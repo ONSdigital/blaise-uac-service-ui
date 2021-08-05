@@ -2,6 +2,14 @@
   "name": "blaise-uac-service-ui",
   "version": "0.1.0",
   "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "lint-fix": "node_modules/.bin/eslint . --fix"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -22,12 +30,6 @@
   "devDependencies": {
     "@types/react-router-dom": "^5.1.6",
     "eslint": "^7.32.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
