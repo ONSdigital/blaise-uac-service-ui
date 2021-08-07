@@ -1,18 +1,30 @@
 import React, {ReactElement, useState} from "react";
 import {Formik, Form} from "formik";
 import {Link, Route, Switch} from "react-router-dom";
-import App from "../../App";
+import App from "../../../App";
 import SelectFile from "./Sections/SelectFile";
-import {ONSPanel, ONSTextInput, ONSButton} from "blaise-design-system-react-components";
-import {uploadCsvFile} from "../../Utilities/UploadFile"
+import InstrumentName from "./Sections/InstrumentName";
+import {ONSPanel, ONSButton, StyledFormErrorSummary} from "blaise-design-system-react-components";
 
 function GenerateUACs(): ReactElement {
+    const [instrumentName, setInstrumentName] = useState<string>();
     const [file, setFile] = useState<File>();
 
     async function _handleSubmit(values: any, actions: any) {
-        await uploadCsvFile("", file);
-    }
+        console.log('Try to upload csv');
+        const formData = new FormData();
+        formData.append('instrumentName', values.instrumentName);
+        formData.append('file', values.files[0]);
 
+        fetch("/api/v1/upload", {
+             method: 'POST',
+            body: formData
+            })
+            .then(async (res: Response) => {
+                console.log("Response from api:");
+                console.log(res);
+            });
+    }
     return (
         <>
             {/*<Breadcrumbs BreadcrumbList={*/}
@@ -42,8 +54,7 @@ function GenerateUACs(): ReactElement {
                     validateOnBlur={false}
                     validateOnChange={false}
                     initialValues={{override: ""}}
-                    onSubmit={_handleSubmit}
-                >
+                    onSubmit={_handleSubmit}>
 
                         <Form id={"formID"}>
                             <div>
@@ -64,10 +75,14 @@ function GenerateUACs(): ReactElement {
                                 </ONSPanel>
                             </div>
                             <div className="u-mt-m">
-                                <ONSTextInput label={"Instrument name"}/>
-                                <SelectFile file={file}
-                                            setFile={setFile}
-                                            loading={false}/>
+                                <StyledFormErrorSummary/>
+                                <InstrumentName
+                                    instrumentName={instrumentName}
+                                    setInstrumentName={setInstrumentName}/>
+                                <SelectFile
+                                    file={file}
+                                    setFile={setFile}
+                                    loading={false}/>
                             </div>
                             <div className="btn-group u-mt-m">
                                 <ONSButton

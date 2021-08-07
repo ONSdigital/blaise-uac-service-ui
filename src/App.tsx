@@ -1,6 +1,6 @@
 import React, {ReactElement} from "react";
 import {Switch, Route, Link, useLocation} from "react-router-dom";
-import UploadPage from "./Components/GenerataUACs/GenerateUACs";
+import UploadPage from "./client/components/generate_uacs/GenerateUACs";
 import "./style.css";
 
 import {
