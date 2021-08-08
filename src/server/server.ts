@@ -5,7 +5,7 @@ const server = express();
 const port = process.env.PORT || 5000;
 
 const multer = require('multer');
-const upload = multer({dest: "/resources/uploads/"});
+const upload = multer({dest: "/resources/temp/uploads/"});
 
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
