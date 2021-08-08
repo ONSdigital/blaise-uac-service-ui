@@ -10,7 +10,6 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
     const {instrumentName, setInstrumentName} = props;
 
     function validateInstrumentName() {
-        console.log("Instrument name: " + instrumentName);
         let error;
         if (!instrumentName) {
             error = 'Enter a valid instrument name';
@@ -23,7 +22,6 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
     }
 
     const handleValueChange = (value: string | null) => {
-        console.log(value);
         if (value && value.length > 1) {
             setInstrumentName(value);
         }

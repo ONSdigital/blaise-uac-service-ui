@@ -4,24 +4,25 @@ import {upload_file} from "./google-storage"
 const server = express();
 const port = process.env.PORT || 5000;
 
+const multer = require('multer');
+const upload = multer({dest: "/resources/uploads/"});
+
 server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
+server.use(express.urlencoded({extended: true}));
+server.post('/api/v1/upload', upload.single('file'), uploadFiles);
 
-server.get('/api/hello', (req: Request, res: Response) => {
-    console.log(req.body);
-    res.header('Content-Type', 'application/json');
-    res.status(200).json({express: 'Hello From Express' });
-});
+function uploadFiles(req: Request, res: Response) {
+    const instrumentName = req.body.instrumentName;
+    const file = req.file;
+    const filePath = `${file?.path}`;
 
-server.post('/api/v1/upload', (req: Request, res: Response) => {
-    console.log(req.body);
+    upload_file(instrumentName, filePath)
+        .then(() => {
+        });
+
     res.setHeader('Content-Type', 'application/json');
-
-    upload_file(req.body.instrumentName, req.body.file)
-        .then(() => { console.log("req.body")});
-
-    res.status(200).json(req.body.post);
-});
+    res.status(200).json("yo");
+}
 
 // Health Check endpoint
 server.get("/uac-ui/:version/health", async function (req: Request, res: Response) {
