@@ -5,22 +5,38 @@ import App from "../../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
 import {ONSPanel, ONSButton, StyledFormErrorSummary} from "blaise-design-system-react-components";
-import {uploadFile} from "../../../server/upload-file";
+import {uploadFile} from "../../upload-file";
+import UploadFailed from "./Sections/UploadFailed";
+import UploadSuccessful from "./Sections/UploadSuccessful";
 
 function GenerateUACs(): ReactElement {
     const [instrumentName, setInstrumentName] = useState<string>();
     const [file, setFile] = useState<File>();
+    const [activeStep, setActiveStep] = useState(0);
+
+     function _renderStepContent(step: number) {
+        switch (step) {
+            case 1:
+                return (
+                <UploadSuccessful instrumentName={instrumentName}/>
+                );
+            case 2:
+                 return (
+                     <UploadFailed instrumentName={instrumentName}/>
+                );
+        }
+    }
 
     async function _handleSubmit() {
-        if (instrumentName === undefined) {
-            return;
-        }
-
-        if (file === undefined) {
-            return;
-        }
-
-        await uploadFile(instrumentName, file);
+        uploadFile(instrumentName, file)
+            .then(function () {
+                console.log("File uploaded");
+                setActiveStep(1);
+            })
+            .catch(function (error) {
+                console.error(`File failed to upload ${error}`);
+                setActiveStep(2);
+            });
     }
 
     return (
@@ -83,6 +99,7 @@ function GenerateUACs(): ReactElement {
                                 setFile={setFile}
                                 loading={false}/>
                         </div>
+                         {_renderStepContent(activeStep)}
                         <div className="btn-group u-mt-m">
                             <ONSButton
                                 id={"upload-sample-button"}
