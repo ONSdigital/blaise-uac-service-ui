@@ -17,5 +17,15 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
 
     const config = {headers: {"Content-Type": "multipart/form-data"}};
 
-    await axios.post("/api/v1/upload", data, config);
+    return axios.post("/api/v1/upload", data, config)
+        .then(() => {
+            console.log("File successfully uploaded");
+            return true;
+        })
+        .catch((error) => {
+            console.error(`File failed to upload ${error}`);
+            return false;
+        });
+
+    return false;
 }

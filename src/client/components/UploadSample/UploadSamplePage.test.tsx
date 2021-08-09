@@ -32,7 +32,22 @@ describe("Upload Sample Page", () => {
         expect(queryByText(/Select instrument sample/i)).toBeInTheDocument();
     });
 
-    it("should display a message if you dont select a file", async () => {
+    it("should display an error message if you dont enter an instrument name", async () => {
+        const history = createMemoryHistory();
+        render(
+            <Router history={history}>
+                <UploadSamplePage/>
+            </Router>
+        );
+
+        await fireEvent.click(screen.getByText(/Continue/));
+
+        await waitFor(() => {
+            expect(screen.queryAllByText("Enter a valid instrument name")).toHaveLength(2);
+        });
+    });
+
+    it("should display an error message if you dont select a file", async () => {
         const history = createMemoryHistory();
         render(
             <Router history={history}>

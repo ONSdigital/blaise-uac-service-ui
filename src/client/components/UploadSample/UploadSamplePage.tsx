@@ -28,15 +28,13 @@ function UploadSamplePage(): ReactElement {
     }
 
     async function _handleSubmit() {
-        uploadFile(instrumentName, file)
-            .then(function () {
-                console.log("File uploaded");
-                setActiveStep(1);
-            })
-            .catch(function (error) {
-                console.error(`File failed to upload ${error}`);
-                setActiveStep(2);
-            });
+        const result = await uploadFile(instrumentName, file);
+        if(result === true) {
+            setActiveStep(1);
+        }
+        else {
+            setActiveStep(2);
+        }
     }
 
     return (
