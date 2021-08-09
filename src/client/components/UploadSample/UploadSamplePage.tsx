@@ -9,20 +9,20 @@ import {uploadFile} from "../../upload-file";
 import UploadFailed from "./Sections/UploadFailed";
 import UploadSuccessful from "./Sections/UploadSuccessful";
 
-function GenerateUACs(): ReactElement {
+function UploadSamplePage(): ReactElement {
     const [instrumentName, setInstrumentName] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState(0);
 
-     function _renderStepContent(step: number) {
+    function _renderStepContent(step: number) {
         switch (step) {
             case 1:
                 return (
-                <UploadSuccessful instrumentName={instrumentName}/>
+                    <UploadSuccessful instrumentName={instrumentName}/>
                 );
             case 2:
-                 return (
-                     <UploadFailed instrumentName={instrumentName}/>
+                return (
+                    <UploadFailed instrumentName={instrumentName}/>
                 );
         }
     }
@@ -73,7 +73,7 @@ function GenerateUACs(): ReactElement {
                     <Form id={"formID"}>
                         <div>
                             <h1 className="u-mt-s">
-                                Upload sample file
+                                Select instrument sample
                             </h1>
 
                             <ONSPanel>
@@ -99,12 +99,12 @@ function GenerateUACs(): ReactElement {
                                 setFile={setFile}
                                 loading={false}/>
                         </div>
-                         {_renderStepContent(activeStep)}
+                        {_renderStepContent(activeStep)}
                         <div className="btn-group u-mt-m">
                             <ONSButton
                                 id={"upload-sample-button"}
                                 submit={true}
-                                primary={true} label={"Upload"}/>
+                                primary={true} label={"Continue"}/>
                         </div>
                     </Form>
 
@@ -114,4 +114,4 @@ function GenerateUACs(): ReactElement {
     );
 }
 
-export default GenerateUACs;
+export default UploadSamplePage;

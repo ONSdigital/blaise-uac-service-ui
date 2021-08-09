@@ -1,8 +1,8 @@
-import { StyledFormField} from "blaise-design-system-react-components";
+import {StyledFormField} from "blaise-design-system-react-components";
 import React, {ChangeEvent, ReactElement} from "react";
 
 interface SelectFilePageProps {
-    instrumentName: String | undefined,
+    instrumentName: string | undefined,
     setInstrumentName: any,
 }
 
@@ -12,13 +12,13 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
     function validateInstrumentName() {
         let error;
         if (!instrumentName) {
-            error = 'Enter a valid instrument name';
+            error = "Enter a valid instrument name";
         } else if (
             instrumentName.length < 7
         ) {
-            error = 'Enter a valid instrument name (longer than 7 characters)';
+            error = "Enter a valid instrument name (longer than 7 characters)";
         }
-        return error
+        return error;
     }
 
     const handleValueChange = (value: string | null) => {

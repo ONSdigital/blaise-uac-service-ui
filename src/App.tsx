@@ -1,6 +1,6 @@
 import React, {ReactElement} from "react";
 import {Switch, Route, Link, useLocation} from "react-router-dom";
-import UploadPage from "./client/components/generate_uacs/GenerateUACs";
+import UploadSamplePage from "./client/components/UploadSample/UploadSamplePage";
 import "./style.css";
 
 import {
@@ -33,7 +33,7 @@ function App(): ReactElement {
                 <main id="main-content" className="page__main">
                     <Switch>
                         <Route path="/upload">
-                            <UploadPage/>
+                            <UploadSamplePage/>
                         </Route>
                         <Route path="/">
 
@@ -47,7 +47,7 @@ function App(): ReactElement {
 
                             <ONSPanel>
                                 <p>
-                                    This is a landing page. Construction is on hold until we've finished the <Link
+                                    This is a landing page. Construction is on hold until we have finished the <Link
                                     to="/upload" id="deploy-questionnaire-link">upload sample</Link> page. Leave us
                                     alone until then!
                                 </p>

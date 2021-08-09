@@ -4,6 +4,14 @@
   "private": true,
   "main": "index.ts",
   "proxy": "http://localhost:5000",
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "pre-commit": [
+    "lint-fix"
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -39,6 +47,11 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/plugin-transform-react-jsx": "^7.14.9",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "axios-mock-adapter": "^1.19.0",
     "concurrently": "^4.0.1",
     "eslint": "^7.32.0"
   },

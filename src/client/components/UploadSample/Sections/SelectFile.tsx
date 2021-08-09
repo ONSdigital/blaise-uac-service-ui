@@ -1,4 +1,4 @@
-import { StyledFormField} from "blaise-design-system-react-components";
+import {StyledFormField} from "blaise-design-system-react-components";
 import React, {ChangeEvent, ReactElement} from "react";
 import {FormikContextType, useFormikContext} from "formik";
 
