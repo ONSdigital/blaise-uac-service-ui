@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {uploadFileToBucket} from "./google-storage";
-import {getEnvironmentVariables} from "../../../Config";
+import {getEnvironmentVariables} from "../config";
 
 export function uploadFile(req: Request, res: Response) {
     const instrumentName = req.body.instrumentName;
