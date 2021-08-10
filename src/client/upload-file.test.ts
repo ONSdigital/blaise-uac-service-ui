@@ -15,16 +15,16 @@ const sampleFile = fileMock({
     size: 50000,
 });
 
-describe("Function will return null if arguments are not provided", () => {
+describe("Function will return false if arguments are not provided", () => {
 
     it("It should return null if an instrument name is not provided", async () => {
         const result = await uploadFile(undefined, sampleFile);
-        expect(result).toBeNull();
+        expect(result).toBeFalsy();
     });
 
     it("It should return null if a file is not provided", async () => {
         const result = await uploadFile(instrumentName, undefined);
-        expect(result).toBeNull();
+        expect(result).toBeFalsy();
     });
 });
 

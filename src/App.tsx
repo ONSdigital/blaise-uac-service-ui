@@ -1,5 +1,5 @@
 import React, {ReactElement} from "react";
-import {Switch, Route, Link, useLocation} from "react-router-dom";
+import {Switch, Route, Link} from "react-router-dom";
 import UploadSamplePage from "./client/components/UploadSample/UploadSamplePage";
 import "./style.css";
 
@@ -15,12 +15,7 @@ const divStyle = {
     minHeight: "calc(67vh)"
 };
 
-interface Location {
-    state: any
-}
-
 function App(): ReactElement {
-    const location = useLocation();
 
     return (
         <>

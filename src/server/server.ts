@@ -1,10 +1,14 @@
 import express, {Request, Response} from "express";
 import {uploadFile} from "./storage/storage";
 import multer from "multer";
+import dotenv from "dotenv";
 
 const server = express();
-const port = process.env.PORT || 5000;
 const upload = multer({dest: "/resources/temp/uploads/"});
+
+if (process.env.NODE_ENV !== "production") {
+    dotenv.config({path: __dirname + "/../.env"});
+}
 
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
@@ -20,7 +24,5 @@ server.get("/uac-ui/:version/health", async function (req: Request, res: Respons
 server.get("*", function (req: Request, res: Response) {
     res.render("index.html");
 });
-
-server.listen(port, () => console.log(`Listening on port ${port}`));
 
 export default server;

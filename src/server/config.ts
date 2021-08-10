@@ -1,5 +1,5 @@
 export interface EnvironmentVariables {
-    PROJECT_ID: string
+    PROJECT_ID: string,
     BUCKET_NAME: string
 }
 
@@ -16,5 +16,5 @@ export function getEnvironmentVariables(): EnvironmentVariables {
         BUCKET_NAME = "ENV_VAR_NOT_SET";
     }
 
-    return { PROJECT_ID, BUCKET_NAME,};
+    return { PROJECT_ID, BUCKET_NAME};
 }

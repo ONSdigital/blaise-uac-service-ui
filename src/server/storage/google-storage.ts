@@ -1,11 +1,22 @@
-import {Storage} from "@google-cloud/storage";
+import {getEnvironmentVariables} from "../config";
+import Cloud, {Storage, StorageOptions} from "@google-cloud/storage";
+import path from "path";
 
-export async function uploadFileToBucket(bucketName: string, sourceFilePath: string, destinationFilePath: string) {
-    const storage = new Storage();
-    const bucket = storage.bucket(bucketName);
-    const uploadOptions = {destination: destinationFilePath};
+export function CreateStorage():Cloud.Storage {
+  const {PROJECT_ID} = getEnvironmentVariables();
 
-    console.log(`attempt to upload file ${destinationFilePath}`);
-    await bucket.upload(sourceFilePath, uploadOptions);
-    console.log(`Uploaded file${destinationFilePath}`);
+let googleStorageConfig = <StorageOptions>{
+    projectId: PROJECT_ID,
+};
+
+if (process.env.NODE_ENV !== "production") {
+    console.log("Not Prod: Attempting to use local keys.json file");
+    const serviceKey = path.join(__dirname, "/../../keys.json");
+    googleStorageConfig = <StorageOptions>{
+        projectId: PROJECT_ID,
+        keyFilename: serviceKey,
+    };
 }
+return new Storage(googleStorageConfig);
+}
+
