@@ -1,8 +1,7 @@
-import app from "./server"; // Link to your server file
+import app from "./server"; 
 import supertest from "supertest";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-
 
 const request = supertest(app);
 
