@@ -3,7 +3,6 @@ import {fileMock} from "./../mocks/FileMock";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
-
 // This sets the mock adapter on the default instance
 const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 
