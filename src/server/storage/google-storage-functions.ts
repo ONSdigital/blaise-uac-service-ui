@@ -5,7 +5,12 @@ export async function uploadFileToBucket(bucketName: string, sourceFilePath: str
     const bucket = storage.bucket(bucketName);
     const uploadOptions = {destination: destinationFilePath};
 
-    console.log(`attempt to upload file '${destinationFilePath}' to bucket '${bucketName}'`);
     await bucket.upload(sourceFilePath, uploadOptions);
-    console.log(`Uploaded file '${destinationFilePath}' to bucket '${bucketName}'`);
+}
+
+export async function fileExistsInBucket(bucketName: string, fileName: string): Promise<boolean> {
+    const storage = CreateStorage();
+    const bucket = storage.bucket(bucketName);
+
+    return (await bucket.file(fileName).exists())[0];
 }

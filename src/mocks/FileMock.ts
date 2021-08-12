@@ -12,7 +12,7 @@ export function multerFileMock(
         path = "/temp/path",
         size = 1024,
         mimetype = "plain/txt",
-        buffer = new Buffer(""),
+        buffer = new Buffer("yo"),
         destination = "destinationTest",
         fieldname = "fieldNameTest",
         stream = new Readable(),

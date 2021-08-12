@@ -5,9 +5,10 @@ import App from "../../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
 import {ONSPanel, ONSButton, StyledFormErrorSummary} from "blaise-design-system-react-components";
-import {uploadFile} from "../../upload-file";
+import {fileExists, uploadFile} from "../../file-functions";
 import UploadFailed from "./Sections/UploadFailed";
 import UploadSuccessful from "./Sections/UploadSuccessful";
+import FileExists from "./Sections/FileExists";
 
 function UploadSamplePage(): ReactElement {
     const [instrumentName, setInstrumentName] = useState<string>();
@@ -18,9 +19,13 @@ function UploadSamplePage(): ReactElement {
         switch (step) {
             case 1:
                 return (
-                    <UploadSuccessful instrumentName={instrumentName}/>
+                    <FileExists instrumentName={instrumentName}/>
                 );
             case 2:
+                return (
+                    <UploadSuccessful instrumentName={instrumentName}/>
+                );
+            case 3:
                 return (
                     <UploadFailed instrumentName={instrumentName}/>
                 );
@@ -28,12 +33,15 @@ function UploadSamplePage(): ReactElement {
     }
 
     async function _handleSubmit() {
-        const result = await uploadFile(instrumentName, file);
-        if(result === true) {
+        if (await fileExists(instrumentName)) {
             setActiveStep(1);
-        }
-        else {
-            setActiveStep(2);
+        } else {
+            const result = await uploadFile(instrumentName, file);
+            if (result === true) {
+                setActiveStep(2);
+            } else {
+                setActiveStep(3);
+            }
         }
     }
 

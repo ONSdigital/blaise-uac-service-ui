@@ -1,18 +1,18 @@
-import app from "./server"; 
-import supertest from "supertest";
-import MockAdapter from "axios-mock-adapter";
-import axios from "axios";
+import listEndpoints from "express-list-endpoints";
 
-const request = supertest(app);
+import server from "./server";
 
-const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
+describe("All expected routes are registered", () => {
+    const expectedEndpoints = [
+        {"methods": ["POST"], "middlewares": ["multerMiddleware", "uploadFile"], "path": "/api/v1/file/upload"},
+        {"methods": ["GET"], "middlewares": ["fileExists"], "path": "/api/v1/file/:fileName/exists"},
+        {"methods": ["GET"], "middlewares": ["healthCheck"], "path": "/uac-ui/:version/health"},
+        {"methods": ["GET"], "middlewares": ["anonymous"], "path": "*"}];
 
-describe("Test Heath Endpoint", () => {
-    it("should return a 200 status and json message", async done => {
-        const response = await request.get("/uac-ui/version/health");
+    it("should contain all expected routes", async () => {
+        const endpoints = listEndpoints(server);
 
-        expect(response.statusCode).toEqual(200);
-        expect(response.body).toStrictEqual({healthy: true});
-        done();
+        expect(endpoints).toEqual(expectedEndpoints);
     });
 });
+

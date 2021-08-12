@@ -1,12 +1,12 @@
 import axios from "axios";
 
 export async function uploadFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
-    if (instrumentName === undefined || instrumentName === null) {
+    if (instrumentName === undefined) {
         console.error("Instrument name not supplied");
         return false;
     }
 
-    if (file === undefined || file === null) {
+    if (file === undefined) {
         console.error("File not supplied");
         return false;
     }
@@ -17,7 +17,7 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
 
     const config = {headers: {"Content-Type": "multipart/form-data"}};
 
-    return axios.post("/api/v1/upload", data, config)
+    return axios.post("/api/v1/file/upload", data, config)
         .then(() => {
             console.log("File successfully uploaded");
             return true;
@@ -28,4 +28,17 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
         });
 
     return false;
+}
+
+
+export async function fileExists(instrumentName: string | undefined): Promise<boolean> {
+    if (instrumentName === undefined) {
+        console.error("Instrument name not supplied");
+        return false;
+    }
+
+    const fileName = `${instrumentName}.csv`;
+    const exists = await axios.get(`/api/v1/file/${fileName}/exists`);
+
+    return exists.data === true;
 }
