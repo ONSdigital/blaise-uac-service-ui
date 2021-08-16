@@ -3,26 +3,27 @@ import multer from "multer";
 import {uploadFileToBucket} from "./../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
 
-const upload = multer({dest: "/resources/temp/uploads/"});
 const router = express.Router();
 
 export default function FileUploadHandler(): Router {
+    const upload = multer({dest: "/resources/temp/uploads/"});
+
     return router.post("/api/v1/file/upload", upload.single("file"), uploadFile);
 }
 
 async function uploadFile(req: Request, res: Response): Promise<Response> {
     const instrumentName = req.body.instrumentName;
-    const file = req.file;
-
     if (instrumentName === undefined) {
-        console.error("InstrumentName not supplied");
-        return Promise.reject("Instrument name not supplied");
+        console.error("Instrument name not supplied");
+        return res.status(400).json("Instrument name not supplied");
     }
 
+    const file = req.file;
     if (file === undefined) {
         console.error("File not supplied");
-        return Promise.reject("File not supplied");
+         return res.status(400).json("File not supplied");
     }
+
     const {BUCKET_NAME} = getEnvironmentVariables();
     const sourceFilePath = `${file.path}`;
     const destinationFilePath = `${instrumentName.toLowerCase()}.csv`;

@@ -1,4 +1,4 @@
-import {StyledFormField} from "blaise-design-system-react-components";
+import {ONSPanel, StyledFormErrorSummary, StyledFormField} from "blaise-design-system-react-components";
 import React, {ChangeEvent, ReactElement} from "react";
 
 interface SelectFilePageProps {
@@ -28,7 +28,7 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
     };
 
     const field = {
-        name: "Instrument name",
+        name: "questionnaire name",
         type: "input",
         id: "instrument-name",
         validate: validateInstrumentName,
@@ -38,7 +38,13 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
 
     return (
         <>
+            <ONSPanel>
+                <p>
+                    Please enter the questionnaire name that you wish to generate UACs for
+                </p>
+            </ONSPanel>
             <StyledFormField {...field}/>
+            <StyledFormErrorSummary/>
         </>
     );
 }

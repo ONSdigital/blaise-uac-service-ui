@@ -30,7 +30,6 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
     return false;
 }
 
-
 export async function fileExists(instrumentName: string | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
         console.error("Instrument name not supplied");
@@ -39,6 +38,6 @@ export async function fileExists(instrumentName: string | undefined): Promise<bo
 
     const fileName = `${instrumentName}.csv`;
     const exists = await axios.get(`/api/v1/file/${fileName}/exists`);
-
+    console.log(`${fileName} exists: $(exists)`);
     return exists.data === true;
 }
