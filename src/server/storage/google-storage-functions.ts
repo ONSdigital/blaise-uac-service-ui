@@ -1,11 +1,11 @@
 import {CreateStorage} from "./google-storage";
 
-export async function uploadFileToBucket(bucketName: string, sourceFilePath: string, destinationFilePath: string) {
+export async function uploadFileToBucket(bucketName: string, file: Express.Multer.File, fileName: string) {
     const storage = CreateStorage();
     const bucket = storage.bucket(bucketName);
-    const uploadOptions = {destination: destinationFilePath};
+    const uploadFile = bucket.file(fileName);
 
-    await bucket.upload(sourceFilePath, uploadOptions);
+    await uploadFile.save(Buffer.from(file));
 }
 
 export async function fileExistsInBucket(bucketName: string, fileName: string): Promise<boolean> {

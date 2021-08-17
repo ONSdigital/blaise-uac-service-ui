@@ -19,7 +19,7 @@ function FileExists(props: FileExistsPageProps): ReactElement {
     }
 
     const field = {
-        name: "overwriteFilter",
+        name: "overwrite sample",
         description: "Overwrite sample file?",
         type: "radio",
         validate: validateOverwrite,

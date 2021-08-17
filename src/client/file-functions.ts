@@ -12,7 +12,7 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
     }
 
     const data = new FormData();
-    data.append("instrumentName", instrumentName);
+    data.append("fileName", getFileName(instrumentName));
     data.append("file", file);
 
     const config = {headers: {"Content-Type": "multipart/form-data"}};
@@ -36,8 +36,12 @@ export async function fileExists(instrumentName: string | undefined): Promise<bo
         return false;
     }
 
-    const fileName = `${instrumentName}.csv`;
+    const fileName = getFileName(instrumentName);
     const exists = await axios.get(`/api/v1/file/${fileName}/exists`);
-    console.log(`${fileName} exists: $(exists)`);
+
     return exists.data === true;
+}
+
+export function getFileName(instrumentName: string): string {
+    return `${instrumentName}.csv`;
 }

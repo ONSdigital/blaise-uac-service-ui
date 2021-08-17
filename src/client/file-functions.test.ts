@@ -37,6 +37,14 @@ describe("Upload file tests", () => {
         expect(mock.history.post[0].headers["Content-Type"]).toBe("multipart/form-data");
     });
 
+    it("It should pass the correct parameters", async () => {
+        mock.onPost("/api/v1/file/upload").reply(201);
+
+        await uploadFile(instrumentName, sampleFile);
+        expect(mock.history.post[0].data.get("fileName")).toBe(`${instrumentName}.csv`);
+        expect(mock.history.post[0].data.get("file")).toBe(sampleFile);
+    });
+
     it("It should return true if file upload is successful", async () => {
         mock.onPost("/api/v1/file/upload").reply(201);
 

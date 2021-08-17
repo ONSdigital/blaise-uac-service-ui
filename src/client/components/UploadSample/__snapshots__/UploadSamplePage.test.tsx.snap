@@ -17,7 +17,7 @@ Object {
           >
             <a
               href="/app"
-              id="deploy-questionnaire-link"
+              id="generate-uac-link"
             >
               Home
             </a>
@@ -28,94 +28,54 @@ Object {
           id="formID"
         >
           <div>
-            <h1
-              class="u-mt-s"
-            >
-              Select instrument sample
-            </h1>
             <div
-              class="panel panel--info panel--no-title  u-mt-m"
+              class="u-mt-m"
             >
               <div
-                class="panel__body "
+                class="panel panel--info panel--no-title  u-mt-m"
               >
-                <p>
-                  When a sample file is selected and you continue to upload this sample file, 
-                  <b>
-                    this may take a few minutes
-                  </b>
-                  .
-                  <br />
-                  <br />
-                  Given this, 
-                  <b>
-                    do not navigate away
-                  </b>
-                   from this page during this process. You will be re-directed when there is an update regarding the deploy of the questionnaire.
-                </p>
+                <div
+                  class="panel__body "
+                >
+                  <p>
+                    Please enter the questionnaire name that you wish to generate UACs for
+                  </p>
+                </div>
+              </div>
+              <div
+                class="field"
+              >
+                <label
+                  class="label "
+                  for="instrument-name"
+                >
+                  Questionnaire name
+                </label>
+                <input
+                  class="input input--text input-type__input"
+                  id="instrument-name"
+                  name="questionnaire name"
+                  type="input"
+                  value=""
+                />
               </div>
             </div>
-          </div>
-          <div
-            class="u-mt-m"
-          >
             <div
-              class="field"
+              class="btn-group u-mt-m"
             >
-              <label
-                class="label "
-                for="instrument-name"
+              <button
+                class="btn "
+                data-testid="button"
+                id="next-screen-button"
+                type="submit"
               >
-                Instrument name
-              </label>
-              <input
-                class="input input--text input-type__input"
-                id="instrument-name"
-                name="Instrument name"
-                type="input"
-                value=""
-              />
+                <span
+                  class="btn__inner"
+                >
+                  Continue
+                </span>
+              </button>
             </div>
-            <div
-              class="field"
-            >
-              <label
-                class="label label--with-description"
-                for="sample-selector"
-              >
-                Select sample file
-              </label>
-              <span
-                class="label__description  input--with-description"
-                id="description-hint"
-              >
-                File type accepted is .csv
-              </span>
-              <input
-                accept=".csv"
-                class="input input--text input-type__input input--upload"
-                id="sample-selector"
-                name="Select sample file"
-                type="file"
-                value=""
-              />
-            </div>
-          </div>
-          <div
-            class="btn-group u-mt-m"
-          >
-            <button
-              class="btn "
-              data-testid="button"
-              id="upload-sample-button"
-              type="submit"
-            >
-              <span
-                class="btn__inner"
-              >
-                Continue
-              </span>
-            </button>
           </div>
         </form>
       </main>
@@ -134,7 +94,7 @@ Object {
         >
           <a
             href="/app"
-            id="deploy-questionnaire-link"
+            id="generate-uac-link"
           >
             Home
           </a>
@@ -145,94 +105,54 @@ Object {
         id="formID"
       >
         <div>
-          <h1
-            class="u-mt-s"
-          >
-            Select instrument sample
-          </h1>
           <div
-            class="panel panel--info panel--no-title  u-mt-m"
+            class="u-mt-m"
           >
             <div
-              class="panel__body "
+              class="panel panel--info panel--no-title  u-mt-m"
             >
-              <p>
-                When a sample file is selected and you continue to upload this sample file, 
-                <b>
-                  this may take a few minutes
-                </b>
-                .
-                <br />
-                <br />
-                Given this, 
-                <b>
-                  do not navigate away
-                </b>
-                 from this page during this process. You will be re-directed when there is an update regarding the deploy of the questionnaire.
-              </p>
+              <div
+                class="panel__body "
+              >
+                <p>
+                  Please enter the questionnaire name that you wish to generate UACs for
+                </p>
+              </div>
+            </div>
+            <div
+              class="field"
+            >
+              <label
+                class="label "
+                for="instrument-name"
+              >
+                Questionnaire name
+              </label>
+              <input
+                class="input input--text input-type__input"
+                id="instrument-name"
+                name="questionnaire name"
+                type="input"
+                value=""
+              />
             </div>
           </div>
-        </div>
-        <div
-          class="u-mt-m"
-        >
           <div
-            class="field"
+            class="btn-group u-mt-m"
           >
-            <label
-              class="label "
-              for="instrument-name"
+            <button
+              class="btn "
+              data-testid="button"
+              id="next-screen-button"
+              type="submit"
             >
-              Instrument name
-            </label>
-            <input
-              class="input input--text input-type__input"
-              id="instrument-name"
-              name="Instrument name"
-              type="input"
-              value=""
-            />
+              <span
+                class="btn__inner"
+              >
+                Continue
+              </span>
+            </button>
           </div>
-          <div
-            class="field"
-          >
-            <label
-              class="label label--with-description"
-              for="sample-selector"
-            >
-              Select sample file
-            </label>
-            <span
-              class="label__description  input--with-description"
-              id="description-hint"
-            >
-              File type accepted is .csv
-            </span>
-            <input
-              accept=".csv"
-              class="input input--text input-type__input input--upload"
-              id="sample-selector"
-              name="Select sample file"
-              type="file"
-              value=""
-            />
-          </div>
-        </div>
-        <div
-          class="btn-group u-mt-m"
-        >
-          <button
-            class="btn "
-            data-testid="button"
-            id="upload-sample-button"
-            type="submit"
-          >
-            <span
-              class="btn__inner"
-            >
-              Continue
-            </span>
-          </button>
         </div>
       </form>
     </main>
