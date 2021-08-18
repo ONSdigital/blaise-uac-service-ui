@@ -5,7 +5,7 @@ export async function uploadFileToBucket(bucketName: string, file: Express.Multe
     const bucket = storage.bucket(bucketName);
     const uploadFile = bucket.file(fileName);
 
-    await uploadFile.save(Buffer.from(file));
+    await uploadFile.save(Buffer.from(file.buffer));
 }
 
 export async function fileExistsInBucket(bucketName: string, fileName: string): Promise<boolean> {

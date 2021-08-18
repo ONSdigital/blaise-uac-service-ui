@@ -1,21 +1,19 @@
 import React, {ReactElement} from "react";
 import {Switch, Route, Link} from "react-router-dom";
 import UploadSamplePage from "./client/components/UploadSample/UploadSamplePage";
+import {Footer, Header, BetaBanner, ONSPanel, NotProductionWarning } from "blaise-design-system-react-components";
+import {getInstrumentsWithExistingUacCodes} from "./client/uac-functions";
 import "./style.css";
-
-import {
-    Footer,
-    Header,
-    BetaBanner,
-    ONSPanel,
-    NotProductionWarning
-} from "blaise-design-system-react-components";
 
 const divStyle = {
     minHeight: "calc(67vh)"
 };
 
 function App(): ReactElement {
+
+    async function getInstrumentsWithExistingUacCodes() {
+        await getInstrumentsWithExistingUacCodes();
+    }
 
     return (
         <>
