@@ -1,7 +1,7 @@
 import AuthProvider from "./authentication-provider";
 import jwt from "jsonwebtoken";
 
-jest.mock("./GoogleTokenProvider");
+jest.mock("./google-token-provider");
 import getGoogleAuthToken from "./google-token-provider";
 
 const mockedGetGoogleAuthToken = getGoogleAuthToken as jest.Mock<Promise<string>>;
@@ -17,7 +17,6 @@ afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
 });
-
 
 it("We can get back Auth headers with a token", async () => {
     const uniqueToken = "A Token";

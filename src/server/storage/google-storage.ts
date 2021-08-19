@@ -4,6 +4,7 @@ import path from "path";
 
 export function CreateStorage():Cloud.Storage {
   const {PROJECT_ID} = getEnvironmentVariables();
+  console.log("project id:", PROJECT_ID);
 
 let googleStorageConfig = <StorageOptions>{
     projectId: PROJECT_ID,

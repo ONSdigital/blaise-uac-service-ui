@@ -1,19 +1,15 @@
 import React, {ReactElement} from "react";
 import {Switch, Route, Link} from "react-router-dom";
-import UploadSamplePage from "./client/components/UploadSample/UploadSamplePage";
-import {Footer, Header, BetaBanner, ONSPanel, NotProductionWarning } from "blaise-design-system-react-components";
-import {getInstrumentsWithExistingUacCodes} from "./client/uac-functions";
+import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
+import {Footer, Header, BetaBanner, NotProductionWarning} from "blaise-design-system-react-components";
 import "./style.css";
+import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 
 const divStyle = {
     minHeight: "calc(67vh)"
 };
 
 function App(): ReactElement {
-
-    async function getInstrumentsWithExistingUacCodes() {
-        await getInstrumentsWithExistingUacCodes();
-    }
 
     return (
         <>
@@ -29,7 +25,6 @@ function App(): ReactElement {
                             <UploadSamplePage/>
                         </Route>
                         <Route path="/">
-
                             <ul className="list list--bare list--inline u-mt-m">
                                 <li className="list__item">
                                     <Link to="/upload" id="deploy-questionnaire-link">
@@ -37,14 +32,8 @@ function App(): ReactElement {
                                     </Link>
                                 </li>
                             </ul>
-
-                            <ONSPanel>
-                                <p>
-                                    This is a landing page. Construction is on hold until we have finished the <Link
-                                    to="/upload" id="deploy-questionnaire-link">upload sample</Link> page. Leave us
-                                    alone until then!
-                                </p>
-                            </ONSPanel>
+                            <h2 className="u-mt-m">Questionnaires that have been previously uploaded</h2>
+                                <InstrumentListPage />
                         </Route>
                     </Switch>
                 </main>

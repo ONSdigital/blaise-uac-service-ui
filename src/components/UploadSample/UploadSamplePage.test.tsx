@@ -1,12 +1,12 @@
 import React from "react";
 import {Router} from "react-router";
-import {render, waitFor, fireEvent, cleanup, screen} from "@testing-library/react";
+import {render, waitFor, fireEvent, cleanup, screen, act} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import {createMemoryHistory} from "history";
 import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import {getFileName} from "./../../file-functions";
+import {getFileName} from "../../client/file-functions";
 
 const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 
@@ -23,9 +23,9 @@ describe("Upload Sample Page", () => {
             </Router>
         );
 
-        await waitFor(() => {
+        await act(async () => await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
-        });
+        }));
     });
 
     it("should render correctly", async () => {

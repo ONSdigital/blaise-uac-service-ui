@@ -1,11 +1,11 @@
 import React, {ReactElement, useState} from "react";
 import {Formik, Form} from "formik";
 import {Link, Route, Switch} from "react-router-dom";
-import App from "../../../App";
+import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
 import {ONSButton} from "blaise-design-system-react-components";
-import {fileExists, uploadFile} from "../../file-functions";
+import {fileExists, uploadFile} from "../../client/file-functions";
 import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
@@ -21,7 +21,8 @@ function UploadSamplePage(): ReactElement {
             case 0:
                 return (<InstrumentName instrumentName={instrumentName} setInstrumentName={setInstrumentName}/>);
             case 1:
-                return (<FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite}/>);
+                return (
+                    <FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite}/>);
             case 2:
                 return (<SelectFile file={file} setFile={setFile}/>);
             case 3:
@@ -31,19 +32,27 @@ function UploadSamplePage(): ReactElement {
         }
     }
 
-    async function _handleSubmit() {
+    async function _handleSubmit(values: any, actions: any) {
         switch (activeStep) {
             case 0:
                 setActiveStep(await fileExists(instrumentName) ? 1 : 2);
+                actions.setTouched({});
+                actions.setSubmitting(false);
                 break;
             case 1:
-                 setActiveStep(overwrite === "Yes" ? 2 : 3);
+                setActiveStep(overwrite === "Yes" ? 2 : 3);
+                actions.setTouched({});
+                actions.setSubmitting(false);
                 break;
             case 2:
                 setActiveStep(await uploadFile(instrumentName, file) === true ? 3 : 4);
+                actions.setTouched({});
+                actions.setSubmitting(false);
                 break;
             default:
                 setActiveStep(0);
+                actions.setTouched({});
+                actions.setSubmitting(false);
         }
     }
 

@@ -1,5 +1,5 @@
 import {uploadFile, fileExists} from "./file-functions";
-import {fileMock} from "./../mocks/FileMock";
+import {fileMocks} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 const instrumentName = "DST2101A";
 
 describe("Upload file tests", () => {
-    const sampleFile = fileMock({
+    const sampleFile = fileMocks({
         name: "sample.csv",
         type: "image/png",
         size: 50000,
