@@ -1,7 +1,7 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useState} from "react";
 import {Switch, Route, Link} from "react-router-dom";
 import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
-import {Footer, Header, BetaBanner, NotProductionWarning} from "blaise-design-system-react-components";
+import {Footer, Header, BetaBanner, NotProductionWarning, ONSErrorPanel} from "blaise-design-system-react-components";
 import "./style.css";
 import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 
@@ -33,7 +33,7 @@ function App(): ReactElement {
                                 </li>
                             </ul>
                             <h2 className="u-mt-m">Questionnaires that have been previously uploaded</h2>
-                                <InstrumentListPage />
+                            <InstrumentListPage />
                         </Route>
                     </Switch>
                 </main>

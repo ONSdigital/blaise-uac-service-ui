@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import UacGenerationHandler from "./handlers/uac-generation-handler";
 import HealthCheckHandler from "./handlers/health-check-handler";
 import FileExistsHandler from "./handlers/file-exists-handler";
-import UacHandler from "./handlers/uac-generation-handler";
 import InstrumentListHandler from "./handlers/instrument-list-handler";
 
 const server = express();

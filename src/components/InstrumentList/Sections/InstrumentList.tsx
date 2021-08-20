@@ -6,8 +6,53 @@ import {Link} from "react-router-dom";
 interface Props {
     instrumentList: string[]
     loading: boolean
-    listMessage: string
+    message: string
 }
+
+export const InstrumentList = (props: Props): ReactElement => {
+    const {instrumentList, loading, message} = props;
+    const displayTable = instrumentList.length > 0;
+    const tableColumns: TableColumns[] =
+        [
+            {
+                title: "Name"
+            },
+            {
+                title: "UAC file"
+            },
+        ];
+
+
+    if (loading) {
+        return <ONSLoadingPanel/>;
+    } else {
+        return (
+            <>
+                <div className="u-mt-s">
+
+                    {
+                        displayTable ?
+                            <ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                                {
+                                    instrumentList.map((item: string) => {
+                                        return instrumentTableRow(item);
+                                    })
+                                }
+                            </ONSTable>
+                            :
+                            <ONSPanel spacious={true}
+                                      status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
+                    }
+
+                </div>
+            </>
+
+        );
+    }
+};
+
+export default InstrumentList;
+
 
 function instrumentTableRow(item: string) {
     return (
@@ -30,47 +75,3 @@ function instrumentTableRow(item: string) {
         </tr>
     );
 }
-
-export const InstrumentList = (props: Props): ReactElement => {
-    const {instrumentList, loading, listMessage} = props;
-
-    const tableColumns: TableColumns[] =
-        [
-            {
-                title: "Name"
-            },
-            {
-                title: "UAC file"
-            },
-        ];
-
-
-    if (loading) {
-        return <ONSLoadingPanel/>;
-    } else {
-        return (
-            <>
-                <div className="u-mt-s">
-
-                    {
-                        instrumentList.length > 0 ?
-                            <ONSTable columns={tableColumns} tableID={"instrument-table"}>
-                                {
-                                    instrumentList.map((item: string) => {
-                                        return instrumentTableRow(item);
-                                    })
-                                }
-                            </ONSTable>
-                            :
-                            <ONSPanel spacious={true}
-                                      status={listMessage.includes("Unable") ? "error" : "info"}>{listMessage}</ONSPanel>
-                    }
-
-                </div>
-            </>
-
-        );
-    }
-};
-
-export default InstrumentList;
