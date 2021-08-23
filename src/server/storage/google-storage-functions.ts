@@ -13,7 +13,7 @@ export async function fileExistsInBucket(bucketName: string, fileName: string): 
     return (await bucket.file(fileName).exists())[0];
 }
 
-export async function getFilenamesInBucket(bucketName: string): Promise<string[]> {
+export async function getFileNamesInBucket(bucketName: string): Promise<string[]> {
     const bucket = getBucket(bucketName);
     const [files] = await bucket.getFiles();
     const fileNames: Array<string> = [];
@@ -23,6 +23,15 @@ export async function getFilenamesInBucket(bucketName: string): Promise<string[]
     });
 
     return fileNames;
+}
+
+export async function getFileFromBucket(bucketName: string, fileName: string): Promise<Buffer> {
+    const bucket = getBucket(bucketName);
+    const file = await bucket
+        .file(fileName)
+        .download();
+
+    return file[0];
 }
 
 function getBucket(bucketName: string) {

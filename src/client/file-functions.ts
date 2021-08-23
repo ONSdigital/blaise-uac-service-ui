@@ -1,6 +1,7 @@
 import axios from "axios";
+import * as fs from "fs";
 
-export async function uploadFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
+export async function generateUacCodesForFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
         console.error("Instrument name not supplied");
         return false;
@@ -17,17 +18,28 @@ export async function uploadFile(instrumentName: string | undefined, file: File 
 
     const config = {headers: {"Content-Type": "multipart/form-data"}};
 
-    return axios.post("/api/v1/file/upload", data, config)
+    return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, config)
         .then(() => {
-            console.log("File successfully uploaded");
+            console.log("UAC codes generated and file uploaded");
             return true;
         })
         .catch((error) => {
-            console.error(`File failed to upload ${error}`);
+            console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
             return false;
         });
 
     return false;
+}
+
+export async function getSampleFileWithUacCodes(instrumentName: string | undefined, fileName: string | undefined): Promise<string> {
+
+    return axios.get(`/api/v1/instrument/${instrumentName}/uac/sample/${fileName}`)
+        .then((response) => {
+            return response.data;
+        })
+        .catch((error) => {
+            console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
+        });
 }
 
 export async function fileExists(instrumentName: string | undefined): Promise<boolean> {

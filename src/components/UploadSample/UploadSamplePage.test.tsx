@@ -104,7 +104,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("Select sample file - should display an upload filed message if file fails to upload", async () => {
-        mock.onPost("/api/v1/file/upload").reply(500);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(500);
 
         await NavigateToSelectFileAndUpload("csv");
 
@@ -114,7 +114,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
-        mock.onPost("/api/v1/file/upload").reply(201);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await NavigateToSelectFileAndUpload("csv");
 

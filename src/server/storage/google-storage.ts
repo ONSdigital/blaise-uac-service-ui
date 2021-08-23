@@ -12,7 +12,7 @@ let googleStorageConfig = <StorageOptions>{
 
 if (process.env.NODE_ENV !== "production") {
     console.log("Not Prod: Attempting to use local keys.json file");
-    const serviceKey = path.join(__dirname, "/../../keys.json");
+    const serviceKey = path.join(__dirname, "../../keys.json");
     googleStorageConfig = <StorageOptions>{
         projectId: PROJECT_ID,
         keyFilename: serviceKey,

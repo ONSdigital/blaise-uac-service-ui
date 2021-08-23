@@ -2151,6 +2151,13 @@
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
+"@types/papaparse@^5.2.6":
+  version "5.2.6"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.2.6.tgz#0bba18de4d15eff65883bc7c0794e0134de9e7c7"
+  integrity sha512-xGKSd0UTn58N1h0+zf8mW863Rv8BvXcGibEgKFtBIXZlcDXAmX/T4RdDO2mwmrmOypUDt5vRgo2v32a78JdqUA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.0.tgz"
@@ -8860,6 +8867,11 @@ pako@~1.0.5:
   resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
+papaparse@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.1.tgz#770b7a9124d821d4b2132132b7bd7dce7194b5b1"
+  integrity sha512-Dbt2yjLJrCwH2sRqKFFJaN5XgIASO9YOFeFP8rIBRG2Ain8mqk5r1M6DkfvqEVozVcz3r3HaUGw253hA1nLIcA==
+
 parallel-transform@^1.1.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/parallel-transform/-/parallel-transform-1.2.0.tgz"
@@ -10533,6 +10545,11 @@ requires-port@^1.0.0:
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
+rereadable-stream@^1.4.12:
+  version "1.4.12"
+  resolved "https://registry.yarnpkg.com/rereadable-stream/-/rereadable-stream-1.4.12.tgz#51d375d3eb7f4708a4bb592d057d4858502defd9"
+  integrity sha512-X6DO4q5q+QWIKP/B3MO+W0fNlu7x2xJDYvZ6LqM3kSFtyRp/0E/W1NOoxg5Zp9gUB0kKTFXUiubhxgb/c+tZEw==
+
 resolve-cwd@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/resolve-cwd/-/resolve-cwd-2.0.0.tgz"
@@ -10832,6 +10849,20 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.6"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+scramjet-core@^4.31.19:
+  version "4.31.19"
+  resolved "https://registry.yarnpkg.com/scramjet-core/-/scramjet-core-4.31.19.tgz#ac69687c792abae40ab1a4bedc2cdca7a1f814ec"
+  integrity sha512-/rmtiNw7CY2xLKCm7qBc7RwToltdZ+0MpLaS7XCdPAjMwheKT3+Jbu/r708DryySQypy2IKJQkUx5kx7b2qkeg==
+
+scramjet@^4.35.20:
+  version "4.35.20"
+  resolved "https://registry.yarnpkg.com/scramjet/-/scramjet-4.35.20.tgz#acce89a4d4419af3b8dd0d5dde95eaef2d839665"
+  integrity sha512-Lnj3Js/y07VsaQM2vhMkNHl51jRHucnpAOPE55Ug3B6mo3CtPdO+DEpCsaV97u0ZBXcxWIbR9DN4SPftcAprDw==
+  dependencies:
+    papaparse "^5.3.1"
+    rereadable-stream "^1.4.12"
+    scramjet-core "^4.31.19"
 
 select-hose@^2.0.0:
   version "2.0.0"

@@ -5,7 +5,7 @@ import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
 import {ONSButton} from "blaise-design-system-react-components";
-import {fileExists, uploadFile} from "../../client/file-functions";
+import {fileExists, generateUacCodesForFile} from "../../client/file-functions";
 import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
@@ -45,7 +45,7 @@ function UploadSamplePage(): ReactElement {
                 actions.setSubmitting(false);
                 break;
             case 2:
-                setActiveStep(await uploadFile(instrumentName, file) === true ? 3 : 4);
+                setActiveStep(await generateUacCodesForFile(instrumentName, file) === true ? 3 : 4);
                 actions.setTouched({});
                 actions.setSubmitting(false);
                 break;

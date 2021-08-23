@@ -1,9 +1,10 @@
 import express, {Request, Response} from "express";
 import dotenv from "dotenv";
-import UacGenerationHandler from "./handlers/uac-generation-handler";
+import GenerateUacsHandler from "./handlers/generate-uacs-handler";
 import HealthCheckHandler from "./handlers/health-check-handler";
 import FileExistsHandler from "./handlers/file-exists-handler";
 import InstrumentListHandler from "./handlers/instrument-list-handler";
+import GetFileWithUacsHandler from "./handlers/get-file-with-uacs-handler";
 
 const server = express();
 
@@ -16,7 +17,8 @@ server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 
 //define handlers
-server.use("/", UacGenerationHandler());
+server.use("/", GenerateUacsHandler());
+server.use("/", GetFileWithUacsHandler());
 server.use("/", FileExistsHandler());
 server.use("/", InstrumentListHandler());
 server.use("/", HealthCheckHandler());

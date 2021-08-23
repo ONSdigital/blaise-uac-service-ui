@@ -1,16 +1,21 @@
 import {getMockReq, getMockRes} from "@jest-mock/express";
-import {GenerateUacCodesForSampleFile} from "./uac-generation-handler";
+import {GenerateUacCodesForSampleFile} from "./generate-uacs-handler";
 import {multerFileMock} from "../../mocks/file-mocks";
 
-jest.mock("../api-clients/BusApiClient");
-import {BusApiClient} from "../api-clients/BusApiClient";
-
+//mock bus api
+jest.mock("../api-clients/BusApi/bus-api-client");
+import BusApiClient from "../api-clients/BusApi/bus-api-client";
 const BusApiClientMock = BusApiClient as jest.Mock;
 
+//mock google storage
 jest.mock("./../storage/google-storage-functions");
 import {uploadFileToBucket} from "./../storage/google-storage-functions";
-
 const uploadFileToBucketMock = uploadFileToBucket as jest.Mock<Promise<void>>;
+
+//mock csv parser
+jest.mock("../utils/csv-parser");
+import {getCaseIdsFromFile} from "../utils/csv-parser";
+const getCaseIdsFromFileMock = getCaseIdsFromFile as jest.Mock<Promise<string[]>>;
 
 const {res, mockClear} = getMockRes();
 const instrumentName = "DST1234A";
@@ -56,6 +61,7 @@ describe("uac-generation-handler tests", () => {
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(res.status).toHaveBeenCalledWith(201);
+        expect(getCaseIdsFromFileMock).toHaveBeenCalledWith(sampleFile.buffer);
         expect(uploadFileToBucketMock).toHaveBeenCalledWith("unique-bucket", sampleFile, `${instrumentName.toLowerCase()}.csv`);
     });
 
@@ -68,6 +74,16 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 500 response if the uac generation fails", async () => {
         BusApiClientMock.mockImplementationOnce(() => {
             throw new Error();
+        });
+
+        await callGenerateUacCodesForSampleFileWithParameters();
+
+        expect(res.status).toHaveBeenCalledWith(500);
+    });
+
+    it("It should return a 500 response if the file fails to parse", async () => {
+        getCaseIdsFromFileMock.mockImplementationOnce(() => {
+             throw new Error();
         });
 
         await callGenerateUacCodesForSampleFileWithParameters();

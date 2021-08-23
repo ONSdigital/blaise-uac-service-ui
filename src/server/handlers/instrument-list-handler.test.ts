@@ -1,5 +1,5 @@
 import server from "./../server";
-import {getFilenamesInBucket} from "./../storage/google-storage-functions";
+import {getFileNamesInBucket} from "./../storage/google-storage-functions";
 import supertest from "supertest";
 
 jest.mock("./../storage/google-storage-functions");
@@ -14,7 +14,7 @@ describe("instrument-list-handler tests", () => {
         getFilenamesInBucketMock.mockReset();
     });
 
-    const getFilenamesInBucketMock = getFilenamesInBucket as jest.Mock<Promise<string[]>>;
+    const getFilenamesInBucketMock = getFileNamesInBucket as jest.Mock<Promise<string[]>>;
     const fileName = "DST2101A.csv";
 
     it("It should be called with correct parameters with filename converted to lowercase", async () => {

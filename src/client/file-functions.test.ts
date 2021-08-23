@@ -1,4 +1,4 @@
-import {uploadFile, fileExists} from "./file-functions";
+import {generateUacCodesForFile, fileExists} from "./file-functions";
 import {fileMocks} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
@@ -21,41 +21,41 @@ describe("Upload file tests", () => {
     });
 
     it("It should return null if an instrument name is not provided", async () => {
-        const result = await uploadFile(undefined, sampleFile);
+        const result = await generateUacCodesForFile(undefined, sampleFile);
         expect(result).toBeFalsy();
     });
 
     it("It should return null if a file is not provided", async () => {
-        const result = await uploadFile(instrumentName, undefined);
+        const result = await generateUacCodesForFile(instrumentName, undefined);
         expect(result).toBeFalsy();
     });
 
     it("It should set the content-type correctly", async () => {
-        mock.onPost("/api/v1/file/upload").reply(201);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
-        await uploadFile(instrumentName, sampleFile);
+        await generateUacCodesForFile(instrumentName, sampleFile);
         expect(mock.history.post[0].headers["Content-Type"]).toBe("multipart/form-data");
     });
 
     it("It should pass the correct parameters", async () => {
-        mock.onPost("/api/v1/file/upload").reply(201);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
-        await uploadFile(instrumentName, sampleFile);
+        await generateUacCodesForFile(instrumentName, sampleFile);
         expect(mock.history.post[0].data.get("fileName")).toBe(`${instrumentName}.csv`);
         expect(mock.history.post[0].data.get("file")).toBe(sampleFile);
     });
 
-    it("It should return true if file upload is successful", async () => {
-        mock.onPost("/api/v1/file/upload").reply(201);
+    it("It should return true if UAC generation is successful", async () => {
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
-        const result = await uploadFile(instrumentName, sampleFile);
+        const result = await generateUacCodesForFile(instrumentName, sampleFile);
         expect(result).toBeTruthy();
     });
 
-    it("It should return false if file upload is not successful", async () => {
-        mock.onPost("/api/v1/file/upload").networkError();
+    it("It should return false if the UAC generation is not successful", async () => {
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).networkError();
 
-        const result = await uploadFile(instrumentName, sampleFile);
+        const result = await generateUacCodesForFile(instrumentName, sampleFile);
         expect(result).toBeFalsy();
     });
 });
