@@ -12,7 +12,7 @@ export const inValidSampleCsv = `serial_number,Phone Number,Email
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
 
-export const instrumentUacDetails:InstrumentUacDetails = {
+export const matchedInstrumentUacDetails:InstrumentUacDetails = {
   "000975653827": {
     instrument_name: "dst2106a",
     case_id: "100000001",
@@ -47,4 +47,41 @@ export const instrumentUacDetails:InstrumentUacDetails = {
     }
   }
 };
+
+export const unMatchedInstrumentUacDetails:InstrumentUacDetails = {
+  "000975653827": {
+    instrument_name: "dst2106a",
+    case_id: "100000997",
+    postcode_attempts: 0,
+    postcode_attempt_timestamp: "",
+    uac_chunks: {
+      uac1: "0009",
+      uac2: "7565",
+      uac3: "3827"
+    }
+  },
+  "345365454564": {
+    instrument_name: "dst2106a",
+    case_id: "100000998",
+    postcode_attempts: 0,
+    postcode_attempt_timestamp: "",
+    uac_chunks: {
+      uac1: "3453",
+      uac2: "6545",
+      uac3: "4564"
+    }
+  },
+  "978975785367": {
+    instrument_name: "dst2106a",
+    case_id: "100000999",
+    postcode_attempts: 0,
+    postcode_attempt_timestamp: "",
+    uac_chunks: {
+      uac1: "9789",
+      uac2: "7578",
+      uac3: "5367"
+    }
+  }
+};
+
 

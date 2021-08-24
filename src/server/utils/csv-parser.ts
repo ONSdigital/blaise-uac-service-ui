@@ -1,7 +1,6 @@
 import {Readable} from "stream";
 import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
 import {StringStream} from "scramjet";
-import Papa from "papaparse";
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
 
@@ -40,7 +39,7 @@ function getUacChunksForCaseId(instrumentUacDetails: InstrumentUacDetails, caseI
     throw new Error("Error in retrieving UAC chunks");
 }
 
-export async function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetails): Promise<any[]> {
+export async function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetails): Promise<string[]> {
     const readStream = Readable.from(fileData);
 
     return StringStream.from(readStream)
@@ -57,13 +56,11 @@ export async function addUacCodesToFile(fileData: string | Buffer, instrumentUac
             return line;
         })
         .catch(() => {
-            return Promise.reject("Failed to parse file");
+            throw new Error("Failed to parse file");
         })
-        .CSVStringify()
         .toArray()
         .then((array) =>  {
-            const parsedResults:any = Papa.parse(array.toString(), {header: true, skipEmptyLines: true});
-            return parsedResults.data;
+            return array;
         });
 }
 
