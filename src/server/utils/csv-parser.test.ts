@@ -6,7 +6,7 @@ import {
     unMatchedInstrumentUacDetails,
     emptyInstrumentUacDetails,
     partialMatchedInstrumentUacDetails,
-    validSampleCsvWithExistingUacEntries
+    validSampleCsvWithExistingUacEntries, validSampleCsvWithExistingUacColumns
 } from "../../mocks/csv-mocks";
 
 
@@ -70,7 +70,41 @@ describe("addUacCodesToFile tests", () => {
         });
     });
 
- it("Adds expected UAC chunks to the CSV where there are are existing UAC entries in the file", async () => {
+ it("Adds expected UAC chunks to the CSV where there are are existing UAC columns in the file", async () => {
+        const fileData = Buffer.from(validSampleCsvWithExistingUacColumns);
+
+        const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
+
+        expect(result).toContainEqual({
+            "serial_number": "100000001",
+            "Name": "Homer Simpson",
+            "UAC1": "0009",
+            "UAC2": "7565",
+            "UAC3": "3827",
+            "Phone Number": "5551234422",
+            "Email": "homer@springfield.com"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000002",
+            "Name": "Seymour Skinner",
+            "UAC1": "3453",
+            "UAC2": "6545",
+            "UAC3": "4564",
+            "Phone Number": "1235663322",
+            "Email": "a@b.c"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000003",
+            "Name": "Bart Simpson",
+            "UAC1": "9789",
+            "UAC2": "7578",
+            "UAC3": "5367",
+            "Phone Number": "2675465026",
+            "Email": "bart@spring.field"
+        });
+    });
+
+it("Overwrites UAC chunks to the CSV where there are are existing UAC entries in the file", async () => {
         const fileData = Buffer.from(validSampleCsvWithExistingUacEntries);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
