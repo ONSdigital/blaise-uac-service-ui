@@ -1,9 +1,10 @@
 import express, {Router, Request, Response} from "express";
 import multer from "multer";
-import {uploadFileToBucket} from "./../storage/google-storage-functions";
+import {uploadFileToBucket} from "../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
 import BusApiClient from "../api-clients/BusApi/bus-api-client";
-import {getCaseIdsFromFile} from "../utils/csv-parser";
+import {getCaseIdsFromFile, addUacCodesToFile} from "../utils/csv-parser";
+import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
 
 const router = express.Router();
 
@@ -28,22 +29,23 @@ export async function GenerateUacCodesForSampleFile(req: Request, res: Response)
     }
 
     try {
-        await generateUacCodes(instrumentName, file);
+        const instrumentUacDetails = await generateUacCodes(instrumentName, file);
         await uploadSampleFile(fileName, file);
 
-        return res.status(201).json(`Successfully generated uac codes for instrument ${instrumentName}`);
+        const datas = await addUacCodesToFile(file.buffer, instrumentUacDetails);
+        return res.status(201).json(datas);
     } catch (error) {
         console.error(`Response: ${error}`);
         return res.status(500).json(`Generate UAC codes failed for instrument ${instrumentName}`);
     }
 }
 
-async function generateUacCodes(instrumentName: string, file: Express.Multer.File) {
+async function generateUacCodes(instrumentName: string, file: Express.Multer.File):Promise<InstrumentUacDetails> {
     const caseIds = await getCaseIdsFromFile(file.buffer);
     const {BUS_API_URL, BUS_CLIENT_ID} = getEnvironmentVariables();
     const busApiClient = new BusApiClient(BUS_API_URL, BUS_CLIENT_ID);
 
-    await busApiClient.generateUacCodes(instrumentName, caseIds);
+    return await busApiClient.generateUacCodes(instrumentName, caseIds);
 }
 
 async function uploadSampleFile(fileName: string, file: Express.Multer.File) {

@@ -8,8 +8,8 @@ import BusApiClient from "../api-clients/BusApi/bus-api-client";
 const BusApiClientMock = BusApiClient as jest.Mock;
 
 //mock google storage
-jest.mock("./../storage/google-storage-functions");
-import {uploadFileToBucket} from "./../storage/google-storage-functions";
+jest.mock("../storage/google-storage-functions");
+import {uploadFileToBucket} from "../storage/google-storage-functions";
 const uploadFileToBucketMock = uploadFileToBucket as jest.Mock<Promise<void>>;
 
 //mock csv parser
