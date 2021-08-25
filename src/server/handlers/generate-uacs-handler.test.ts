@@ -5,14 +5,11 @@ import {multerFileMock} from "../../mocks/file-mocks";
 //mock bus api
 jest.mock("../api-clients/BusApi/bus-api-client");
 import BusApiClient from "../api-clients/BusApi/bus-api-client";
-
 const busApiClientMock = BusApiClient as jest.Mock;
-
 
 //mock google storage
 jest.mock("../storage/google-storage-functions");
 import {uploadFileToBucket} from "../storage/google-storage-functions";
-
 const uploadFileToBucketMock = uploadFileToBucket as jest.Mock<Promise<void>>;
 
 //mock csv parser
@@ -59,7 +56,7 @@ describe("uac-generation-handler tests", () => {
         expect(res.json).toHaveBeenCalledWith("File not supplied");
     });
 
-    it("Bus api client should be called with correct parameters with filename converted to lowercase", async () => {
+    it("Bus api client should be called with correct parameter", async () => {
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(busApiClientMock).toHaveBeenCalledWith("bus-api-url", "bus-client-id");
@@ -88,11 +85,11 @@ describe("uac-generation-handler tests", () => {
         expect(addUacCodesToFileMock).toHaveBeenCalledWith(sampleFile.buffer, matchedInstrumentUacDetails);
     });
 
-    it("It should return a 201 response with expected data if uac generation is successful", async () => {
+    it("It should return a 200 response with expected data if uac generation is successful", async () => {
         setMocksForSuccess();
         await callGenerateUacCodesForSampleFileWithParameters();
 
-        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(validSampleFileWithUacArrayResponse);
     });
 

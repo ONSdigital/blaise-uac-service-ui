@@ -4,7 +4,7 @@ import {
     getSampleFileWithUacCodes,
     getListOfInstrumentsWhichHaveExistingSampleFiles
 } from "./file-functions";
-import {fileMocks} from "../mocks/file-mocks";
+import {fileMock} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import {validSampleCsv, validSampleFileWithUacDatasResponse} from "../mocks/csv-mocks";
@@ -17,7 +17,7 @@ const instrumentName = "DST2101A";
 const fileName = "DST2101A.csv";
 
 describe("generateUacCodesForFile file tests", () => {
-    const sampleFile = fileMocks({
+    const sampleFile = fileMock({
         name: "sample.csv",
         type: "image/png",
         size: 50000,

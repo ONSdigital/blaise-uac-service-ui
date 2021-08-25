@@ -1,6 +1,6 @@
 import {Readable} from "stream";
 
-export function fileMocks(
+export function fileMock(
     {
         name = "file.txt",
         size = 1024,
