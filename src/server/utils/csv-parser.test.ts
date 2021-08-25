@@ -3,7 +3,7 @@ import {
     matchedInstrumentUacDetails,
     inValidSampleCsv,
     validSampleCsv,
-    unMatchedInstrumentUacDetails
+    unMatchedInstrumentUacDetails, emptyInstrumentUacDetails, partialMatchedInstrumentUacDetails
 } from "../../mocks/csv-mocks";
 
 
@@ -20,10 +20,13 @@ describe("getCaseIdsFromFile tests", () => {
     });
 
     it("Invalid CSV - error", async () => {
+        console.error = jest.fn();
         const fileData = Buffer.from(inValidSampleCsv);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects
-            .toThrow("Failed to parse file");
+        const result = await getCaseIdsFromFile(fileData);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("Too many fields: expected 3 fields but parsed 4");
     });
 });
 
@@ -34,7 +37,7 @@ describe("addUacCodesToFile tests", () => {
         const fileData = Buffer.from(validSampleCsv);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
-        console.log(result);
+
         expect(result).toContainEqual({
             "serial_number": "100000001",
             "Name": "Homer Simpson",
@@ -64,17 +67,48 @@ describe("addUacCodesToFile tests", () => {
         });
     });
 
-    it("Invalid CSV - failed to parse error", async () => {
-        const fileData = Buffer.from(inValidSampleCsv);
-
-        await expect(addUacCodesToFile(fileData, matchedInstrumentUacDetails)).rejects
-            .toThrow();
-    });
-
-    it("Unmatched instrument UAC results - failed to parse error", async () => {
+    it("Unmatched instrument UAC results - returns an empty array", async () => {
+        console.error = jest.fn();
         const fileData = Buffer.from(validSampleCsv);
 
-        await expect(addUacCodesToFile(fileData, unMatchedInstrumentUacDetails)).rejects
-            .toThrow();
+        const result = await addUacCodesToFile(fileData, unMatchedInstrumentUacDetails);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000001");
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000002");
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000003");
+    });
+
+    it("Partial Matched instrument UAC results - returns an empty array", async () => {
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsv);
+
+        const result = await addUacCodesToFile(fileData, partialMatchedInstrumentUacDetails);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000001");
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000003");
+    });
+
+    it("Empty instrument UAC results - returns an empty array", async () => {
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsv);
+
+        const result = await addUacCodesToFile(fileData, emptyInstrumentUacDetails);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000001");
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000002");
+        expect(console.error).toHaveBeenCalledWith("No UAC chunks found that matches the case id 100000003");
+    });
+
+    it("Invalid CSV - returns an empty array", async () => {
+        console.error = jest.fn();
+        const fileData = Buffer.from(inValidSampleCsv);
+
+        const result = await addUacCodesToFile(fileData, emptyInstrumentUacDetails);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("Too many fields: expected 3 fields but parsed 4");
     });
 });

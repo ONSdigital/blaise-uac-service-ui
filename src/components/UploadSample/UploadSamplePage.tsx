@@ -5,7 +5,7 @@ import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
 import {ONSButton} from "blaise-design-system-react-components";
-import {fileExists, generateUacCodesForFile} from "../../client/file-functions";
+import {sampleFileAlreadyExists, generateUacCodesForSampleFile} from "../../client/file-functions";
 import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
@@ -15,6 +15,7 @@ function UploadSamplePage(): ReactElement {
     const [overwrite, setOverwrite] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState(0);
+
 
     function _renderStepContent(step: number) {
         switch (step) {
@@ -32,27 +33,19 @@ function UploadSamplePage(): ReactElement {
         }
     }
 
-    async function _handleSubmit(values: any, actions: any) {
+    async function _handleSubmit() {
         switch (activeStep) {
             case 0:
-                setActiveStep(await fileExists(instrumentName) ? 1 : 2);
-                actions.setTouched({});
-                actions.setSubmitting(false);
+                setActiveStep(await sampleFileAlreadyExists(instrumentName) ? 1 : 2);
                 break;
             case 1:
                 setActiveStep(overwrite === "Yes" ? 2 : 3);
-                actions.setTouched({});
-                actions.setSubmitting(false);
                 break;
             case 2:
-                setActiveStep(await generateUacCodesForFile(instrumentName, file) === true ? 3 : 4);
-                actions.setTouched({});
-                actions.setSubmitting(false);
+                setActiveStep(await generateUacCodesForSampleFile(instrumentName, file) === true ? 3 : 4);
                 break;
             default:
                 setActiveStep(0);
-                actions.setTouched({});
-                actions.setSubmitting(false);
         }
     }
 

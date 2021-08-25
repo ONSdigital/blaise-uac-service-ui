@@ -3,9 +3,9 @@ import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-
 import {StringStream} from "scramjet";
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
-
     const caseIds: string[] = [];
     const readStream = Readable.from(fileData);
+    let hasErrored = false;
 
     return StringStream
         .from(readStream)
@@ -15,32 +15,19 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
         })
         .setOptions({maxParallel: 32})
         .map(({serial_number}) => caseIds.push(serial_number))
-        .catch(() => {
-            throw new Error("Failed to parse file");
+        .catch((error: Error) => {
+            console.error(error.message);
+            hasErrored = true;
         })
         .run()
         .then(() => {
-            return (caseIds);
+            return hasErrored === false ? caseIds : [];
         });
 }
 
-function getUacChunksForCaseId(instrumentUacDetails: InstrumentUacDetails, caseId: string): string[] {
-    for (const key in instrumentUacDetails) {
-        const value = instrumentUacDetails[key];
-        if (value.case_id === caseId) {
-            const uacChunkArray: string[] = [];
-            uacChunkArray.push(value.uac_chunks.uac1);
-            uacChunkArray.push(value.uac_chunks.uac2);
-            uacChunkArray.push(value.uac_chunks.uac3);
-            return uacChunkArray;
-        }
-    }
-
-    throw new Error("Error in retrieving UAC chunks");
-}
-
-export async function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetails): Promise<string[]> {
+export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetails): Promise<string[]> {
     const readStream = Readable.from(fileData);
+    let hasErrored = false;
 
     return StringStream.from(readStream)
         .CSVParse({
@@ -49,19 +36,30 @@ export async function addUacCodesToFile(fileData: string | Buffer, instrumentUac
         })
         .setOptions({maxParallel: 32})
         .map((line) => {
-            const uacChunks = getUacChunksForCaseId(instrumentUacDetails, line.serial_number);
-            line.uac1 = uacChunks[0];
-            line.uac2 = uacChunks[1];
-            line.uac3 = uacChunks[2];
+            mapUacChunk(line, instrumentUacDetails);
             return line;
         })
-        .catch(() => {
-            throw new Error("Failed to parse file");
+        .catch((error: Error) => {
+            console.error(error.message);
+            hasErrored = true;
         })
         .toArray()
-        .then((array) =>  {
-            return array;
+        .then((array) => {
+            return hasErrored === false ? array : [];
         });
 }
 
+function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetails) {
+    for (const key in instrumentUacDetails) {
+        const value = instrumentUacDetails[key];
+        if (value.case_id === line.serial_number) {
+            line.uac1 = value.uac_chunks.uac1;
+            line.uac2 = value.uac_chunks.uac2;
+            line.uac3 = value.uac_chunks.uac3;
 
+            return;
+        }
+    }
+
+    throw new Error(`No UAC chunks found that matches the case id ${line.serial_number}`);
+}

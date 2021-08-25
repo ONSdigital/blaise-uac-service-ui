@@ -6,14 +6,14 @@ import {Router} from "react-router";
 import "@testing-library/jest-dom";
 import {instrumentNames} from "./mocks/api-mocks";
 
-jest.mock("./client/instrument-functions");
-import {getInstrumentsWithExistingUacCodes} from "./client/instrument-functions";
+jest.mock("./client/file-functions");
+import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./client/file-functions";
 
-const getInstrumentsWithExistingUacCodesMock = getInstrumentsWithExistingUacCodes as jest.Mock<Promise<string[]>>;
+const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
 
 describe("React homepage", () => {
     beforeAll(() => {
-        getInstrumentsWithExistingUacCodesMock.mockImplementation(() => Promise.resolve(instrumentNames));
+        getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.resolve(instrumentNames));
     });
 
     it("App page matches snapshot", async () => {

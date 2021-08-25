@@ -119,7 +119,8 @@ describe("Upload Sample Page", () => {
         await NavigateToSelectFileAndUpload("csv");
 
         await waitFor(() => {
-            expect(screen.queryAllByText(`Download UAC file for questionnaire ${instrumentName}`)).toHaveLength(1);
+            expect(screen.queryAllByText(`Successfully generated UACs for ${instrumentName}`)).toHaveLength(1);
+            expect(screen.queryAllByText("Download CSV file")).toHaveLength(1);
         });
     });
 

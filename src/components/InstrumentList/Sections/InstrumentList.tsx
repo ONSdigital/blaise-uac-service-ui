@@ -1,7 +1,9 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useState} from "react";
 import {ONSLoadingPanel, ONSPanel} from "blaise-design-system-react-components";
 import ONSTable, {TableColumns} from "./ONSTable";
-import {Link} from "react-router-dom";
+import CsvDownloader from "react-csv-downloader";
+import {getSampleFileWithUacCodes} from "../../../client/file-functions";
+import {ONSButton} from "blaise-design-system-react-components";
 
 interface Props {
     instrumentList: string[]
@@ -15,13 +17,12 @@ export const InstrumentList = (props: Props): ReactElement => {
     const tableColumns: TableColumns[] =
         [
             {
-                title: "Name"
+                title: "Instrument name"
             },
             {
-                title: "UAC file"
+                title: "CSV file"
             },
         ];
-
 
     if (loading) {
         return <ONSLoadingPanel/>;
@@ -29,7 +30,6 @@ export const InstrumentList = (props: Props): ReactElement => {
         return (
             <>
                 <div className="u-mt-s">
-
                     {
                         displayTable ?
                             <ONSTable columns={tableColumns} tableID={"instrument-table"}>
@@ -50,28 +50,41 @@ export const InstrumentList = (props: Props): ReactElement => {
         );
     }
 };
-
 export default InstrumentList;
 
 
 function instrumentTableRow(item: string) {
+    const [errored, setErrored] = useState<boolean>();
+
+    const downloadCsvFile = async () => {
+        return getSampleFileWithUacCodes(item, `${item}.csv`)
+            .then((response) => {
+                return response;
+            })
+            .catch(() => {
+                setErrored(true);
+                return Promise.reject("");
+            });
+    };
+
     return (
-        <tr className="table__row" key={item} data-testid={"instrument-table-row"}>
-            <td className="table__cell ">
-                {item}
-            </td>
-            <td className="table__cell ">
-                <Link
-                    id={`info-${item}`}
-                    data-testid={`info-${item}`}
-                    aria-label={`View more information for questionnaire ${item}`}
-                    to={{
-                        pathname: "/questionnaire",
-                        state: {instrument: item}
-                    }}>
-                    Click to download
-                </Link>
-            </td>
-        </tr>
+        <>
+            {errored &&
+            <tr className="table__row  summary__item--error">
+                <th colSpan={6} className="summary__row-title u-fs-r">There was an error downloading the file {item}.csv
+                </th>
+            </tr>
+            }
+            <tr className={`table__row  ${(errored ? "summary__item--error" : "")}`} key={item} data-testid={"instrument-table-row"}>
+                <td className="table__cell" style={{padding: "1rem"}}>
+                    {item}
+                </td>
+                <td className="table__cell">
+                    <CsvDownloader datas={downloadCsvFile} filename={`${item}.csv`}>
+                        <ONSButton label={"Download"} primary={true} small={true}/>
+                    </CsvDownloader>
+                </td>
+            </tr>
+        </>
     );
 }

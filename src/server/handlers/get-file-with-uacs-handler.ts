@@ -23,7 +23,9 @@ export async function GetSampleFileWithUacs(req: Request, res: Response): Promis
         const instrumentUacDetails = await getUacCodes(instrumentName);
         const fileWithUacsArray = await addUacCodesToFile(fileBuffer, instrumentUacDetails);
 
-        return res.status(201).json(fileWithUacsArray);
+        return fileWithUacsArray.length === 0
+            ? res.status(400).json()
+            : res.status(201).json(fileWithUacsArray);
     } catch (error) {
         console.error(`Response: ${error}`);
         return res.status(500).json(`Get sample file with uacs failed for instrument ${instrumentName}`);

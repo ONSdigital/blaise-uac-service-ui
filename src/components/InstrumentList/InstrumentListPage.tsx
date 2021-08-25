@@ -1,7 +1,6 @@
 import React, {ReactElement, useState, useEffect} from "react";
-import {getInstrumentsWithExistingUacCodes} from "./../../client/instrument-functions";
+import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./../../client/file-functions";
 import InstrumentList from "./Sections/InstrumentList";
-import {getSampleFileWithUacCodes} from "../../client/file-functions";
 
 function InstrumentListPage(): ReactElement {
     const [message, setMessage] = useState<string>("");
@@ -25,9 +24,8 @@ function InstrumentListPage(): ReactElement {
 
     async function getInstrumentList() {
         setListLoading(true);
-        const response = await getSampleFileWithUacCodes("dst1221a", "dst1221a.csv");
-        console.log("response: ", response);
-        getInstrumentsWithExistingUacCodes()
+
+        getListOfInstrumentsWhichHaveExistingSampleFiles()
             .then((instrumentList) => {
                 if (instrumentList.length === 0) {
                     setMessage("No instruments found relating to uploaded samples.");
