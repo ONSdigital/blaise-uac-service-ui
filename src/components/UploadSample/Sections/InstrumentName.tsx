@@ -17,18 +17,12 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
         }
     }
 
-    const handleValueChange = (value: string | null) => {
-        if (value && value.length > 1) {
-            setInstrumentName(value);
-        }
-    };
-
     const field = {
         name: "questionnaire name",
         type: "input",
         id: "instrument-name",
         validate: validateInstrumentName,
-        onChange: (e: ChangeEvent<HTMLInputElement>) => handleValueChange(e.target.value),
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setInstrumentName(e.target.value),
         className: "input input--text input-type__input",
     };
 

@@ -91,7 +91,8 @@ function UploadSamplePage(): ReactElement {
                                 <ONSButton
                                     id={"next-screen-button"}
                                     submit={true}
-                                    primary={true} label={"Continue"}/>
+                                    primary={true} label={"Continue"}
+                                    onClick={(e) => e.currentTarget.blur()}/>
                             </div>
                         </div>
                     </Form>
