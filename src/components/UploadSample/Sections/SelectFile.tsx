@@ -42,18 +42,30 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
 
     return (
         <>
-            <ONSPanel>
-                <p>
-                    When a sample file is selected and you continue to upload this sample file, <b>this
-                    may take a few minutes</b>.
-                    <br/>
-                    <br/>
-                    Given this, <b>do not navigate away</b> from this page during this process. You will
-                    be re-directed when there is an update regarding the deploy of the questionnaire.
-                </p>
-            </ONSPanel>
-            <StyledFormErrorSummary/>
-            <StyledFormField {...field}/>
+            <div className="grid">
+                <div className="grid__col col-8@m">
+                    <h1>Upload a sample file</h1>
+                    <p>
+                        The sample file must be a Comma-Separated Values (CSV) file containing the column <em
+                        className="highlight">serial_number</em>.
+                    </p>
+                    <p>
+                        If the sample file already contains any Unique Access Codes rows then these will be overwritten.
+                    </p>
+                    <ONSPanel>
+                        <p>
+                            When a sample file is selected and you continue to upload this sample file, <b>this
+                            may take a few minutes</b>.
+                            <br/>
+                            <br/>
+                            Given this, <b>do not navigate away</b> from this page during this process. You will
+                            be re-directed when there is an update regarding the deploy of the questionnaire.
+                        </p>
+                    </ONSPanel>
+                    <StyledFormErrorSummary/>
+                    <StyledFormField {...field}/>
+                </div>
+            </div>
         </>
     );
 }
