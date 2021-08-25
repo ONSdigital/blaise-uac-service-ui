@@ -7,6 +7,7 @@ import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import {getFileName} from "../../client/file-functions";
+import {validSampleFileWithUacDatasResponse} from "../../mocks/csv-mocks";
 
 const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 
@@ -39,18 +40,38 @@ describe("Upload Sample Page", () => {
         expect(queryByText(/Please enter the questionnaire name that you wish to generate UACs for/i)).toBeInTheDocument();
     });
 
-    it("Enter instrument name - should display an error message if you dont enter an instrument name", async () => {
-        const history = createMemoryHistory();
-        render(
-            <Router history={history}>
-                <UploadSamplePage/>
-            </Router>
-        );
+    const invalidInstrumentNameTestCases = [
+        {
+            instrumentName: [
+                null,
+                undefined,
+                "",
+                "dst",
+                "dst1",
+                "2013dst",
+                "ds2013a",
+                "dst201a",
+            ]
+        }
+    ];
 
-        await fireEvent.click(screen.getByText(/Continue/));
+    invalidInstrumentNameTestCases.forEach(test => {
+        it(`Enter instrument name - should display an error message if you enter an invalid instrument name - ${test.instrumentName}`, async () => {
+            const history = createMemoryHistory();
+            render(
+                <Router history={history}>
+                    <UploadSamplePage/>
+                </Router>
+            );
 
-        await waitFor(() => {
-            expect(screen.queryAllByText("Enter a valid instrument name")).toHaveLength(2);
+            const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);
+            fireEvent.change(inputInstrumentName, {target: {value: test.instrumentName}});
+
+            await fireEvent.click(screen.getByText(/Continue/));
+
+            await waitFor(() => {
+                expect(screen.queryAllByText("Enter a valid instrument name (three letters followed by four numbers)")).toHaveLength(2);
+            });
         });
     });
 
@@ -114,7 +135,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleFileWithUacDatasResponse);
 
         await NavigateToSelectFileAndUpload("csv");
 

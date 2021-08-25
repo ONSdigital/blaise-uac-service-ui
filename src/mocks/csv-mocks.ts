@@ -7,6 +7,12 @@ export const validSampleCsv = `serial_number,Name,Phone Number,Email
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
 
+export const validSampleCsvWithExistingUacEntries = `serial_number,Name,UAC1,UAC2,UAC3,Phone Number,Email
+100000001,Homer Simpson,,,,5551234422,homer@springfield.com
+100000002,Seymour Skinner,,,,1235663322,a@b.c
+100000003,Bart Simpson,,,,2675465026,bart@spring.field
+`;
+
 export const inValidSampleCsv = `serial_number,Phone Number,Email
 100000001,Homer Simpson,5551234422,homer@springfield.com
 100000002,Seymour Skinner,1235663322,a@b.c
@@ -101,17 +107,45 @@ export const partialMatchedInstrumentUacDetails: InstrumentUacDetails = {
 
 export const emptyInstrumentUacDetails: InstrumentUacDetails = {};
 
-export const validSampleFileWithUacResponse: Datas = [
+
+export const validSampleFileWithUacArrayResponse: any[] = [
     {
         serial_number: "100000001",
-        first_name: "Bob",
-        last_name: "Jones",
-        town: "Caerfilthy"
+        name: "Homer Simpson",
+        phone: "5551234422",
+        email: "homer@springfield.com",
+        UAC1: "0009",
+        UAC2: "7565",
+        UAC3: "3827"
     },
     {
         serial_number: "100000002",
-        first_name: "Jackie",
-        last_name: "Chan",
-        town: "Splooooo"
+        name: "Seymour Skinner",
+        phone: "1235663322",
+        email: "a@b.c",
+        UAC1: "3453",
+        UAC2: "6545",
+        UAC3: "4564"
+    }
+];
+
+export const validSampleFileWithUacDatasResponse: Datas = [
+    {
+        serial_number: "100000001",
+        name: "Homer Simpson",
+        phone: "5551234422",
+        email: "homer@springfield.com",
+        UAC1: "0009",
+        UAC2: "7565",
+        UAC3: "3827"
+    },
+    {
+        serial_number: "100000002",
+        name: "Seymour Skinner",
+        phone: "1235663322",
+        email: "a@b.c",
+        UAC1: "3453",
+        UAC2: "6545",
+        UAC3: "4564"
     }
 ];

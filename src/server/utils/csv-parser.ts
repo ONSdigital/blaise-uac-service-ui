@@ -53,9 +53,9 @@ function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetails) {
     for (const key in instrumentUacDetails) {
         const value = instrumentUacDetails[key];
         if (value.case_id === line.serial_number) {
-            line.uac1 = value.uac_chunks.uac1;
-            line.uac2 = value.uac_chunks.uac2;
-            line.uac3 = value.uac_chunks.uac3;
+            line["UAC1"] ? line["UAC1"] = value.uac_chunks.uac1 : line.UAC1 = value.uac_chunks.uac1;
+            line["UAC2"] ? line["UAC2"] = value.uac_chunks.uac2 : line.UAC2 = value.uac_chunks.uac2;
+            line["UAC3"] ? line["UAC3"] = value.uac_chunks.uac3 : line.UAC3 = value.uac_chunks.uac3;
 
             return;
         }

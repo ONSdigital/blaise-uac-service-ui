@@ -7,7 +7,7 @@ import {
 import {fileMocks} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import {validSampleCsv, validSampleFileWithUacResponse} from "../mocks/csv-mocks";
+import {validSampleCsv, validSampleFileWithUacDatasResponse} from "../mocks/csv-mocks";
 import {instrumentNames} from "../mocks/api-mocks";
 
 // This sets the mock adapter on the default instance
@@ -90,10 +90,10 @@ describe("getSampleFileWithUacCodes file tests", () => {
     });
 
     it("It should return expected data if successful", async () => {
-        mock.onGet(`/api/v1/instrument/${instrumentName}/uac/sample/${fileName}`).reply(200, validSampleFileWithUacResponse);
+        mock.onGet(`/api/v1/instrument/${instrumentName}/uac/sample/${fileName}`).reply(200, validSampleFileWithUacDatasResponse);
 
         const result = await getSampleFileWithUacCodes(instrumentName, fileName);
-        expect(result).toStrictEqual(validSampleFileWithUacResponse);
+        expect(result).toStrictEqual(validSampleFileWithUacDatasResponse);
     });
 
     it("It should fail with response code 400 if call is a bad request", async () => {

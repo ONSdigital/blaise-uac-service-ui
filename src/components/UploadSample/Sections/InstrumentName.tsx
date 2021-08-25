@@ -10,15 +10,11 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
     const {instrumentName, setInstrumentName} = props;
 
     function validateInstrumentName() {
-        let error;
-        if (!instrumentName) {
-            error = "Enter a valid instrument name";
-        } else if (
-            instrumentName.length < 7
-        ) {
-            error = "Enter a valid instrument name (longer than 7 characters)";
+        const regExpr = new RegExp("^[a-zA-Z]{3}\\d{4}");
+
+        if (!instrumentName || instrumentName.match(regExpr) == null) {
+            return "Enter a valid instrument name (three letters followed by four numbers)";
         }
-        return error;
     }
 
     const handleValueChange = (value: string | null) => {
