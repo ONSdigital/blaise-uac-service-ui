@@ -22,6 +22,7 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
         type: "input",
         id: "instrument-name",
         validate: validateInstrumentName,
+        value: instrumentName,
         onChange: (e: ChangeEvent<HTMLInputElement>) => setInstrumentName(e.target.value),
         className: "input input--text input-type__input",
     };
