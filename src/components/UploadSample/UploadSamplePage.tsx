@@ -81,22 +81,23 @@ function UploadSamplePage(): ReactElement {
                     validateOnChange={false}
                     initialValues={{override: ""}}
                     onSubmit={_handleSubmit}>
-
-                    <Form id={"formID"}>
-                        <div>
-                            <div className="u-mt-m">
-                                {_renderStepContent(activeStep)}
+                    {({isSubmitting}) => (
+                        <Form id={"formID"}>
+                            <div>
+                                <div className="u-mt-m">
+                                    {_renderStepContent(activeStep)}
+                                </div>
+                                <div className="btn-group u-mt-m">
+                                    <ONSButton
+                                        id={"next-screen-button"}
+                                        submit={true}
+                                        loading={isSubmitting}
+                                        primary={true}
+                                        label={"Continue"}
+                                onClick={(e) => e.currentTarget.blur()}/></div>
                             </div>
-                            <div className="btn-group u-mt-m">
-                                <ONSButton
-                                    id={"next-screen-button"}
-                                    submit={true}
-                                    primary={true} label={"Continue"}
-                                    onClick={(e) => e.currentTarget.blur()}/>
-                            </div>
-                        </div>
-                    </Form>
-
+                        </Form>
+                    )}
                 </Formik>
             </main>
         </>

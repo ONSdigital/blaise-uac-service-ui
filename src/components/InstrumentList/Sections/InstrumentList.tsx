@@ -6,9 +6,9 @@ import {getSampleFileWithUacCodes} from "../../../client/file-functions";
 import {ONSButton} from "blaise-design-system-react-components";
 
 interface Props {
-    instrumentList: string[]
-    loading: boolean
-    message: string
+    instrumentList: string[];
+    loading: boolean;
+    message: string;
 }
 
 export const InstrumentList = (props: Props): ReactElement => {
@@ -54,9 +54,11 @@ export default InstrumentList;
 
 
 function instrumentTableRow(item: string) {
-    const [errored, setErrored] = useState<boolean>();
+    const [errored, setErrored] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const downloadCsvFile = async () => {
+        setLoading(true);
         return getSampleFileWithUacCodes(item, `${item}.csv`)
             .then((response) => {
                 return response;
@@ -64,7 +66,7 @@ function instrumentTableRow(item: string) {
             .catch(() => {
                 setErrored(true);
                 return Promise.reject("");
-            });
+            }).finally(() => setLoading(false));
     };
 
     return (
@@ -75,13 +77,15 @@ function instrumentTableRow(item: string) {
                 </th>
             </tr>
             }
-            <tr className={`table__row  ${(errored ? "summary__item--error" : "")}`} key={item} data-testid={"instrument-table-row"}>
+            <tr className={`table__row ${(errored ? "summary__item--error" : "")}`}
+                key={item}
+                data-testid={"instrument-table-row"}>
                 <td className="table__cell" style={{padding: "1rem"}}>
                     {item}
                 </td>
                 <td className="table__cell">
                     <CsvDownloader datas={downloadCsvFile} filename={`${item}.csv`}>
-                        <ONSButton label={"Download"} primary={true} small={true}/>
+                        <ONSButton label={"Download"} primary={true} small={true} loading={loading}/>
                     </CsvDownloader>
                 </td>
             </tr>

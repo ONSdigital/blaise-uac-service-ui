@@ -2,7 +2,7 @@ import {ONSPanel} from "blaise-design-system-react-components";
 import React, {ReactElement} from "react";
 
 interface UploadFailedProps {
-    instrumentName: string | undefined
+    instrumentName: string | undefined;
 }
 
 function UploadFailed(props: UploadFailedProps): ReactElement {
@@ -11,14 +11,12 @@ function UploadFailed(props: UploadFailedProps): ReactElement {
     return (
         <>
             <ONSPanel status="error">
+                <h1>File upload failed</h1>
                 <p>
-                    <b>File upload failed</b>
-
-                    <br/>
-                    <br/>
-                    Sample file for instrument &apos;{instrumentName}&apos; has failed to deploy. When reporting the issue to
-                    Service
-                    Desk provide the questionnaire name, time and date of failure.
+                    Sample file for questionnaire <em className="highlight">{instrumentName}</em> has failed to deploy.
+                </p>
+                <p>
+                    When reporting the issue to Service Desk provide the questionnaire name, time and date of failure.
                 </p>
             </ONSPanel>
         </>

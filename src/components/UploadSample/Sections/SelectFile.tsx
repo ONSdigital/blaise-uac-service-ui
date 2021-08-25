@@ -4,7 +4,7 @@ import {FormikContextType, useFormikContext} from "formik";
 
 interface SelectFilePageProps {
     file: File | undefined,
-    setFile: any
+    setFile: (file: File) => void
 }
 
 function SelectFile(props: SelectFilePageProps): ReactElement {
@@ -52,9 +52,8 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                     be re-directed when there is an update regarding the deploy of the questionnaire.
                 </p>
             </ONSPanel>
-
-            <StyledFormField {...field}/>
             <StyledFormErrorSummary/>
+            <StyledFormField {...field}/>
         </>
     );
 }

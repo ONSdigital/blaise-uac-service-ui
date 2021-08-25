@@ -32,32 +32,43 @@ Object {
               class="u-mt-m"
             >
               <div
-                class="panel panel--info panel--no-title  u-mt-m"
+                class="grid"
               >
                 <div
-                  class="panel__body "
+                  class="grid__col col-8@m"
                 >
-                  <p>
-                    Please enter the questionnaire name that you wish to generate UACs for
-                  </p>
+                  <h1>
+                    Which questionnaire do you wish to generate Unique Access Codes for?
+                  </h1>
+                  <div
+                    class="panel panel--info panel--no-title  u-mt-m"
+                  >
+                    <div
+                      class="panel__body "
+                    >
+                      <p>
+                        Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="field"
+                  >
+                    <label
+                      class="label "
+                      for="questionnaire name"
+                    >
+                      Questionnaire name
+                    </label>
+                    <input
+                      class="input input--text input-type__input"
+                      id="questionnaire name"
+                      name="questionnaire name"
+                      type="input"
+                      value=""
+                    />
+                  </div>
                 </div>
-              </div>
-              <div
-                class="field"
-              >
-                <label
-                  class="label "
-                  for="instrument-name"
-                >
-                  Questionnaire name
-                </label>
-                <input
-                  class="input input--text input-type__input"
-                  id="instrument-name"
-                  name="questionnaire name"
-                  type="input"
-                  value=""
-                />
               </div>
             </div>
             <div
@@ -109,32 +120,43 @@ Object {
             class="u-mt-m"
           >
             <div
-              class="panel panel--info panel--no-title  u-mt-m"
+              class="grid"
             >
               <div
-                class="panel__body "
+                class="grid__col col-8@m"
               >
-                <p>
-                  Please enter the questionnaire name that you wish to generate UACs for
-                </p>
+                <h1>
+                  Which questionnaire do you wish to generate Unique Access Codes for?
+                </h1>
+                <div
+                  class="panel panel--info panel--no-title  u-mt-m"
+                >
+                  <div
+                    class="panel__body "
+                  >
+                    <p>
+                      Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label "
+                    for="questionnaire name"
+                  >
+                    Questionnaire name
+                  </label>
+                  <input
+                    class="input input--text input-type__input"
+                    id="questionnaire name"
+                    name="questionnaire name"
+                    type="input"
+                    value=""
+                  />
+                </div>
               </div>
-            </div>
-            <div
-              class="field"
-            >
-              <label
-                class="label "
-                for="instrument-name"
-              >
-                Questionnaire name
-              </label>
-              <input
-                class="input input--text input-type__input"
-                id="instrument-name"
-                name="questionnaire name"
-                type="input"
-                value=""
-              />
             </div>
           </div>
           <div
