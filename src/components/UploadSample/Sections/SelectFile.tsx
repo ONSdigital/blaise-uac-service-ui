@@ -50,7 +50,7 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                         className="highlight">serial_number</em>.
                     </p>
                     <p>
-                        Note if the sample file contains any Unique Access Codes rows then these will be overwritten.
+                        Note if the sample file already contains any Unique Access Codes rows then these will be overwritten.
                     </p>
                     <ONSPanel>
                         <p>
