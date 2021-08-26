@@ -1,0 +1,234 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Upload Sample Page select file page matches Snapshot 1`] = `
+Object {
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <main
+        class="page__main u-mt-no"
+        id="main-content"
+      >
+        <ul
+          class="list list--bare list--inline u-mt-m"
+        >
+          <li
+            class="list__item"
+          >
+            <a
+              href="/app"
+              id="generate-uac-link"
+            >
+              Home
+            </a>
+          </li>
+        </ul>
+        <form
+          action="#"
+          id="formID"
+        >
+          <div>
+            <div
+              class="u-mt-m"
+            >
+              <div
+                class="grid"
+              >
+                <div
+                  class="grid__col col-8@m"
+                >
+                  <h1>
+                    Which questionnaire do you wish to generate Unique Access Codes for?
+                  </h1>
+                  <div
+                    class="panel panel--info panel--no-title  u-mt-m"
+                  >
+                    <div
+                      class="panel__body "
+                    >
+                      <p>
+                        Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="field"
+                  >
+                    <label
+                      class="label "
+                      for="questionnaire name"
+                    >
+                      Questionnaire name
+                    </label>
+                    <input
+                      class="input input--text input-type__input"
+                      id="questionnaire name"
+                      name="questionnaire name"
+                      type="input"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="btn-group u-mt-m"
+            >
+              <button
+                class="btn "
+                data-testid="button"
+                id="next-screen-button"
+                type="submit"
+              >
+                <span
+                  class="btn__inner"
+                >
+                  Continue
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>,
+  "container": <div>
+    <main
+      class="page__main u-mt-no"
+      id="main-content"
+    >
+      <ul
+        class="list list--bare list--inline u-mt-m"
+      >
+        <li
+          class="list__item"
+        >
+          <a
+            href="/app"
+            id="generate-uac-link"
+          >
+            Home
+          </a>
+        </li>
+      </ul>
+      <form
+        action="#"
+        id="formID"
+      >
+        <div>
+          <div
+            class="u-mt-m"
+          >
+            <div
+              class="grid"
+            >
+              <div
+                class="grid__col col-8@m"
+              >
+                <h1>
+                  Which questionnaire do you wish to generate Unique Access Codes for?
+                </h1>
+                <div
+                  class="panel panel--info panel--no-title  u-mt-m"
+                >
+                  <div
+                    class="panel__body "
+                  >
+                    <p>
+                      Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="field"
+                >
+                  <label
+                    class="label "
+                    for="questionnaire name"
+                  >
+                    Questionnaire name
+                  </label>
+                  <input
+                    class="input input--text input-type__input"
+                    id="questionnaire name"
+                    name="questionnaire name"
+                    type="input"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="btn-group u-mt-m"
+          >
+            <button
+              class="btn "
+              data-testid="button"
+              id="next-screen-button"
+              type="submit"
+            >
+              <span
+                class="btn__inner"
+              >
+                Continue
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;

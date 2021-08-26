@@ -1,26 +1,15 @@
 import React, {ReactElement} from "react";
-import {Switch, Route, Link, useLocation} from "react-router-dom";
-import UploadPage from "./Components/GenerataUACs/GenerateUACs";
+import {Switch, Route, Link} from "react-router-dom";
+import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
+import {Footer, Header, BetaBanner, NotProductionWarning} from "blaise-design-system-react-components";
 import "./style.css";
-
-import {
-    Footer,
-    Header,
-    BetaBanner,
-    ONSPanel,
-    NotProductionWarning
-} from "blaise-design-system-react-components";
+import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 
 const divStyle = {
     minHeight: "calc(67vh)"
 };
 
-interface Location {
-    state: any
-}
-
 function App(): ReactElement {
-    const location = useLocation();
 
     return (
         <>
@@ -33,10 +22,9 @@ function App(): ReactElement {
                 <main id="main-content" className="page__main">
                     <Switch>
                         <Route path="/upload">
-                            <UploadPage/>
+                            <UploadSamplePage/>
                         </Route>
                         <Route path="/">
-
                             <ul className="list list--bare list--inline u-mt-m">
                                 <li className="list__item">
                                     <Link to="/upload" id="deploy-questionnaire-link">
@@ -44,14 +32,8 @@ function App(): ReactElement {
                                     </Link>
                                 </li>
                             </ul>
-
-                            <ONSPanel>
-                                <p>
-                                    This is a landing page. Construction is on hold until we've finished the <Link
-                                    to="/upload" id="deploy-questionnaire-link">upload sample</Link> page. Leave us
-                                    alone until then!
-                                </p>
-                            </ONSPanel>
+                            <h2 className="u-mt-m">Questionnaires that have been previously uploaded</h2>
+                            <InstrumentListPage />
                         </Route>
                     </Switch>
                 </main>

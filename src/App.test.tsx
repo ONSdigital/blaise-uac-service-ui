@@ -1,9 +1,51 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import {render, waitFor, screen, act} from "@testing-library/react";
+import App from "./App";
+import {createMemoryHistory} from "history";
+import {Router} from "react-router";
+import "@testing-library/jest-dom";
+import {instrumentNames} from "./mocks/api-mocks";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock("./client/file-functions");
+import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./client/file-functions";
+
+const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
+
+describe("React homepage", () => {
+    beforeAll(() => {
+        getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.resolve(instrumentNames));
+    });
+
+    it("App page matches snapshot", async () => {
+        const history = createMemoryHistory();
+        const wrapper = render(
+            <Router history={history}>
+                <App/>
+            </Router>
+        );
+
+        await act(async () => await waitFor(() => {
+            expect(wrapper).toMatchSnapshot();
+        }));
+    });
+
+    it("should render correctly", async () => {
+        const history = createMemoryHistory();
+        const {queryByText} = render(
+            <Router history={history}>
+                <App/>
+            </Router>
+        );
+
+        await act(async () => await waitFor(() => {
+            expect(queryByText(/Questionnaires that have been previously uploaded/i)).toBeInTheDocument();
+            instrumentNames.forEach((instrumentName) => {
+              expect(queryByText(instrumentName)).toBeInTheDocument();
+            });
+        }));
+    });
+
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
 });
