@@ -15,7 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --coverage --watchAll=false",
+    "test": "jest --coverage --watchAll=false --detectOpenHandles",
     "eject": "react-scripts eject",
     "lint-fix": "node_modules/.bin/eslint . --fix",
     "client": "yarn start",

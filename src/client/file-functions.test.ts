@@ -140,7 +140,7 @@ describe("sampleFileAlreadyExists tests", () => {
     });
 });
 
-describe("getListOfExistingSampleFiles tests", () => {
+describe("getListOfInstrumentsWhichHaveExistingSampleFiles tests", () => {
     beforeAll(() => {
         jest.clearAllMocks();
         mock.reset();

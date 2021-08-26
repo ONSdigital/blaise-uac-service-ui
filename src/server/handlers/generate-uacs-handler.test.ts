@@ -122,6 +122,12 @@ describe("uac-generation-handler tests", () => {
 
         expect(res.status).toHaveBeenCalledWith(500);
     });
+
+    afterEach(() => {
+        mockClear();
+        jest.clearAllMocks();
+        jest.resetModules();
+    });
 });
 
 async function callGenerateUacCodesForSampleFileWithParameters() {

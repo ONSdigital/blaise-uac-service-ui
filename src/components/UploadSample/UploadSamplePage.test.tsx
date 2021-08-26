@@ -16,6 +16,11 @@ const fileName = getFileName(instrumentName);
 
 describe("Upload Sample Page", () => {
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
+    });
+
     it("select file page matches Snapshot", async () => {
         const history = createMemoryHistory();
         const wrapper = render(
@@ -145,8 +150,9 @@ describe("Upload Sample Page", () => {
         });
     });
 
-    afterAll(() => {
+    afterEach(() => {
         jest.clearAllMocks();
+        jest.resetModules();
         cleanup();
     });
 });
