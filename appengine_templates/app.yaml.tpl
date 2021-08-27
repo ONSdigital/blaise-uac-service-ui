@@ -1,4 +1,4 @@
-service: uac-ui
+service: bus-ui
 runtime: nodejs14
 
 vpc_access_connector:
