@@ -13,8 +13,8 @@
     "lint-fix"
   ],
   "scripts": {
-    "start": "node ./dist/server/index.js",
-    "start-server": "tsc --project tsconfig.server.json && node ./dist/server/index.js | pino-pretty -c -t",
+    "start": "node ./dist/src/server/index.js",
+    "start-server": "tsc --project tsconfig.server.json && node ./dist/src/server/index.js | pino-pretty -c -t",
     "start-react": "react-scripts start",
     "build-react": "react-scripts build",
     "test": "jest --coverage --watchAll=false",
