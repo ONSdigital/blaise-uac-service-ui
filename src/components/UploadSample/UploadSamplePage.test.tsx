@@ -7,7 +7,6 @@ import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import {getFileName} from "../../client/file-functions";
-import {validSampleFileWithUacDatasResponse} from "../../mocks/csv-mocks";
 
 const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 
@@ -140,7 +139,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleFileWithUacDatasResponse);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await NavigateToSelectFileAndUpload("csv");
 
@@ -149,17 +148,6 @@ describe("Upload Sample Page", () => {
             expect(screen.queryAllByText("Download CSV file")).toHaveLength(1);
         });
     });
-
-    // it("Download UAC file- should navigate to the main page if the user selects the continue button", async () => {
-    //     mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleFileWithUacDatasResponse);
-    //     await NavigateToDownloadPage("csv");
-    //
-    //     await fireEvent.click(screen.getByText(/Continue/));
-    //
-    //     await waitFor(() => {
-    //         expect(screen.queryAllByText("Questionnaires that have been previously uploaded")).toHaveLength(1);
-    //     });
-    // });
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -224,13 +212,4 @@ async function NavigateToSelectFileAndUpload(fileExtension: string) {
     fireEvent.change(inputEl);
 
     await fireEvent.click(screen.getByText(/Continue/));
-}
-
-async function NavigateToDownloadPage(fileExtension: string) {
-    await NavigateToSelectFileAndUpload(fileExtension);
-
-    await waitFor(() => {
-        expect(screen.queryAllByText(`Successfully generated UACs for ${instrumentName}`)).toHaveLength(1);
-        expect(screen.queryAllByText("Download CSV file")).toHaveLength(1);
-    });
 }

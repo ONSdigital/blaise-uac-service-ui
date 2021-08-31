@@ -1,7 +1,6 @@
 {
   "name": "blaise-uac-service-ui",
   "version": "0.1.0",
-  "private": true,
   "main": "index.ts",
   "proxy": "http://localhost:5000",
   "jest": {
@@ -21,7 +20,8 @@
     "lint-fix": "node_modules/.bin/eslint . --fix",
     "client": "yarn start-react",
     "server": "tsc --project tsconfig.server.json && node ./dist/index.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "gcp-build": "react-scripts build && tsc --project tsconfig.server.json"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.12.0",
