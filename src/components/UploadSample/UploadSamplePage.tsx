@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from "react";
 import {Formik, Form} from "formik";
-import {Link, Route, Switch} from "react-router-dom";
+import {Link, Route, Switch, useHistory} from "react-router-dom";
 import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
@@ -15,6 +15,8 @@ function UploadSamplePage(): ReactElement {
     const [overwrite, setOverwrite] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState(0);
+
+    const history = useHistory();
 
     function _renderStepContent(step: number) {
         switch (step) {
@@ -42,6 +44,9 @@ function UploadSamplePage(): ReactElement {
                 break;
             case 2:
                 setActiveStep(await generateUacCodesForSampleFile(instrumentName, file) ? 3 : 4);
+                break;
+            case 3:
+                history.push("/");
                 break;
             default:
                 setActiveStep(0);
@@ -85,7 +90,7 @@ function UploadSamplePage(): ReactElement {
                                         loading={isSubmitting}
                                         primary={true}
                                         label={"Continue"}
-                                onClick={(e) => e.currentTarget.blur()}/></div>
+                                        onClick={(e) => e.currentTarget.blur()}/></div>
                             </div>
                         </Form>
                     )}

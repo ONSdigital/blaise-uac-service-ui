@@ -150,6 +150,17 @@ describe("Upload Sample Page", () => {
         });
     });
 
+    // it("Download UAC file- should navigate to the main page if the user selects the continue button", async () => {
+    //     mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleFileWithUacDatasResponse);
+    //     await NavigateToDownloadPage("csv");
+    //
+    //     await fireEvent.click(screen.getByText(/Continue/));
+    //
+    //     await waitFor(() => {
+    //         expect(screen.queryAllByText("Questionnaires that have been previously uploaded")).toHaveLength(1);
+    //     });
+    // });
+
     afterEach(() => {
         jest.clearAllMocks();
         jest.resetModules();
@@ -213,4 +224,13 @@ async function NavigateToSelectFileAndUpload(fileExtension: string) {
     fireEvent.change(inputEl);
 
     await fireEvent.click(screen.getByText(/Continue/));
+}
+
+async function NavigateToDownloadPage(fileExtension: string) {
+    await NavigateToSelectFileAndUpload(fileExtension);
+
+    await waitFor(() => {
+        expect(screen.queryAllByText(`Successfully generated UACs for ${instrumentName}`)).toHaveLength(1);
+        expect(screen.queryAllByText("Download CSV file")).toHaveLength(1);
+    });
 }

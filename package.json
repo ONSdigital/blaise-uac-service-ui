@@ -15,7 +15,7 @@
   "scripts": {
     "start": "node ./dist/index.js",
     "start-react": "react-scripts start",
-    "build": "react-scripts build",
+    "build-react": "react-scripts build",
     "test": "jest --coverage --watchAll=false --detectOpenHandles",
     "eject": "react-scripts eject",
     "lint-fix": "node_modules/.bin/eslint . --fix",
