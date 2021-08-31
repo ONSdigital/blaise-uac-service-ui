@@ -26,9 +26,8 @@ export const inValidSampleCsv = `serial_number,Phone Number,Email
 `;
 
 export const matchedInstrumentUacDetails: InstrumentUacDetails = {
-    "000975653827": {
+    "100000001": {
         instrument_name: "dst2106a",
-        case_id: "100000001",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -37,9 +36,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetails = {
             uac3: "3827"
         }
     },
-    "345365454564": {
+    "100000002": {
         instrument_name: "dst2106a",
-        case_id: "100000002",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -48,9 +46,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetails = {
             uac3: "4564"
         }
     },
-    "978975785367": {
+    "100000003": {
         instrument_name: "dst2106a",
-        case_id: "100000003",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -62,9 +59,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetails = {
 };
 
 export const unMatchedInstrumentUacDetails: InstrumentUacDetails = {
-    "000975653827": {
+    "100000997": {
         instrument_name: "dst2106a",
-        case_id: "100000997",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -73,9 +69,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetails = {
             uac3: "3827"
         }
     },
-    "345365454564": {
+    "100000998": {
         instrument_name: "dst2106a",
-        case_id: "100000998",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -84,9 +79,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetails = {
             uac3: "4564"
         }
     },
-    "978975785367": {
+    "100000999": {
         instrument_name: "dst2106a",
-        case_id: "100000999",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {
@@ -98,9 +92,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetails = {
 };
 
 export const partialMatchedInstrumentUacDetails: InstrumentUacDetails = {
-    "345365454564": {
+    "100000002": {
         instrument_name: "dst2106a",
-        case_id: "100000002",
         postcode_attempts: 0,
         postcode_attempt_timestamp: "",
         uac_chunks: {

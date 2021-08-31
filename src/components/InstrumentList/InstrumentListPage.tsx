@@ -1,6 +1,7 @@
 import React, {ReactElement, useState, useEffect} from "react";
 import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./../../client/file-functions";
 import InstrumentList from "./Sections/InstrumentList";
+import {ONSPanel} from "blaise-design-system-react-components";
 
 function InstrumentListPage(): ReactElement {
     const [message, setMessage] = useState<string>("");
@@ -10,7 +11,7 @@ function InstrumentListPage(): ReactElement {
     useEffect(() => {
         let mounted = true;
         getInstrumentList().then(() => {
-            if(mounted) {
+            if (mounted) {
                 setListLoading(false);
             }
         });
@@ -26,24 +27,28 @@ function InstrumentListPage(): ReactElement {
         setListLoading(true);
 
         getListOfInstrumentsWhichHaveExistingSampleFiles()
-            .then((instrumentList) => {
-                if (instrumentList.length === 0) {
+            .then((instruments) => {
+                if (instruments.length === 0) {
                     setMessage("No instruments found relating to uploaded samples.");
                 }
 
-                setInstruments(instrumentList);
+                setInstruments(instruments);
             })
             .catch(() => {
                 setMessage("Unable to retrieve list of instruments");
             });
+
     }
 
     return (
         <>
             <div>
                 <div className="u-mt-m">
-                    <InstrumentList instrumentList={instruments} message={message}
-                                    loading={listLoading}/>
+                    {instruments.length > 0 ?
+                        <InstrumentList instrumentList={instruments} loading={listLoading}/>
+                        :
+                        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
+                    }
                 </div>
             </div>
         </>

@@ -1,5 +1,5 @@
 import React from "react";
-import {render, waitFor, screen, act} from "@testing-library/react";
+import {render, waitFor, screen, act, cleanup} from "@testing-library/react";
 import InstrumentListPage from "./InstrumentListPage";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
@@ -12,7 +12,7 @@ import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "../../client/fil
 const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
 
 describe("Instrument list page", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.resolve(instrumentNames));
     });
 
@@ -58,10 +58,6 @@ describe("Instrument list page", () => {
         }));
     });
 
-    afterAll(() => {
-        jest.clearAllMocks();
-    });
-
     it("should display an appropriate error message if service does not respond correctly", async () => {
         getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.reject());
         const history = createMemoryHistory();
@@ -76,7 +72,9 @@ describe("Instrument list page", () => {
         }));
     });
 
-    afterAll(() => {
+    afterEach(() => {
         jest.clearAllMocks();
+        jest.resetModules();
+        cleanup();
     });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import {render, waitFor, screen, act} from "@testing-library/react";
+import {render, waitFor, act} from "@testing-library/react";
 import App from "./App";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";
@@ -45,7 +45,8 @@ describe("React homepage", () => {
         }));
     });
 
-    afterAll(() => {
+    beforeEach(() => {
         jest.clearAllMocks();
+        jest.resetModules();
     });
 });

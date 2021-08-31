@@ -14,11 +14,18 @@ export async function GetSampleFileWithUacs(req: Request, res: Response): Promis
     const {instrumentName} = req.params;
     const {fileName} = req.params;
 
-    console.log("meh", instrumentName, fileName);
     try {
+        console.log("Get sample file from bucket");
         const fileBuffer = await getSampleFile(fileName);
+        console.log("Got sample file from bucket");
+
+        console.log("Get UAC details from BUS");
         const instrumentUacDetails = await getUacCodes(instrumentName);
+        console.log("Got UAC details from BUS");
+
+        console.log("Add UAC details to file");
         const fileWithUacsArray = await addUacCodesToFile(fileBuffer, instrumentUacDetails);
+        console.log("Added UAC details to file");
 
         return fileWithUacsArray.length === 0
             ? res.status(400).json()

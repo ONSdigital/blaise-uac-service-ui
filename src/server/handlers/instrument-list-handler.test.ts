@@ -11,7 +11,6 @@ describe("instrument-list-handler tests", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         jest.resetModules();
-        getFilenamesInBucketMock.mockReset();
     });
 
     const getFilenamesInBucketMock = getFileNamesInBucket as jest.Mock<Promise<string[]>>;
@@ -51,6 +50,11 @@ describe("instrument-list-handler tests", () => {
         await request
             .get(url)
             .expect(200, ["DST1234A", "DST5432A"]);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
     });
 });
 

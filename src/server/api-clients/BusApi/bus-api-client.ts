@@ -32,7 +32,7 @@ class BusApiClient {
     async getUacCodes(instrumentName: string): Promise<InstrumentUacDetails> {
         const authHeader = await this.authProvider.getAuthHeader();
 
-        return this.get(`/uacs/instrument/${instrumentName}`, {headers: authHeader});
+        return this.get(`/uacs/instrument/${instrumentName}/bycaseid`, {headers: authHeader});
     }
 
     private url(url: string): string {

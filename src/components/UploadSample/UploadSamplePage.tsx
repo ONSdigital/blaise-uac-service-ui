@@ -1,6 +1,6 @@
 import React, {ReactElement, useState} from "react";
 import {Formik, Form} from "formik";
-import {Link, Route, Switch} from "react-router-dom";
+import {Link, Route, Switch, useHistory} from "react-router-dom";
 import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
@@ -9,15 +9,14 @@ import {sampleFileAlreadyExists, generateUacCodesForSampleFile} from "../../clie
 import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
-import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
 function UploadSamplePage(): ReactElement {
     const [instrumentName, setInstrumentName] = useState<string>();
     const [overwrite, setOverwrite] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState(0);
-    const [downloadData, setDownloadData] = useState<Datas>([]);
 
+    const history = useHistory();
 
     function _renderStepContent(step: number) {
         switch (step) {
@@ -29,16 +28,10 @@ function UploadSamplePage(): ReactElement {
             case 2:
                 return (<SelectFile file={file} setFile={setFile}/>);
             case 3:
-                return (<DownloadUacFile instrumentName={instrumentName} downloadData={downloadData}/>);
+                return (<DownloadUacFile instrumentName={instrumentName}/>);
             case 4:
                 return (<UploadFailed instrumentName={instrumentName}/>);
         }
-    }
-
-    async function generateUacCodesAndSetDownloadData(): Promise<boolean> {
-        const result = await generateUacCodesForSampleFile(instrumentName, file);
-        setDownloadData(result);
-        return result.length > 0;
     }
 
     async function _handleSubmit() {
@@ -50,7 +43,10 @@ function UploadSamplePage(): ReactElement {
                 setActiveStep(overwrite === "Yes" ? 2 : 3);
                 break;
             case 2:
-                setActiveStep(await generateUacCodesAndSetDownloadData() ? 3 : 4);
+                setActiveStep(await generateUacCodesForSampleFile(instrumentName, file) ? 3 : 4);
+                break;
+            case 3:
+                history.push("/");
                 break;
             default:
                 setActiveStep(0);
@@ -94,7 +90,7 @@ function UploadSamplePage(): ReactElement {
                                         loading={isSubmitting}
                                         primary={true}
                                         label={"Continue"}
-                                onClick={(e) => e.currentTarget.blur()}/></div>
+                                        onClick={(e) => e.currentTarget.blur()}/></div>
                             </div>
                         </Form>
                     )}

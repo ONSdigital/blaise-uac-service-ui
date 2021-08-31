@@ -7,7 +7,6 @@ import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import {getFileName} from "../../client/file-functions";
-import {validSampleFileWithUacDatasResponse} from "../../mocks/csv-mocks";
 
 const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
 
@@ -15,6 +14,11 @@ const instrumentName = "DST1234A";
 const fileName = getFileName(instrumentName);
 
 describe("Upload Sample Page", () => {
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
+    });
 
     it("select file page matches Snapshot", async () => {
         const history = createMemoryHistory();
@@ -135,7 +139,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleFileWithUacDatasResponse);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await NavigateToSelectFileAndUpload("csv");
 
@@ -145,8 +149,9 @@ describe("Upload Sample Page", () => {
         });
     });
 
-    afterAll(() => {
+    afterEach(() => {
         jest.clearAllMocks();
+        jest.resetModules();
         cleanup();
     });
 });

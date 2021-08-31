@@ -1,7 +1,7 @@
 import axios from "axios";
 import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
-export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<Datas> {
+export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
         throw new Error("Instrument name was not supplied");
     }
@@ -17,17 +17,18 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     const config = {headers: {"Content-Type": "multipart/form-data"}};
 
     return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, config)
-        .then((response) => {
-            console.log("UAC codes generated and file uploaded");
-            console.log("response", response.data);
-            return response.data;
+        .then(() => {
+            console.log("file-functions - true");
+            return true;
         })
         .catch((error) => {
+            console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-            return [];
+        return false;
         });
 
-    return [];
+    console.log("file-functions - balls");
+    return false;
 }
 
 export async function getSampleFileWithUacCodes(instrumentName: string | undefined, fileName: string | undefined): Promise<Datas> {

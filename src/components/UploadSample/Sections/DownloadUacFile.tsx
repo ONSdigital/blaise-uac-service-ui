@@ -2,20 +2,18 @@ import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
 import React, {ReactElement, useState} from "react";
 import CsvDownloader from "react-csv-downloader";
 import {getSampleFileWithUacCodes} from "../../../client/file-functions";
-import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
 interface DownloadUacPageProps {
     instrumentName: string | undefined
-    downloadData:Datas
 }
 
 function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
-    const {instrumentName, downloadData} = props;
+    const {instrumentName} = props;
+    const [loading, setLoading] = useState<boolean>(false);
     const [errored, setErrored] = useState<boolean>();
 
     const downloadCsvFile = async () => {
-        if(downloadData) {
-         return downloadData;}
+        setLoading(true);
 
         return getSampleFileWithUacCodes(instrumentName, `${instrumentName}.csv`)
             .then((response) => {
@@ -24,7 +22,7 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
             .catch(() => {
                 setErrored(true);
                 return Promise.reject("");
-            });
+            }).finally(() => setLoading(false));
     };
 
     return (
@@ -42,7 +40,7 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
                     Download CSV file
                 </p>
                 <CsvDownloader datas={downloadCsvFile} filename={`${instrumentName}.csv`}>
-                    <ONSButton label={"Download"} primary={false} small={true}/>
+                    <ONSButton label={"Download"} primary={false} small={true} loading={loading}/>
                 </CsvDownloader>
             </ONSPanel>
         </>

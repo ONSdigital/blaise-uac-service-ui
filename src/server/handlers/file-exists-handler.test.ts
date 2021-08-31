@@ -5,6 +5,9 @@ import {fileExistsInBucket} from "./../storage/google-storage-functions";
 import supertest from "supertest";
 
 jest.mock("./../storage/google-storage-functions");
+const fileExistsInBucketMock = fileExistsInBucket as jest.Mock<Promise<boolean>>;
+
+const fileName = "DST2101A.csv";
 
 //have to test the parameter separately as technically you cannot call the endpoint with a null or empty filename :/
 describe("fileExists parameter tests", () => {
@@ -31,11 +34,7 @@ describe("file-exists-handler tests", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         jest.resetModules();
-        fileExistsInBucketMock.mockReset();
     });
-
-    const fileExistsInBucketMock = fileExistsInBucket as jest.Mock<Promise<boolean>>;
-    const fileName = "DST2101A.csv";
 
     it("It should be called with correct parameters with filename converted to lowercase", async () => {
         fileExistsInBucketMock.mockImplementationOnce(() => {
@@ -71,6 +70,11 @@ describe("file-exists-handler tests", () => {
         await request
             .get(`/api/v1/file/${fileName}/exists`)
             .expect(200, "false");
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
     });
 });
 
