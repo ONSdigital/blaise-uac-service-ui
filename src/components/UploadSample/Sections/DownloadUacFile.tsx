@@ -9,9 +9,11 @@ interface DownloadUacPageProps {
 
 function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
     const {instrumentName} = props;
+    const [loading, setLoading] = useState<boolean>(false);
     const [errored, setErrored] = useState<boolean>();
 
     const downloadCsvFile = async () => {
+        setLoading(true);
 
         return getSampleFileWithUacCodes(instrumentName, `${instrumentName}.csv`)
             .then((response) => {
@@ -20,7 +22,7 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
             .catch(() => {
                 setErrored(true);
                 return Promise.reject("");
-            });
+            }).finally(() => setLoading(false));
     };
 
     return (
@@ -38,7 +40,7 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
                     Download CSV file
                 </p>
                 <CsvDownloader datas={downloadCsvFile} filename={`${instrumentName}.csv`}>
-                    <ONSButton label={"Download"} primary={false} small={true}/>
+                    <ONSButton label={"Download"} primary={false} small={true} loading={loading}/>
                 </CsvDownloader>
             </ONSPanel>
         </>
