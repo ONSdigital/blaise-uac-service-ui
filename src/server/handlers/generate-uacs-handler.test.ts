@@ -14,11 +14,9 @@ const uploadFileToBucketMock = uploadFileToBucket as jest.Mock<Promise<void>>;
 
 //mock csv parser
 jest.mock("../utils/csv-parser");
-import {getCaseIdsFromFile, addUacCodesToFile} from "../utils/csv-parser";
-import {matchedInstrumentUacDetails, validSampleFileWithUacArrayResponse} from "../../mocks/csv-mocks";
+import {getCaseIdsFromFile} from "../utils/csv-parser";
 
 const getCaseIdsFromFileMock = getCaseIdsFromFile as jest.Mock<Promise<string[]>>;
-const addUacCodesToFileMock = addUacCodesToFile as jest.Mock<Promise<string[]>>;
 
 const {res, mockClear} = getMockRes();
 const instrumentName = "DST1234A";
@@ -78,19 +76,11 @@ describe("uac-generation-handler tests", () => {
         expect(uploadFileToBucketMock).toHaveBeenCalledWith("unique-bucket", sampleFile, `${instrumentName.toLowerCase()}.csv`);
     });
 
-    it("Add UAC codes to file should be called with correct parameters if successful", async () => {
-        setMocksForSuccess();
-        await callGenerateUacCodesForSampleFileWithParameters();
-
-        expect(addUacCodesToFileMock).toHaveBeenCalledWith(sampleFile.buffer, matchedInstrumentUacDetails);
-    });
-
     it("It should return a 201 response with expected data if uac generation is successful", async () => {
         setMocksForSuccess();
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(validSampleFileWithUacArrayResponse);
     });
 
     it("It should return a 500 response if the uac generation fails", async () => {
@@ -140,16 +130,6 @@ async function callGenerateUacCodesForSampleFileWithParameters() {
 
 function setMocksForSuccess() {
     getCaseIdsFromFileMock.mockImplementationOnce(() => Promise.resolve(caseIds));
-
-    busApiClientMock.mockImplementation(() => {
-        return {
-            generateUacCodes: () => {
-                return Promise.resolve(matchedInstrumentUacDetails);
-            },
-        };
-    });
-
-    addUacCodesToFileMock.mockImplementationOnce(() => Promise.resolve(validSampleFileWithUacArrayResponse));
 }
 
 

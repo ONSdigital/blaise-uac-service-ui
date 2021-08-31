@@ -7,7 +7,7 @@ import {
 import {fileMock} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import {validSampleCsv, validSampleFileWithUacDatasResponse} from "../mocks/csv-mocks";
+import {validSampleFileWithUacDatasResponse} from "../mocks/csv-mocks";
 import {instrumentNames} from "../mocks/api-mocks";
 
 // This sets the mock adapter on the default instance
@@ -41,14 +41,14 @@ describe("generateUacCodesForFile file tests", () => {
     });
 
     it("It should set the content-type correctly", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleCsv);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await generateUacCodesForSampleFile(instrumentName, sampleFile);
         expect(mock.history.post[0].headers["Content-Type"]).toBe("multipart/form-data");
     });
 
     it("It should pass the correct parameters", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleCsv);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await generateUacCodesForSampleFile(instrumentName, sampleFile);
         expect(mock.history.post[0].data.get("fileName")).toBe(`${instrumentName}.csv`);
@@ -56,17 +56,17 @@ describe("generateUacCodesForFile file tests", () => {
     });
 
     it("It should return true if UAC generation is successful", async () => {
-        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201, validSampleCsv);
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         const result = await generateUacCodesForSampleFile(instrumentName, sampleFile);
-        expect(result).toStrictEqual(validSampleCsv);
+        expect(result).toStrictEqual(true);
     });
 
     it("It should return false if the UAC generation is not successful", async () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).networkError();
 
         const result = await generateUacCodesForSampleFile(instrumentName, sampleFile);
-        expect(result).toStrictEqual([]);
+        expect(result).toStrictEqual(false);
     });
 });
 
@@ -152,5 +152,4 @@ describe("getListOfInstrumentsWhichHaveExistingSampleFiles tests", () => {
         const result = await getListOfInstrumentsWhichHaveExistingSampleFiles();
         expect(result).toStrictEqual(instrumentNames);
     });
-
 });

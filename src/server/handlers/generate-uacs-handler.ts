@@ -3,7 +3,7 @@ import multer from "multer";
 import {uploadFileToBucket} from "../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
 import BusApiClient from "../api-clients/BusApi/bus-api-client";
-import {getCaseIdsFromFile, addUacCodesToFile} from "../utils/csv-parser";
+import {getCaseIdsFromFile} from "../utils/csv-parser";
 import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
 
 const router = express.Router();
@@ -29,14 +29,14 @@ export async function GenerateUacCodesForSampleFile(req: Request, res: Response)
     }
 
     try {
-        const instrumentUacDetails = await generateUacCodes(instrumentName, file);
+        await generateUacCodes(instrumentName, file);
         await uploadSampleFile(fileName, file);
 
-        const datas = await addUacCodesToFile(file.buffer, instrumentUacDetails);
-        return res.status(201).json(datas);
+        console.log("GenerateUacCodesForSampleFile - 201");
+        return res.status(201).json("Success");
     } catch (error) {
         console.error(`Response: ${error}`);
-        return res.status(500).json(`Generate UAC codes failed for instrument ${instrumentName}`);
+        return res.status(500).json("Failure");
     }
 }
 
