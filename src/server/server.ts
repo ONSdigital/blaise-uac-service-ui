@@ -1,4 +1,4 @@
-import express, {Request,  Response} from "express";
+import express, {NextFunction, Request, RequestHandler, Response} from "express";
 import dotenv from "dotenv";
 import path from "path";
 import ejs from "ejs";
@@ -16,12 +16,15 @@ if (process.env.NODE_ENV !== "production") {
 const server = express();
 // treat the index.html as a template and substitute the values at runtime
 const buildFolder = "../../build";
+server.set("views", path.join(__dirname, buildFolder));
 server.engine("html", ejs.renderFile);
 server.use("/static", express.static(path.join(__dirname, `${buildFolder}/static`)));
 
 
 server.use(express.json());
 server.use(express.urlencoded({extended: true}));
+
+
 
 //define handlers
 server.use("/", GenerateUacsHandler());
@@ -35,5 +38,8 @@ server.get("*", function (req: Request, res: Response) {
     res.render("index.html");
 });
 
+server.use(function (err: Error, req: Request, res: Response) {
+    res.render("../src/views/500.html", {});
+});
 
 export default server;
