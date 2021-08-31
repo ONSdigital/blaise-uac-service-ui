@@ -50,16 +50,14 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
 }
 
 function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetails) {
-    for (const key in instrumentUacDetails) {
-        const value = instrumentUacDetails[key];
-        if (value.case_id === line.serial_number) {
-            line["UAC1"] ? line["UAC1"] = value.uac_chunks.uac1 : line.UAC1 = value.uac_chunks.uac1;
-            line["UAC2"] ? line["UAC2"] = value.uac_chunks.uac2 : line.UAC2 = value.uac_chunks.uac2;
-            line["UAC3"] ? line["UAC3"] = value.uac_chunks.uac3 : line.UAC3 = value.uac_chunks.uac3;
+    const uacDetails = instrumentUacDetails[line.serial_number];
 
-            return;
-        }
+    if(!uacDetails)
+    {
+        throw new Error(`No UAC chunks found that matches the case id ${line.serial_number}`);
     }
 
-    throw new Error(`No UAC chunks found that matches the case id ${line.serial_number}`);
+    line["UAC1"] ? line["UAC1"] = uacDetails.uac_chunks.uac1 : line.UAC1 = uacDetails.uac_chunks.uac1;
+    line["UAC2"] ? line["UAC2"] = uacDetails.uac_chunks.uac2 : line.UAC2 = uacDetails.uac_chunks.uac2;
+    line["UAC3"] ? line["UAC3"] = uacDetails.uac_chunks.uac3 : line.UAC3 = uacDetails.uac_chunks.uac3;
 }
