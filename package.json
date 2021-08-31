@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
-  "proxy": "http://localhost:5008",
+  "proxy": "http://localhost:5000",
   "jest": {
     "coveragePathIgnorePatterns": [
       "/node_modules/"
@@ -14,11 +14,12 @@
   ],
   "scripts": {
     "start": "node ./dist/index.js",
+    "start-react": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest --coverage --watchAll=false --detectOpenHandles",
     "eject": "react-scripts eject",
     "lint-fix": "node_modules/.bin/eslint . --fix",
-    "client": "yarn start",
+    "client": "yarn start-react",
     "server": "tsc --project tsconfig.server.json && node ./dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
