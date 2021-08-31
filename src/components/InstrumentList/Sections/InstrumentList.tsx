@@ -1,5 +1,5 @@
 import React, {ReactElement, useState} from "react";
-import {ONSLoadingPanel, ONSPanel} from "blaise-design-system-react-components";
+import {ONSLoadingPanel} from "blaise-design-system-react-components";
 import ONSTable, {TableColumns} from "./ONSTable";
 import CsvDownloader from "react-csv-downloader";
 import {getSampleFileWithUacCodes} from "../../../client/file-functions";

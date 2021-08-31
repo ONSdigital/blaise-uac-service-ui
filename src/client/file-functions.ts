@@ -1,6 +1,5 @@
 import axios from "axios";
 import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
-import {Instrument} from "../components/interfaces/instrument";
 
 export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<Datas> {
     if (instrumentName === undefined) {

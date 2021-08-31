@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:5008",
   "jest": {
     "coveragePathIgnorePatterns": [
       "/node_modules/"
@@ -13,7 +13,7 @@
     "lint-fix"
   ],
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node ./dist/index.js",
     "build": "react-scripts build",
     "test": "jest --coverage --watchAll=false --detectOpenHandles",
     "eject": "react-scripts eject",
