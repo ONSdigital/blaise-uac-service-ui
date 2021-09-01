@@ -17,7 +17,7 @@ function App(): ReactElement {
                 (window.location.hostname.includes("dev")) && <NotProductionWarning/>
             }
             <BetaBanner/>
-            <Header title={"Create UACs for case samples"}/>
+            <Header title={"Generate UACs"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
                     <Switch>
@@ -32,7 +32,7 @@ function App(): ReactElement {
                                     </Link>
                                 </li>
                             </ul>
-                            <h2 className="u-mt-m">Questionnaires that have been previously uploaded</h2>
+                            <h2 className="u-mt-m">Previously uploaded samples</h2>
                             <InstrumentListPage />
                         </Route>
                     </Switch>
