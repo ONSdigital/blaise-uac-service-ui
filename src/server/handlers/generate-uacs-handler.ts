@@ -4,7 +4,6 @@ import {uploadFileToBucket} from "../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
 import BusApiClient from "../api-clients/BusApi/bus-api-client";
 import {getCaseIdsFromFile} from "../utils/csv-parser";
-import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
 
 const router = express.Router();
 
