@@ -55,7 +55,7 @@ export const InstrumentList = (props: Props): ReactElement => {
     const tableColumns: TableColumns[] =
         [
             {
-                title: "Instrument name"
+                title: "Questionnaire name"
             },
             {
                 title: "CSV file"
