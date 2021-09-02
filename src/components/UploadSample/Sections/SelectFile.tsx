@@ -51,7 +51,8 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                             className="highlight">serial_number</em>.
                         </p>
                         <p>
-                            If the sample file already contains any UACs, these may be overwritten.
+                            If the sample file already contains UACs, these may be overwritten if they were generated
+                            outside of this process.
                         </p>
                         <p>
                             When a sample file is selected and you continue to upload this sample file, <b>this

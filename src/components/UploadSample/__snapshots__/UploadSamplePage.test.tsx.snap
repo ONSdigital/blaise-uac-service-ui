@@ -47,6 +47,9 @@ Object {
                       class="panel__body "
                     >
                       <p>
+                        The questionnaire name must match the name of the questionnaire that is going to be deployed via DQS.
+                      </p>
+                      <p>
                         The start of the questionnaire name must be three letters followed by four numbers. Example, OPN2101A.
                       </p>
                     </div>
@@ -134,6 +137,9 @@ Object {
                   <div
                     class="panel__body "
                   >
+                    <p>
+                      The questionnaire name must match the name of the questionnaire that is going to be deployed via DQS.
+                    </p>
                     <p>
                       The start of the questionnaire name must be three letters followed by four numbers. Example, OPN2101A.
                     </p>

@@ -111,7 +111,7 @@ Object {
             >
               <a
                 href="/upload"
-                id="deploy-questionnaire-link"
+                id="upload-sample-link"
               >
                 Upload sample
               </a>
@@ -120,7 +120,7 @@ Object {
           <h2
             class="u-mt-m"
           >
-            Previously uploaded samples
+            Previously uploaded questionnaire samples
           </h2>
           <div>
             <div
@@ -275,7 +275,7 @@ Object {
           >
             <a
               href="/upload"
-              id="deploy-questionnaire-link"
+              id="upload-sample-link"
             >
               Upload sample
             </a>
@@ -284,7 +284,7 @@ Object {
         <h2
           class="u-mt-m"
         >
-          Previously uploaded samples
+          Previously uploaded questionnaire samples
         </h2>
         <div>
           <div

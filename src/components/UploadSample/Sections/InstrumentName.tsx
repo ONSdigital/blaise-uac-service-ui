@@ -35,7 +35,10 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
                     <h1>Which questionnaire do you wish to generate UACs for?</h1>
                     <StyledFormErrorSummary/>
                     <ONSPanel>
-                        <p>The start of the questionnaire name must be three letters followed by four numbers. Example, OPN2101A.</p>
+                        <p>The questionnaire name must match the name of the questionnaire that is going to be deployed
+                            via DQS.</p>
+                        <p>The start of the questionnaire name must be three letters followed by four numbers. Example,
+                            OPN2101A.</p>
                     </ONSPanel>
                     <StyledFormField {...field}/>
                 </div>

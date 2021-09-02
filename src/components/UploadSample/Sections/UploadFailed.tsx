@@ -13,10 +13,11 @@ function UploadFailed(props: UploadFailedProps): ReactElement {
             <ONSPanel status="error">
                 <h1>File upload failed</h1>
                 <p>
-                    Sample file for questionnaire <em className="highlight">{instrumentName}</em> has failed to deploy.
+                    Sample file for questionnaire <em className="highlight">{instrumentName}</em> has failed to upload.
                 </p>
                 <p>
-                    When reporting the issue to Service Desk provide the questionnaire name, time and date of failure.
+                    When reporting this issue to the Service Desk, please provide the questionnaire name, and time and
+                    date of the failure.
                 </p>
             </ONSPanel>
         </>

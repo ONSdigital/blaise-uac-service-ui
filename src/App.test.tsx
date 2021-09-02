@@ -38,7 +38,7 @@ describe("React homepage", () => {
         );
 
         await act(async () => await waitFor(() => {
-            expect(queryByText(/Previously uploaded samples/i)).toBeInTheDocument();
+            expect(queryByText(/Previously uploaded questionnaire samples/i)).toBeInTheDocument();
             instrumentNames.forEach((instrumentName) => {
               expect(queryByText(instrumentName)).toBeInTheDocument();
             });

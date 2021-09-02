@@ -27,12 +27,12 @@ function App(): ReactElement {
                         <Route path="/">
                             <ul className="list list--bare list--inline u-mt-m">
                                 <li className="list__item">
-                                    <Link to="/upload" id="deploy-questionnaire-link">
+                                    <Link to="/upload" id="upload-sample-link">
                                         Upload sample
                                     </Link>
                                 </li>
                             </ul>
-                            <h2 className="u-mt-m">Previously uploaded samples</h2>
+                            <h2 className="u-mt-m">Previously uploaded questionnaire samples</h2>
                             <InstrumentListPage />
                         </Route>
                     </Switch>
