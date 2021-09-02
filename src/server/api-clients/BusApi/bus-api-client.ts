@@ -19,20 +19,20 @@ class BusApiClient {
         }
     }
 
-    async generateUacCodes(instrumentName: string, caseIds: string[]): Promise<InstrumentUacDetails> {
+    async generateUacCodes(instrumentName: string, caseIds: string[]):Promise<void> {
         const authHeader = await this.authProvider.getAuthHeader();
         const data = {
             "instrument_name": instrumentName,
             "case_ids": caseIds
         };
 
-        return this.post("/uacs/generate", data, {headers: authHeader});
+        await this.post("/uacs/generate", data, {headers: authHeader});
     }
 
     async getUacCodes(instrumentName: string): Promise<InstrumentUacDetails> {
         const authHeader = await this.authProvider.getAuthHeader();
 
-        return this.get(`/uacs/instrument/${instrumentName}/bycaseid`, {headers: authHeader});
+        return await this.get(`/uacs/instrument/${instrumentName}/bycaseid`, {headers: authHeader});
     }
 
     private url(url: string): string {
