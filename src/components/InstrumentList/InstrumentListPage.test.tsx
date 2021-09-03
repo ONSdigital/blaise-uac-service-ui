@@ -54,7 +54,7 @@ describe("Instrument list page", () => {
         );
 
         await act(async () => await waitFor(() => {
-            expect(queryByText(/No instruments found relating to uploaded samples./i)).toBeInTheDocument();
+            expect(queryByText(/No questionnaire samples found./i)).toBeInTheDocument();
         }));
     });
 
@@ -68,7 +68,7 @@ describe("Instrument list page", () => {
         );
 
         await act(async () => await waitFor(() => {
-            expect(queryByText(/Unable to retrieve list of instruments/i)).toBeInTheDocument();
+            expect(queryByText(/Unable to retrieve list of questionnaire samples./i)).toBeInTheDocument();
         }));
     });
 

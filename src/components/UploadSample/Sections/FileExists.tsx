@@ -38,7 +38,7 @@ function FileExists(props: FileExistsPageProps): ReactElement {
         <>
             <ONSPanel>
                 <p>
-                    <b>UACs have already been generated this instrument on a previous sample upload</b>
+                    <b>UACs have already been generated for this questionnaire</b>
                 </p>
             </ONSPanel>
             <StyledFormField {...field}/>
