@@ -41,7 +41,7 @@ function instrumentTableRow(item: string, index: number) {
                     {item}
                 </td>
                 <td className="table__cell">
-                    <CsvDownloader datas={downloadCsvFile} filename={`${item}.csv`}>
+                    <CsvDownloader datas={downloadCsvFile} filename={`${item}.csv`} bom={false}>
                         <ONSButton label={"Download"} primary={true} small={true} loading={loading}/>
                     </CsvDownloader>
                 </td>
