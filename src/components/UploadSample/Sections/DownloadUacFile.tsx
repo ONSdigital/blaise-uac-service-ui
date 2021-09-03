@@ -39,8 +39,8 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
                 <p>
                     Download CSV file
                 </p>
-                <CsvDownloader datas={downloadCsvFile} filename={`${instrumentName}.csv`}>
-                    <ONSButton label={"Download"} primary={false} small={true} loading={loading}/>
+                <CsvDownloader datas={downloadCsvFile} filename={`${instrumentName}.csv`} bom={false}>
+                    <ONSButton label={"Download"} primary={false} small={true} loading={loading} />
                 </CsvDownloader>
             </ONSPanel>
         </>

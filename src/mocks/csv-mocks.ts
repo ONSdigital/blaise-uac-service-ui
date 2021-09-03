@@ -1,10 +1,10 @@
 import {InstrumentUacDetails} from "../server/api-clients/BusApi/interfaces/instrument-uac-details";
 import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
-export const validSampleCsv = `serial_number,Name,Phone Number,Email
-100000001,Homer Simpson,5551234422,homer@springfield.com
-100000002,Seymour Skinner,1235663322,a@b.c
-100000003,Bart Simpson,2675465026,bart@spring.field
+export const validSampleCsv = `serial_number,Name,Phone Number,Email,UAC1,UAC2,UAC3
+100000001,Homer Simpson,5551234422,homer@springfield.com,9999,9999,1001
+100000002,Seymour Skinner,1235663322,a@b.c,9999,9999,1002
+100000003,Bart Simpson,2675465026,bart@spring.field,9999,9999,1003
 `;
 
 export const validSampleCsvWithExistingUacColumns = `serial_number,Name,UAC1,UAC2,UAC3,Phone Number,Email
