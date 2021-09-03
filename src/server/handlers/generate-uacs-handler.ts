@@ -4,7 +4,6 @@ import {uploadFileToBucket} from "../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
 import BusApiClient from "../api-clients/BusApi/bus-api-client";
 import {getCaseIdsFromFile} from "../utils/csv-parser";
-import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
 
 const router = express.Router();
 
@@ -40,12 +39,12 @@ export async function GenerateUacCodesForSampleFile(req: Request, res: Response)
     }
 }
 
-async function generateUacCodes(instrumentName: string, file: Express.Multer.File):Promise<InstrumentUacDetails> {
+async function generateUacCodes(instrumentName: string, file: Express.Multer.File):Promise<void> {
     const caseIds = await getCaseIdsFromFile(file.buffer);
     const {BUS_API_URL, BUS_CLIENT_ID} = getEnvironmentVariables();
     const busApiClient = new BusApiClient(BUS_API_URL, BUS_CLIENT_ID);
 
-    return await busApiClient.generateUacCodes(instrumentName, caseIds);
+    await busApiClient.generateUacCodes(instrumentName, caseIds);
 }
 
 async function uploadSampleFile(fileName: string, file: Express.Multer.File) {

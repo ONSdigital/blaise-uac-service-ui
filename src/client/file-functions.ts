@@ -3,7 +3,7 @@ import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
 export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
-        throw new Error("Instrument name was not supplied");
+        throw new Error("Questionnaire name was not supplied");
     }
 
     if (file === undefined) {
@@ -33,7 +33,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
 
 export async function getSampleFileWithUacCodes(instrumentName: string | undefined, fileName: string | undefined): Promise<Datas> {
     if (instrumentName === undefined) {
-        throw new Error("Instrument name was not supplied");
+        throw new Error("Questionnaire name was not supplied");
     }
 
     if (fileName === undefined) {
@@ -47,7 +47,7 @@ export async function getSampleFileWithUacCodes(instrumentName: string | undefin
 
 export async function sampleFileAlreadyExists(instrumentName: string | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
-        throw new Error("Instrument name was not supplied");
+        throw new Error("Questionnaire name was not supplied");
     }
 
     const fileName = getFileName(instrumentName);

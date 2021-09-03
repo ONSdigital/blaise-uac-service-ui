@@ -38,7 +38,7 @@ Object {
                   class="grid__col col-8@m"
                 >
                   <h1>
-                    Which questionnaire do you wish to generate Unique Access Codes for?
+                    Which questionnaire do you wish to generate UACs for?
                   </h1>
                   <div
                     class="panel panel--info panel--no-title  u-mt-m"
@@ -47,7 +47,10 @@ Object {
                       class="panel__body "
                     >
                       <p>
-                        Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                        The questionnaire name must match the name of the questionnaire that is going to be deployed via DQS.
+                      </p>
+                      <p>
+                        The start of the questionnaire name must be three letters followed by four numbers. Example, OPN2101A.
                       </p>
                     </div>
                   </div>
@@ -126,7 +129,7 @@ Object {
                 class="grid__col col-8@m"
               >
                 <h1>
-                  Which questionnaire do you wish to generate Unique Access Codes for?
+                  Which questionnaire do you wish to generate UACs for?
                 </h1>
                 <div
                   class="panel panel--info panel--no-title  u-mt-m"
@@ -135,7 +138,10 @@ Object {
                     class="panel__body "
                   >
                     <p>
-                      Questionnaire name should in the formatted as three letters followed by four numbers, such as DST2004
+                      The questionnaire name must match the name of the questionnaire that is going to be deployed via DQS.
+                    </p>
+                    <p>
+                      The start of the questionnaire name must be three letters followed by four numbers. Example, OPN2101A.
                     </p>
                   </div>
                 </div>
