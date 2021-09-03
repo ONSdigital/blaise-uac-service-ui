@@ -17,7 +17,7 @@ function App(): ReactElement {
                 (window.location.hostname.includes("dev")) && <NotProductionWarning/>
             }
             <BetaBanner/>
-            <Header title={"Create UACs for case samples"}/>
+            <Header title={"Generate UACs"}/>
             <div style={divStyle} className="page__container container">
                 <main id="main-content" className="page__main">
                     <Switch>
@@ -27,12 +27,12 @@ function App(): ReactElement {
                         <Route path="/">
                             <ul className="list list--bare list--inline u-mt-m">
                                 <li className="list__item">
-                                    <Link to="/upload" id="deploy-questionnaire-link">
+                                    <Link to="/upload" id="upload-sample-link">
                                         Upload sample
                                     </Link>
                                 </li>
                             </ul>
-                            <h2 className="u-mt-m">Questionnaires that have been previously uploaded</h2>
+                            <h2 className="u-mt-m">Previously uploaded questionnaire samples</h2>
                             <InstrumentListPage />
                         </Route>
                     </Switch>

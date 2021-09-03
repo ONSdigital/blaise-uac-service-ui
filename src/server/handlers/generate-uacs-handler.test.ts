@@ -60,7 +60,7 @@ describe("uac-generation-handler tests", () => {
         expect(busApiClientMock).toHaveBeenCalledWith("bus-api-url", "bus-client-id");
     });
 
-    it("Generate UACS should be called with correct parameters if successful", async () => {
+    it("Generate UACs should be called with correct parameters if successful", async () => {
         setMocksForSuccess();
         await callGenerateUacCodesForSampleFileWithParameters();
 

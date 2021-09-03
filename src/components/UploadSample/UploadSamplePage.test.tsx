@@ -41,7 +41,7 @@ describe("Upload Sample Page", () => {
             </Router>
         );
 
-        expect(queryByText(/Which questionnaire do you wish to generate Unique Access Codes for?/i)).toBeInTheDocument();
+        expect(queryByText(/Which questionnaire do you wish to generate UACs for?/i)).toBeInTheDocument();
     });
 
     const invalidInstrumentNameTestCases = [
@@ -74,7 +74,7 @@ describe("Upload Sample Page", () => {
             await fireEvent.click(screen.getByText(/Continue/));
 
             await waitFor(() => {
-                expect(screen.queryAllByText("Enter a questionnaire name in the correct format, such as DST2004")).toHaveLength(2);
+                expect(screen.queryAllByText("Enter a questionnaire name in the correct format. Example, OPN2101A.")).toHaveLength(2);
             });
         });
     });

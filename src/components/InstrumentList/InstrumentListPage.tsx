@@ -29,13 +29,13 @@ function InstrumentListPage(): ReactElement {
         getListOfInstrumentsWhichHaveExistingSampleFiles()
             .then((instruments) => {
                 if (instruments.length === 0) {
-                    setMessage("No instruments found relating to uploaded samples.");
+                    setMessage("No questionnaire samples found.");
                 }
 
                 setInstruments(instruments);
             })
             .catch(() => {
-                setMessage("Unable to retrieve list of instruments");
+                setMessage("Unable to retrieve list of questionnaire samples.");
             });
 
     }

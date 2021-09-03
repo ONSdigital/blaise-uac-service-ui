@@ -31,7 +31,7 @@ describe("generateUacCodesForFile file tests", () => {
     it("It should return error if an instrument name is not provided", async () => {
         await expect(generateUacCodesForSampleFile(undefined, sampleFile))
             .rejects
-            .toThrow("Instrument name was not supplied");
+            .toThrow("Questionnaire name was not supplied");
     });
 
     it("It should return error if a file is not provided", async () => {
@@ -80,7 +80,7 @@ describe("getSampleFileWithUacCodes file tests", () => {
     it("It should return null if an instrument name is not provided", async () => {
         await expect(getSampleFileWithUacCodes(undefined, fileName))
             .rejects
-            .toThrow("Instrument name was not supplied");
+            .toThrow("Questionnaire name was not supplied");
     });
 
     it("It should return null if a file is not provided", async () => {
@@ -115,7 +115,7 @@ describe("sampleFileAlreadyExists tests", () => {
     it("It should return an error if an instrument name is not provided", async () => {
         await expect(sampleFileAlreadyExists(undefined))
             .rejects
-            .toThrow("Instrument name was not supplied");
+            .toThrow("Questionnaire name was not supplied");
     });
 
     it("It should return true if a file already exists", async () => {
