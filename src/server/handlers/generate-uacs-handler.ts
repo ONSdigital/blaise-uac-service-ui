@@ -2,7 +2,7 @@ import express, {Router, Request, Response} from "express";
 import multer from "multer";
 import {uploadFileToBucket} from "../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
-import BusApiClient from "../api-clients/BusApi/bus-api-client";
+import BusApiClient from "bus-api-node-client";
 import {getCaseIdsFromFile} from "../utils/csv-parser";
 
 const router = express.Router();

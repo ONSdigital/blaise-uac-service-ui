@@ -1,7 +1,7 @@
 import express, {Router, Request, Response} from "express";
 import {getFileFromBucket} from "./../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
-import BusApiClient from "../api-clients/BusApi/bus-api-client";
+import BusApiClient from "bus-api-node-client";
 import {addUacCodesToFile} from "../utils/csv-parser";
 
 const router = express.Router();
@@ -46,6 +46,6 @@ async function getUacCodes(instrumentName: string) {
     const {BUS_API_URL, BUS_CLIENT_ID} = getEnvironmentVariables();
     const busApiClient = new BusApiClient(BUS_API_URL, BUS_CLIENT_ID);
 
-    return await busApiClient.getUacCodes(instrumentName);
+    return await busApiClient.getUacCodesByCaseId(instrumentName);
 }
 
