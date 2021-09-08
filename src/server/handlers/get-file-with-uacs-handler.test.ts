@@ -1,8 +1,8 @@
 import {getMockReq, getMockRes} from "@jest-mock/express";
 
 //mock bus api
-jest.mock("../api-clients/BusApi/bus-api-client");
-import BusApiClient from "../api-clients/BusApi/bus-api-client";
+jest.mock("bus-api-node-client");
+import BusApiClient from "bus-api-node-client";
 
 const busApiClientMock = BusApiClient as jest.Mock;
 
@@ -68,7 +68,7 @@ describe("get-uac-handler tests", () => {
 
         busApiClientMock.mockImplementation(() => {
             return {
-                getUacCodes: () => {
+                getUacCodesByCaseId: () => {
                     return Promise.resolve(matchedInstrumentUacDetails);
                 },
             };
@@ -122,7 +122,7 @@ function setMocksForSuccess() {
 
     busApiClientMock.mockImplementation(() => {
         return {
-            getUacCodes: () => {
+            getUacCodesByCaseId: () => {
                 return Promise.resolve(matchedInstrumentUacDetails);
             },
         };
