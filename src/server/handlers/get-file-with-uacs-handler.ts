@@ -1,7 +1,7 @@
 import express, {Router, Request, Response} from "express";
 import {getFileFromBucket} from "./../storage/google-storage-functions";
 import {getEnvironmentVariables} from "../config";
-import BusApiClient from "bus-api-node-client";
+import BusApiClient from "blaise-uac-service-node-client";
 import {addUacCodesToFile} from "../utils/csv-parser";
 
 const router = express.Router();

@@ -1,8 +1,8 @@
 import {getMockReq, getMockRes} from "@jest-mock/express";
 
 //mock bus api
-jest.mock("bus-api-node-client");
-import BusApiClient from "bus-api-node-client";
+jest.mock("blaise-uac-service-node-client");
+import BusApiClient from "blaise-uac-service-node-client";
 
 const busApiClientMock = BusApiClient as jest.Mock;
 
