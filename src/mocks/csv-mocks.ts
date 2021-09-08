@@ -1,4 +1,4 @@
-import {InstrumentUacDetailsByCaseId} from "bus-api-node-client";
+import {InstrumentUacDetailsByCaseId} from "blaise-uac-service-node-client";
 import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
 export const validSampleCsv = `serial_number,Name,Phone Number,Email,UAC1,UAC2,UAC3

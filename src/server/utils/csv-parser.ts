@@ -1,5 +1,5 @@
 import {Readable} from "stream";
-import {InstrumentUacDetailsByCaseId} from "bus-api-node-client";
+import {InstrumentUacDetailsByCaseId} from "blaise-uac-service-node-client";
 import {StringStream} from "scramjet";
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
