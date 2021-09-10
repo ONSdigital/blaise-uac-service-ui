@@ -1,5 +1,5 @@
 import {Readable} from "stream";
-import {InstrumentUacDetails} from "../api-clients/BusApi/interfaces/instrument-uac-details";
+import {InstrumentUacDetailsByCaseId} from "blaise-uac-service-node-client";
 import {StringStream} from "scramjet";
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
@@ -25,7 +25,7 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
         });
 }
 
-export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetails): Promise<string[]> {
+export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetailsByCaseId): Promise<string[]> {
     const readStream = Readable.from(fileData);
     let hasErrored = false;
 
@@ -49,7 +49,7 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
         });
 }
 
-function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetails) {
+function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetailsByCaseId) {
     const uacDetails = instrumentUacDetails[line.serial_number];
 
     if(!uacDetails)
