@@ -3,8 +3,8 @@ import {GenerateUacCodesForSampleFile} from "./generate-uacs-handler";
 import {multerFileMock} from "../../mocks/file-mocks";
 
 //mock bus api
-jest.mock("../api-clients/BusApi/bus-api-client");
-import BusApiClient from "../api-clients/BusApi/bus-api-client";
+jest.mock("blaise-uac-service-node-client");
+import BusApiClient from "blaise-uac-service-node-client";
 const busApiClientMock = BusApiClient as jest.Mock;
 
 //mock google storage
