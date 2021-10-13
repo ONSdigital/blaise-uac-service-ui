@@ -1,6 +1,6 @@
-import {Readable} from "stream";
-import {InstrumentUacDetailsByCaseId} from "blaise-uac-service-node-client";
-import {StringStream} from "scramjet";
+import { Readable } from "stream";
+import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
+import { StringStream } from "scramjet";
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
     const caseIds: string[] = [];
@@ -13,8 +13,8 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
             skipEmptyLines: true,
             header: true,
         })
-        .setOptions({maxParallel: 32})
-        .map(({serial_number}) => caseIds.push(serial_number))
+        .setOptions({ maxParallel: 32 })
+        .map(({ serial_number }) => caseIds.push(serial_number))
         .catch((error: Error) => {
             console.error(error.message);
             hasErrored = true;
@@ -34,7 +34,7 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
             skipEmptyLines: true,
             header: true,
         })
-        .setOptions({maxParallel: 32})
+        .setOptions({ maxParallel: 32 })
         .map((line) => {
             mapUacChunk(line, instrumentUacDetails);
             return line;
@@ -52,12 +52,15 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
 function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetailsByCaseId) {
     const uacDetails = instrumentUacDetails[line.serial_number];
 
-    if(!uacDetails)
-    {
+    if (!uacDetails) {
         throw new Error(`No UAC chunks found that matches the case id ${line.serial_number}`);
     }
 
     line["UAC1"] ? line["UAC1"] = uacDetails.uac_chunks.uac1 : line.UAC1 = uacDetails.uac_chunks.uac1;
     line["UAC2"] ? line["UAC2"] = uacDetails.uac_chunks.uac2 : line.UAC2 = uacDetails.uac_chunks.uac2;
     line["UAC3"] ? line["UAC3"] = uacDetails.uac_chunks.uac3 : line.UAC3 = uacDetails.uac_chunks.uac3;
+
+    if (uacDetails.uac_chunks.uac4) {
+        line["UAC4"] ? line["UAC4"] = uacDetails.uac_chunks.uac4 : line.UAC4 = uacDetails.uac_chunks.uac4;
+    }
 }

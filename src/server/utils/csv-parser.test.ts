@@ -1,6 +1,7 @@
-import {addUacCodesToFile, getCaseIdsFromFile} from "./csv-parser";
+import { addUacCodesToFile, getCaseIdsFromFile } from "./csv-parser";
 import {
     matchedInstrumentUacDetails,
+    matchedInstrumentUac16Details,
     inValidSampleCsv,
     validSampleCsv,
     unMatchedInstrumentUacDetails,
@@ -70,7 +71,44 @@ describe("addUacCodesToFile tests", () => {
         });
     });
 
- it("Adds expected UAC chunks to the CSV where there are are existing UAC columns in the file", async () => {
+    it("Adds expected 16 digit UAC chunks to the CSV where there are no UAC entries in the file", async () => {
+        const fileData = Buffer.from(validSampleCsv);
+
+        const result = await addUacCodesToFile(fileData, matchedInstrumentUac16Details);
+
+        expect(result).toContainEqual({
+            "serial_number": "100000001",
+            "Name": "Homer Simpson",
+            "Phone Number": "5551234422",
+            "Email": "homer@springfield.com",
+            "UAC1": "0009",
+            "UAC2": "7565",
+            "UAC3": "3827",
+            "UAC4": "7512"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000002",
+            "Name": "Seymour Skinner",
+            "Phone Number": "1235663322",
+            "Email": "a@b.c",
+            "UAC1": "3453",
+            "UAC2": "6545",
+            "UAC3": "4564",
+            "UAC4": "3213"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000003",
+            "Name": "Bart Simpson",
+            "Phone Number": "2675465026",
+            "Email": "bart@spring.field",
+            "UAC1": "9789",
+            "UAC2": "7578",
+            "UAC3": "5367",
+            "UAC4": "8765"
+        });
+    });
+
+    it("Adds expected UAC chunks to the CSV where there are are existing UAC columns in the file", async () => {
         const fileData = Buffer.from(validSampleCsvWithExistingUacColumns);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
@@ -104,7 +142,7 @@ describe("addUacCodesToFile tests", () => {
         });
     });
 
-it("Overwrites UAC chunks to the CSV where there are are existing UAC entries in the file", async () => {
+    it("Overwrites UAC chunks to the CSV where there are are existing UAC entries in the file", async () => {
         const fileData = Buffer.from(validSampleCsvWithExistingUacEntries);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
