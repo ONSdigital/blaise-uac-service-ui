@@ -6,7 +6,7 @@ describe("All expected routes are registered", () => {
     const expectedEndpoints = [
         {
             "methods": ["POST"],
-            "middlewares": ["multerMiddleware", "GenerateUacCodesForSampleFile"],
+            "middlewares": ["multerMiddleware", "ForSampleFile"],
             "path": "/api/v1/instrument/:instrumentName/uac/sample"
         },
         {
@@ -25,4 +25,3 @@ describe("All expected routes are registered", () => {
         expect(endpoints).toEqual(expectedEndpoints);
     });
 });
-

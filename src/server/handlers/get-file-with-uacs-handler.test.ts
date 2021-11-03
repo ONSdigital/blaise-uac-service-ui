@@ -1,10 +1,11 @@
 import {getMockReq, getMockRes} from "@jest-mock/express";
 
 //mock bus api
-jest.mock("blaise-uac-service-node-client");
 import BusApiClient from "blaise-uac-service-node-client";
-
-const busApiClientMock = BusApiClient as jest.Mock;
+jest.mock("blaise-uac-service-node-client");
+const mockGetUacCodesByCaseId = jest.fn();
+BusApiClient.prototype.getUacCodesByCaseId = mockGetUacCodesByCaseId;
+const busApiClientMock = new BusApiClient("bus-api-url", "bus-client-id");
 
 //mock google storage
 jest.mock("../storage/google-storage-functions");
@@ -19,7 +20,7 @@ import {addUacCodesToFile} from "../utils/csv-parser";
 const addUacCodesToFileMock = addUacCodesToFile as jest.Mock<Promise<string[]>>;
 
 import {matchedInstrumentUacDetails, validSampleCsv, validSampleFileWithUacArrayResponse} from "../../mocks/csv-mocks";
-import {GetSampleFileWithUacs} from "./get-file-with-uacs-handler";
+import {SampleFileHandler} from "./get-file-with-uacs-handler";
 
 
 const {res, mockClear} = getMockRes();
@@ -32,13 +33,6 @@ describe("get-uac-handler tests", () => {
         mockClear();
         jest.clearAllMocks();
         jest.resetModules();
-    });
-
-    it("Bus api client should be called with correct parameter", async () => {
-        setMocksForSuccess();
-        await callGetSampleFileWithParameters();
-
-        expect(busApiClientMock).toHaveBeenCalledWith("bus-api-url", "bus-client-id");
     });
 
     it("Get file should be called with correct parameters with filename converted to lowercase if successful", async () => {
@@ -66,13 +60,7 @@ describe("get-uac-handler tests", () => {
     it("It should return a 400 bad request response if the file is not parsed correctly", async () => {
         getFileFromBucketMock.mockImplementationOnce(() => Promise.resolve(fileData));
 
-        busApiClientMock.mockImplementation(() => {
-            return {
-                getUacCodesByCaseId: () => {
-                    return Promise.resolve(matchedInstrumentUacDetails);
-                },
-            };
-        });
+        mockGetUacCodesByCaseId.mockReturnValue(Promise.resolve(matchedInstrumentUacDetails));
 
         addUacCodesToFileMock.mockImplementationOnce(() => Promise.resolve([]));
 
@@ -114,19 +102,14 @@ async function callGetSampleFileWithParameters() {
     const req = getMockReq();
     req.params.instrumentName = instrumentName;
     req.params.fileName = filename;
-    await GetSampleFileWithUacs(req, res);
+    const sampleFileHandler = new SampleFileHandler(busApiClientMock, "unique-bucket");
+    await sampleFileHandler.GetSampleFileWithUacs(req, res);
 }
 
 function setMocksForSuccess() {
     getFileFromBucketMock.mockImplementationOnce(() => Promise.resolve(fileData));
 
-    busApiClientMock.mockImplementation(() => {
-        return {
-            getUacCodesByCaseId: () => {
-                return Promise.resolve(matchedInstrumentUacDetails);
-            },
-        };
-    });
+    mockGetUacCodesByCaseId.mockReturnValue(Promise.resolve(matchedInstrumentUacDetails));
 
     addUacCodesToFileMock.mockImplementationOnce(() => Promise.resolve(validSampleFileWithUacArrayResponse));
 }

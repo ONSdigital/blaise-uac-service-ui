@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import React from "react";
 import {Router} from "react-router";
 import {render, waitFor, fireEvent, cleanup, screen, act} from "@testing-library/react";

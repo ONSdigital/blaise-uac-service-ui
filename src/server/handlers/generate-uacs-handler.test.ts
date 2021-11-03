@@ -1,11 +1,14 @@
 import {getMockReq, getMockRes} from "@jest-mock/express";
-import {GenerateUacCodesForSampleFile} from "./generate-uacs-handler";
+import { UacCodeGenerator} from "./generate-uacs-handler";
 import {multerFileMock} from "../../mocks/file-mocks";
 
 //mock bus api
-jest.mock("blaise-uac-service-node-client");
 import BusApiClient from "blaise-uac-service-node-client";
-const busApiClientMock = BusApiClient as jest.Mock;
+jest.mock("blaise-uac-service-node-client");
+const mockGenerateUacCodes = jest.fn();
+BusApiClient.prototype.generateUacCodes = mockGenerateUacCodes;
+const busApiClientMock = new BusApiClient("bus-api-url", "bus-client-id");
+
 
 //mock google storage
 jest.mock("../storage/google-storage-functions");
@@ -34,12 +37,14 @@ describe("uac-generation-handler tests", () => {
         mockClear();
         jest.clearAllMocks();
         jest.resetModules();
+        mockGenerateUacCodes.mockReturnValue(Promise.resolve());
     });
 
     it("It should return a 400 if an filename is not provided", async () => {
         const req = getMockReq();
         req.file = sampleFile;
-        await GenerateUacCodesForSampleFile(req, res);
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+        await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith("Filename not supplied");
@@ -48,26 +53,13 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an file is not provided", async () => {
         const req = getMockReq();
         req.body.fileName = `${instrumentName}.csv`;
-        await GenerateUacCodesForSampleFile(req, res);
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+        await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith("File not supplied");
     });
 
-    it("Bus api client should be called with correct parameter", async () => {
-        await callGenerateUacCodesForSampleFileWithParameters();
-
-        expect(busApiClientMock).toHaveBeenCalledWith("bus-api-url", "bus-client-id");
-    });
-
-    it("Generate UACs should be called with correct parameters if successful", async () => {
-        setMocksForSuccess();
-        await callGenerateUacCodesForSampleFileWithParameters();
-
-        expect(getCaseIdsFromFileMock).toHaveBeenCalledWith(sampleFile.buffer);
-
-        expect(busApiClientMock).toHaveBeenCalledWith("bus-api-url", "bus-client-id");
-    });
 
     it("Upload file should be called with correct parameters with filename converted to lowercase if successful", async () => {
         setMocksForSuccess();
@@ -84,7 +76,7 @@ describe("uac-generation-handler tests", () => {
     });
 
     it("It should return a 500 response if the uac generation fails", async () => {
-        busApiClientMock.mockImplementationOnce(() => {
+        mockGenerateUacCodes.mockImplementationOnce(() => {
             throw new Error();
         });
 
@@ -125,12 +117,10 @@ async function callGenerateUacCodesForSampleFileWithParameters() {
     req.params.instrumentName = instrumentName;
     req.body.fileName = `${instrumentName}.csv`;
     req.file = sampleFile;
-    await GenerateUacCodesForSampleFile(req, res);
+    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+    await uacCodeGenerator.ForSampleFile(req, res);
 }
 
 function setMocksForSuccess() {
     getCaseIdsFromFileMock.mockImplementationOnce(() => Promise.resolve(caseIds));
 }
-
-
-

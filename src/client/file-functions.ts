@@ -24,7 +24,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
         .catch((error) => {
             console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-        return false;
+            return false;
         });
 
     console.log("file-functions - balls");
@@ -68,4 +68,3 @@ export async function getListOfInstrumentsWhichHaveExistingSampleFiles(): Promis
 export function getFileName(instrumentName: string): string {
     return `${instrumentName}.csv`;
 }
-
