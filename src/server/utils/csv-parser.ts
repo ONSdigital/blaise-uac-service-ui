@@ -2,6 +2,35 @@ import { Readable } from "stream";
 import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
 import { StringStream } from "scramjet";
 
+export function getUacsFromFile(fileData: string | Buffer, uacColumn = "Full_UAC"): Promise<string[]> {
+    const uacs: string[] = [];
+    const readStream = Readable.from(fileData);
+
+    return StringStream
+        .from(readStream)
+        .CSVParse({
+            skipEmptyLines: true,
+            header: true,
+            delimiter: ","
+        })
+        .setOptions({ maxParallel: 32 })
+        .peek(1, rows => {
+            checkImportColumns(rows, uacColumn);
+        })
+        .map((line) => {
+            mapUAC(line, uacs, uacColumn);
+            return line;
+        })
+        .catch((error: Error) => {
+            console.error(error.message);
+            return Promise.reject(error);
+        })
+        .run()
+        .then(() => {
+            return uacs;
+        });
+}
+
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
     const caseIds: string[] = [];
     const readStream = Readable.from(fileData);
@@ -62,5 +91,15 @@ function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetailsByCase
 
     if (uacDetails.uac_chunks.uac4) {
         line["UAC4"] ? line["UAC4"] = uacDetails.uac_chunks.uac4 : line.UAC4 = uacDetails.uac_chunks.uac4;
+    }
+}
+
+function mapUAC(line: any, uacs: string[], uacColumn: string) {
+    uacs.push(line[uacColumn]);
+}
+
+export function checkImportColumns(rows: any[], uacColumn: string): void {
+    if (!(uacColumn in rows[0])) {
+        throw new Error(`UAC column "${uacColumn}" not in CSV`);
     }
 }

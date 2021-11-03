@@ -1,15 +1,42 @@
-import { addUacCodesToFile, getCaseIdsFromFile } from "./csv-parser";
+import { addUacCodesToFile, getCaseIdsFromFile, getUacsFromFile, checkImportColumns } from "./csv-parser";
 import {
     matchedInstrumentUacDetails,
     matchedInstrumentUac16Details,
     inValidSampleCsv,
     validSampleCsv,
+    validUACImportCsv,
     unMatchedInstrumentUacDetails,
     emptyInstrumentUacDetails,
     partialMatchedInstrumentUacDetails,
     validSampleCsvWithExistingUacEntries, validSampleCsvWithExistingUacColumns
 } from "../../mocks/csv-mocks";
 
+describe("getUacsFromFile tests", () => {
+    it("Valid CSV - returns a list of UACs", async () => {
+        const fileData = Buffer.from(validUACImportCsv);
+
+        const result = await getUacsFromFile(fileData);
+
+        expect(result).toHaveLength(4);
+        expect(result).toContain("123412341234");
+        expect(result).toContain("432143214321");
+        expect(result).toContain("678967896789");
+        expect(result).toContain("987698769876");
+    });
+
+
+    describe("column validation", () => {
+        const rows: Record<string, unknown>[] = [{ Full_UAC: "123412341234" }];
+        it("Does not throw an error when expected column exists", () => {
+            expect(() => checkImportColumns(rows, "Full_UAC")).not.toThrow();
+        });
+
+
+        it("Throws an error when expected column exists", () => {
+            expect(() => checkImportColumns(rows, "random_column")).toThrow("UAC column \"random_column\" not in CSV");
+        });
+    });
+});
 
 describe("getCaseIdsFromFile tests", () => {
 
