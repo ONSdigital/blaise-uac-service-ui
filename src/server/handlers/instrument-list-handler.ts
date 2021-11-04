@@ -2,9 +2,10 @@ import express, {Request, Response, Router} from "express";
 import {GoogleStorage} from "./../storage/google-storage-functions";
 import {Config} from "../config";
 
-const router = express.Router();
 
 export default function NewInstrumentListHandler(googleStorage: GoogleStorage, config: Config): Router {
+    const router = express.Router();
+
     const instrumentHandler = new InstrumentListHandler(googleStorage, config);
     return router.get("/api/v1/instruments", instrumentHandler.GetListOfInstrumentsInBucket);
 }

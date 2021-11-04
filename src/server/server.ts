@@ -8,6 +8,7 @@ import { Config } from "./config";
 import BusApiClient from "blaise-uac-service-node-client";
 import { GoogleStorage } from "./storage/google-storage-functions";
 import NewInstrumentUacHandler from "./handlers/instrument-uac-handler";
+import NewImportUacHandler from "./handlers/import-uac-handler";
 
 function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): any {
     const server = express();
@@ -23,6 +24,7 @@ function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, con
     server.use("/api/v1/instrument/:instrumentName/uac", NewInstrumentUacHandler(busApiClient, googleStorage, config));
     server.use("/api/v1/file", NewFileHandler(googleStorage, config));
     server.use("/", NewInstrumentListHandler(googleStorage, config));
+    server.use("/", NewImportUacHandler(busApiClient));
     server.use("/", HealthCheckHandler());
 
     //define entry point

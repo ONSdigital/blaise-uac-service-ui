@@ -2,9 +2,9 @@ import express, {Request, Response, Router} from "express";
 import { GoogleStorage } from "../storage/google-storage-functions";
 import { Config } from "../config";
 
-const router = express.Router();
 
 export default function NewFileHandler(googleStorage: GoogleStorage, config: Config): Router {
+    const router = express.Router();
     const fileHandler = new FileHandler(googleStorage, config);
     return router.get("/:fileName/exists", fileHandler.FileExists);
 }
