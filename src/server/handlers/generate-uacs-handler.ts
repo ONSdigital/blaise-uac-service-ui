@@ -1,27 +1,30 @@
 import express, {Router, Request, Response} from "express";
 import multer from "multer";
-import {uploadFileToBucket} from "../storage/google-storage-functions";
+import {GoogleStorage} from "../storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
 import {getCaseIdsFromFile} from "../utils/csv-parser";
 
 const router = express.Router();
 
-export default function GenerateUacsHandler(busApiClient: BusApiClient, bucketName: string): Router {
+export default function GenerateUacsHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string): Router {
     const storage = multer.memoryStorage();
     const upload = multer({storage: storage});
 
-    const uacCodeGenerator = new UacCodeGenerator(busApiClient, bucketName);
+    const uacCodeGenerator = new UacCodeGenerator(busApiClient, googleStorage, bucketName);
 
     return router.post("/api/v1/instrument/:instrumentName/uac/sample", upload.single("file"), uacCodeGenerator.ForSampleFile);
 }
 
 export class UacCodeGenerator {
     busApiClient: BusApiClient;
+    googleStorage: GoogleStorage;
     bucketName: string;
 
-    constructor(busApiClient: BusApiClient, bucketName: string) {
+    constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string) {
         this.busApiClient = busApiClient;
         this.bucketName = bucketName;
+        this.googleStorage = googleStorage;
+        this.ForSampleFile = this.ForSampleFile.bind(this);
     }
 
     async ForSampleFile(req: Request, res: Response): Promise<Response> {
@@ -56,7 +59,7 @@ export class UacCodeGenerator {
     }
 
     async uploadSampleFile(fileName: string, file: Express.Multer.File): Promise<void> {
-        await uploadFileToBucket(this.bucketName, file, fileName.toLowerCase());
+        await this.googleStorage.UploadFileToBucket(this.bucketName, file, fileName.toLowerCase());
     }
 
 }

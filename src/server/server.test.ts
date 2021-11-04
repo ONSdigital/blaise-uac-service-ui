@@ -6,16 +6,16 @@ describe("All expected routes are registered", () => {
     const expectedEndpoints = [
         {
             "methods": ["POST"],
-            "middlewares": ["multerMiddleware", "ForSampleFile"],
+            "middlewares": ["multerMiddleware", "bound ForSampleFile"],
             "path": "/api/v1/instrument/:instrumentName/uac/sample"
         },
         {
             "methods": ["GET"],
-            "middlewares": ["GetSampleFileWithUacs"],
+            "middlewares": ["bound GetSampleFileWithUacs"],
             "path": "/api/v1/instrument/:instrumentName/uac/sample/:fileName"
         },
-        {"methods": ["GET"], "middlewares": ["fileExists"], "path": "/api/v1/file/:fileName/exists"},
-        {"methods": ["GET"], "middlewares": ["GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments"},
+        {"methods": ["GET"], "middlewares": ["bound FileExists"], "path": "/api/v1/file/:fileName/exists"},
+        {"methods": ["GET"], "middlewares": ["bound GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments"},
         {"methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health"},
         {"methods": ["GET"], "middlewares": ["anonymous"], "path": "*"}];
 

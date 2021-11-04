@@ -1,23 +1,33 @@
 import express, {Request, Response, Router} from "express";
-import {getEnvironmentVariables} from "../config";
-import {fileExistsInBucket} from "../storage/google-storage-functions";
+import {GoogleStorage} from "../storage/google-storage-functions";
 
 const router = express.Router();
 
-export default function FileExistsHandler(): Router {
-    return router.get("/api/v1/file/:fileName/exists", fileExists);
+export default function FileExistsHandler(googleStorage: GoogleStorage, bucketName: string): Router {
+    const fileHandler = new FileHandler(googleStorage, bucketName);
+    return router.get("/api/v1/file/:fileName/exists", fileHandler.FileExists);
 }
 
-export async function fileExists(req: Request, res: Response): Promise<Response> {
-    const {fileName} = req.params;
+export class FileHandler {
+    googleStorage: GoogleStorage;
+    bucketName: string;
 
-    if (fileName === undefined) {
-        console.error("FileName not supplied");
-        return res.status(400).json("FileName not supplied");
+    constructor(googleStorage: GoogleStorage, bucketName: string) {
+        this.bucketName = bucketName;
+        this.googleStorage = googleStorage;
+        this.FileExists = this.FileExists.bind(this);
     }
 
-    const {BUCKET_NAME} = getEnvironmentVariables();
-    const exists = await fileExistsInBucket(BUCKET_NAME, fileName.toLowerCase());
+    async FileExists(req: Request, res: Response): Promise<Response> {
+        const { fileName } = req.params;
 
-    return res.status(200).json(exists);
+        if (fileName === undefined) {
+            console.error("FileName not supplied");
+            return res.status(400).json("FileName not supplied");
+        }
+
+        const exists = await this.googleStorage.FileExistsInBucket(this.bucketName, fileName.toLowerCase());
+
+        return res.status(200).json(exists);
+    }
 }

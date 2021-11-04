@@ -1,10 +1,17 @@
-import server from "./../server";
-import {getFileNamesInBucket} from "./../storage/google-storage-functions";
+import express from "express";
 import supertest from "supertest";
+import InstrumentListHandler from "./instrument-list-handler";
 
-jest.mock("./../storage/google-storage-functions");
+//mock google storage
+import { GoogleStorage } from "../storage/google-storage-functions";
+jest.mock("../storage/google-storage-functions");
+const getFilenamesInBucketMock = jest.fn();
+GoogleStorage.prototype.GetFileNamesInBucket = getFilenamesInBucketMock;
+const googleStorageMock = new GoogleStorage("a-project-name");
 
 describe("instrument-list-handler tests", () => {
+    const server = express();
+    server.use("/", InstrumentListHandler(googleStorageMock, "unique-bucket"));
     const request = supertest(server);
     const url = "/api/v1/instruments";
 
@@ -12,9 +19,6 @@ describe("instrument-list-handler tests", () => {
         jest.clearAllMocks();
         jest.resetModules();
     });
-
-    const getFilenamesInBucketMock = getFileNamesInBucket as jest.Mock<Promise<string[]>>;
-    const fileName = "DST2101A.csv";
 
     it("It should be called with correct parameters with filename converted to lowercase", async () => {
         getFilenamesInBucketMock.mockImplementationOnce(() => {
@@ -57,4 +61,3 @@ describe("instrument-list-handler tests", () => {
         jest.resetModules();
     });
 });
-

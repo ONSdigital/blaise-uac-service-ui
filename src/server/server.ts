@@ -9,6 +9,7 @@ import InstrumentListHandler from "./handlers/instrument-list-handler";
 import GetFileWithUacsHandler from "./handlers/get-file-with-uacs-handler";
 import { getEnvironmentVariables } from "./config";
 import BusApiClient from "blaise-uac-service-node-client";
+import { GoogleStorage } from "./storage/google-storage-functions";
 
 if (process.env.NODE_ENV !== "production") {
     dotenv.config({path: __dirname + "/../.env"});
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const envConfig = getEnvironmentVariables();
 const busApiClient = new BusApiClient(envConfig.BUS_API_URL, envConfig.BUS_CLIENT_ID);
+const googleStorage = new GoogleStorage(envConfig.PROJECT_ID);
 
 const server = express();
 // treat the index.html as a template and substitute the values at runtime
@@ -28,10 +30,10 @@ server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 
 //define handlers
-server.use("/", GenerateUacsHandler(busApiClient, envConfig.BUCKET_NAME));
-server.use("/", GetFileWithUacsHandler(busApiClient, envConfig.BUCKET_NAME));
-server.use("/", FileExistsHandler());
-server.use("/", InstrumentListHandler());
+server.use("/", GenerateUacsHandler(busApiClient, googleStorage, envConfig.BUCKET_NAME));
+server.use("/", GetFileWithUacsHandler(busApiClient, googleStorage, envConfig.BUCKET_NAME));
+server.use("/", FileExistsHandler(googleStorage, envConfig.BUCKET_NAME));
+server.use("/", InstrumentListHandler(googleStorage, envConfig.BUCKET_NAME));
 server.use("/", HealthCheckHandler());
 
 //define entry point

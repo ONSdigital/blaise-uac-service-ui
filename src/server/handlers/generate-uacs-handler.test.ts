@@ -11,9 +11,11 @@ const busApiClientMock = new BusApiClient("bus-api-url", "bus-client-id");
 
 
 //mock google storage
+import {GoogleStorage} from "../storage/google-storage-functions";
 jest.mock("../storage/google-storage-functions");
-import {uploadFileToBucket} from "../storage/google-storage-functions";
-const uploadFileToBucketMock = uploadFileToBucket as jest.Mock<Promise<void>>;
+const mockUploadFileToBucket = jest.fn();
+GoogleStorage.prototype.UploadFileToBucket = mockUploadFileToBucket;
+const googleStorageMock = new GoogleStorage("a-project-name");
 
 //mock csv parser
 jest.mock("../utils/csv-parser");
@@ -43,7 +45,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an filename is not provided", async () => {
         const req = getMockReq();
         req.file = sampleFile;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -53,7 +55,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an file is not provided", async () => {
         const req = getMockReq();
         req.body.fileName = `${instrumentName}.csv`;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -65,7 +67,7 @@ describe("uac-generation-handler tests", () => {
         setMocksForSuccess();
         await callGenerateUacCodesForSampleFileWithParameters();
 
-        expect(uploadFileToBucketMock).toHaveBeenCalledWith("unique-bucket", sampleFile, `${instrumentName.toLowerCase()}.csv`);
+        expect(mockUploadFileToBucket).toHaveBeenCalledWith("unique-bucket", sampleFile, `${instrumentName.toLowerCase()}.csv`);
     });
 
     it("It should return a 201 response with expected data if uac generation is successful", async () => {
@@ -96,7 +98,7 @@ describe("uac-generation-handler tests", () => {
     });
 
     it("It should return a 500 response if the upload fails", async () => {
-        uploadFileToBucketMock.mockImplementationOnce(() => {
+        mockUploadFileToBucket.mockImplementationOnce(() => {
             throw new Error();
         });
 
@@ -117,7 +119,7 @@ async function callGenerateUacCodesForSampleFileWithParameters() {
     req.params.instrumentName = instrumentName;
     req.body.fileName = `${instrumentName}.csv`;
     req.file = sampleFile;
-    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, "unique-bucket");
+    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
     await uacCodeGenerator.ForSampleFile(req, res);
 }
 

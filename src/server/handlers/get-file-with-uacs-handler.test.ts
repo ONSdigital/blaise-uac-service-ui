@@ -8,10 +8,11 @@ BusApiClient.prototype.getUacCodesByCaseId = mockGetUacCodesByCaseId;
 const busApiClientMock = new BusApiClient("bus-api-url", "bus-client-id");
 
 //mock google storage
+import { GoogleStorage } from "../storage/google-storage-functions";
 jest.mock("../storage/google-storage-functions");
-import {getFileFromBucket} from "../storage/google-storage-functions";
-
-const getFileFromBucketMock = getFileFromBucket as jest.Mock<Promise<Buffer>>;
+const getFileFromBucketMock = jest.fn();
+GoogleStorage.prototype.GetFileFromBucket = getFileFromBucketMock;
+const googleStorageMock = new GoogleStorage("a-project-name");
 
 //mock csv parser
 jest.mock("../utils/csv-parser");
@@ -102,7 +103,7 @@ async function callGetSampleFileWithParameters() {
     const req = getMockReq();
     req.params.instrumentName = instrumentName;
     req.params.fileName = filename;
-    const sampleFileHandler = new SampleFileHandler(busApiClientMock, "unique-bucket");
+    const sampleFileHandler = new SampleFileHandler(busApiClientMock, googleStorageMock, "unique-bucket");
     await sampleFileHandler.GetSampleFileWithUacs(req, res);
 }
 
