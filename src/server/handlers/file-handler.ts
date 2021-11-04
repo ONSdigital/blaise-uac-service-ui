@@ -4,9 +4,9 @@ import { Config } from "../config";
 
 const router = express.Router();
 
-export default function FileExistsHandler(googleStorage: GoogleStorage, config: Config): Router {
+export default function NewFileHandler(googleStorage: GoogleStorage, config: Config): Router {
     const fileHandler = new FileHandler(googleStorage, config);
-    return router.get("/api/v1/file/:fileName/exists", fileHandler.FileExists);
+    return router.get("/:fileName/exists", fileHandler.FileExists);
 }
 
 export class FileHandler {

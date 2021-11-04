@@ -1,14 +1,13 @@
 import express, {Request, Response} from "express";
 import path from "path";
 import ejs from "ejs";
-import GenerateUacsHandler from "./handlers/generate-uacs-handler";
 import HealthCheckHandler from "./handlers/health-check-handler";
-import FileExistsHandler from "./handlers/file-exists-handler";
-import InstrumentListHandler from "./handlers/instrument-list-handler";
-import GetFileWithUacsHandler from "./handlers/get-file-with-uacs-handler";
+import NewFileHandler from "./handlers/file-handler";
+import NewInstrumentListHandler from "./handlers/instrument-list-handler";
 import { Config } from "./config";
 import BusApiClient from "blaise-uac-service-node-client";
 import { GoogleStorage } from "./storage/google-storage-functions";
+import NewInstrumentUacHandler from "./handlers/instrument-uac-handler";
 
 function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): any {
     const server = express();
@@ -21,10 +20,9 @@ function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, con
     server.use(express.urlencoded({ extended: true }));
 
     //define handlers
-    server.use("/", GenerateUacsHandler(busApiClient, googleStorage, config));
-    server.use("/", GetFileWithUacsHandler(busApiClient, googleStorage, config));
-    server.use("/", FileExistsHandler(googleStorage, config));
-    server.use("/", InstrumentListHandler(googleStorage, config));
+    server.use("/api/v1/instrument/:instrumentName/uac", NewInstrumentUacHandler(busApiClient, googleStorage, config));
+    server.use("/api/v1/file", NewFileHandler(googleStorage, config));
+    server.use("/", NewInstrumentListHandler(googleStorage, config));
     server.use("/", HealthCheckHandler());
 
     //define entry point

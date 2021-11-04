@@ -1,4 +1,4 @@
-import { FileHandler } from "./file-exists-handler";
+import { FileHandler } from "./file-handler";
 import {getMockReq, getMockRes} from "@jest-mock/express";
 import supertest from "supertest";
 import NewServer from "../server";

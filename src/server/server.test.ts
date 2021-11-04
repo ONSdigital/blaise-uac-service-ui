@@ -9,7 +9,7 @@ describe("All expected routes are registered", () => {
     const expectedEndpoints = [
         {
             "methods": ["POST"],
-            "middlewares": ["multerMiddleware", "bound ForSampleFile"],
+            "middlewares": ["multerMiddleware", "bound GenerateUacsForSampleFile"],
             "path": "/api/v1/instrument/:instrumentName/uac/sample"
         },
         {
@@ -20,7 +20,8 @@ describe("All expected routes are registered", () => {
         {"methods": ["GET"], "middlewares": ["bound FileExists"], "path": "/api/v1/file/:fileName/exists"},
         {"methods": ["GET"], "middlewares": ["bound GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments"},
         {"methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health"},
-        {"methods": ["GET"], "middlewares": ["anonymous"], "path": "*"}];
+        {"methods": ["GET"], "middlewares": ["anonymous"], "path": "*"}
+    ];
 
     it("should contain all expected routes", async () => {
         const config = GetConfigFromEnv();

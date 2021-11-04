@@ -4,12 +4,12 @@ import {Config} from "../config";
 
 const router = express.Router();
 
-export default function InstrumentListHandler(googleStorage: GoogleStorage, config: Config): Router {
-    const instrumentHandler = new InstrumentHandler(googleStorage, config);
+export default function NewInstrumentListHandler(googleStorage: GoogleStorage, config: Config): Router {
+    const instrumentHandler = new InstrumentListHandler(googleStorage, config);
     return router.get("/api/v1/instruments", instrumentHandler.GetListOfInstrumentsInBucket);
 }
 
-export class InstrumentHandler {
+export class InstrumentListHandler {
     googleStorage: GoogleStorage;
     config: Config;
 
