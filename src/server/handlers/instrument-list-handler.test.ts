@@ -1,18 +1,21 @@
-import express from "express";
+import NewServer from "../server";
 import supertest from "supertest";
-import InstrumentListHandler from "./instrument-list-handler";
+
+import BusApiClient from "blaise-uac-service-node-client";
+import { GetConfigFromEnv } from "../config";
+
+const config = GetConfigFromEnv();
+const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
 
 //mock google storage
 import { GoogleStorage } from "../storage/google-storage-functions";
-import { GetConfigFromEnv } from "../config";
 jest.mock("../storage/google-storage-functions");
 const getFilenamesInBucketMock = jest.fn();
 GoogleStorage.prototype.GetFileNamesInBucket = getFilenamesInBucketMock;
 const googleStorageMock = new GoogleStorage("a-project-name");
 
 describe("instrument-list-handler tests", () => {
-    const server = express();
-    server.use("/", InstrumentListHandler(googleStorageMock, GetConfigFromEnv()));
+    const server = NewServer(busApiClient, googleStorageMock, config);
     const request = supertest(server);
     const url = "/api/v1/instruments";
 

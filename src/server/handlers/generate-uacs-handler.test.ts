@@ -2,6 +2,8 @@ import {getMockReq, getMockRes} from "@jest-mock/express";
 import { UacCodeGenerator} from "./generate-uacs-handler";
 import {multerFileMock} from "../../mocks/file-mocks";
 
+import { GetConfigFromEnv } from "../config";
+
 //mock bus api
 import BusApiClient from "blaise-uac-service-node-client";
 jest.mock("blaise-uac-service-node-client");
@@ -20,13 +22,13 @@ const googleStorageMock = new GoogleStorage("a-project-name");
 //mock csv parser
 jest.mock("../utils/csv-parser");
 import {getCaseIdsFromFile} from "../utils/csv-parser";
-import { GetConfigFromEnv } from "../config";
 
 const getCaseIdsFromFileMock = getCaseIdsFromFile as jest.Mock<Promise<string[]>>;
 
 const {res, mockClear} = getMockRes();
 const instrumentName = "DST1234A";
 const caseIds = ["100000001", "100000002"];
+const config = GetConfigFromEnv();
 
 const sampleFile = multerFileMock({
     filename: "sample.csv",
@@ -46,7 +48,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an filename is not provided", async () => {
         const req = getMockReq();
         req.file = sampleFile;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, config);
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -56,7 +58,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an file is not provided", async () => {
         const req = getMockReq();
         req.body.fileName = `${instrumentName}.csv`;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, config);
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -120,7 +122,7 @@ async function callGenerateUacCodesForSampleFileWithParameters() {
     req.params.instrumentName = instrumentName;
     req.body.fileName = `${instrumentName}.csv`;
     req.file = sampleFile;
-    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
+    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, config);
     await uacCodeGenerator.ForSampleFile(req, res);
 }
 

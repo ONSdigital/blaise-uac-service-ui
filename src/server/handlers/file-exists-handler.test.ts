@@ -1,13 +1,18 @@
-import express from "express";
 import { FileHandler } from "./file-exists-handler";
-import FileExistsHandler from "./file-exists-handler";
 import {getMockReq, getMockRes} from "@jest-mock/express";
 import supertest from "supertest";
+import NewServer from "../server";
+
+
+import BusApiClient from "blaise-uac-service-node-client";
+import { GetConfigFromEnv } from "../config";
+
+const config = GetConfigFromEnv();
+const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
 
 //mock google storage
 jest.mock("../storage/google-storage-functions");
 import { GoogleStorage } from "../storage/google-storage-functions";
-import { GetConfigFromEnv } from "../config";
 const fileExistsInBucketMock = jest.fn();
 GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
 const googleStorageMock = new GoogleStorage("a-project-name");
@@ -27,15 +32,14 @@ describe("fileExists parameter tests", () => {
             params: {"fileName": undefined}
         });
 
-        const fileHandler = new FileHandler(googleStorageMock, GetConfigFromEnv());
+        const fileHandler = new FileHandler(googleStorageMock, config);
         await fileHandler.FileExists(req, res);
         expect(res.status).toHaveBeenCalledWith(400);
     });
 });
 
 describe("file-exists-handler tests", () => {
-    const server = express();
-    server.use("/", FileExistsHandler(googleStorageMock, GetConfigFromEnv()));
+    const server = NewServer(busApiClient, googleStorageMock, config);
     const request = supertest(server);
 
     beforeEach(() => {

@@ -29,6 +29,7 @@ const {res, mockClear} = getMockRes();
 const instrumentName = "DST1234A";
 const filename = `${instrumentName}.csv`;
 const fileData = Buffer.from(validSampleCsv);
+const config = GetConfigFromEnv();
 
 describe("get-uac-handler tests", () => {
     beforeEach(() => {
@@ -104,7 +105,7 @@ async function callGetSampleFileWithParameters() {
     const req = getMockReq();
     req.params.instrumentName = instrumentName;
     req.params.fileName = filename;
-    const sampleFileHandler = new SampleFileHandler(busApiClientMock, googleStorageMock, GetConfigFromEnv());
+    const sampleFileHandler = new SampleFileHandler(busApiClientMock, googleStorageMock, config);
     await sampleFileHandler.GetSampleFileWithUacs(req, res);
 }
 
