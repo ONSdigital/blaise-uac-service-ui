@@ -1,4 +1,4 @@
-import {getEnvironmentVariables} from "./config";
+import { GetConfigFromEnv } from "./config";
 
 describe("Config setup", () => {
     afterEach(() => {
@@ -7,12 +7,12 @@ describe("Config setup", () => {
     });
 
     it("should return the correct environment variables", () => {
-        const {PROJECT_ID, BUCKET_NAME, BUS_API_URL, BUS_CLIENT_ID} = getEnvironmentVariables();
+        const config = GetConfigFromEnv();
 
-        expect(PROJECT_ID).toBe("a-project-name");
-        expect(BUCKET_NAME).toBe("unique-bucket");
-        expect(BUS_API_URL).toBe("bus-api-url");
-        expect(BUS_CLIENT_ID).toBe("bus-client-id");
+        expect(config.ProjectID).toBe("a-project-name");
+        expect(config.BucketName).toBe("unique-bucket");
+        expect(config.BusApiUrl).toBe("bus-api-url");
+        expect(config.BusClientId).toBe("bus-client-id");
     });
 
     it("should return variables with default string if variables are not defined", () => {
@@ -23,11 +23,11 @@ describe("Config setup", () => {
             BUS_CLIENT_ID: undefined
         });
 
-        const {PROJECT_ID, BUCKET_NAME, BUS_API_URL, BUS_CLIENT_ID} = getEnvironmentVariables();
+        const config = GetConfigFromEnv();
 
-        expect(PROJECT_ID).toBe("ENV_VAR_NOT_SET");
-        expect(BUCKET_NAME).toBe("ENV_VAR_NOT_SET");
-        expect(BUS_API_URL).toBe("ENV_VAR_NOT_SET");
-        expect(BUS_CLIENT_ID).toBe("ENV_VAR_NOT_SET");
+        expect(config.ProjectID).toBe("ENV_VAR_NOT_SET");
+        expect(config.BucketName).toBe("ENV_VAR_NOT_SET");
+        expect(config.BusApiUrl).toBe("ENV_VAR_NOT_SET");
+        expect(config.BusClientId).toBe("ENV_VAR_NOT_SET");
     });
 });

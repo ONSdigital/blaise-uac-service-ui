@@ -2,15 +2,16 @@ import express, {Router, Request, Response} from "express";
 import multer from "multer";
 import {GoogleStorage} from "../storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
-import {getCaseIdsFromFile} from "../utils/csv-parser";
+import { getCaseIdsFromFile } from "../utils/csv-parser";
+import { Config } from "../config";
 
 const router = express.Router();
 
-export default function GenerateUacsHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string): Router {
+export default function GenerateUacsHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): Router {
     const storage = multer.memoryStorage();
     const upload = multer({storage: storage});
 
-    const uacCodeGenerator = new UacCodeGenerator(busApiClient, googleStorage, bucketName);
+    const uacCodeGenerator = new UacCodeGenerator(busApiClient, googleStorage, config);
 
     return router.post("/api/v1/instrument/:instrumentName/uac/sample", upload.single("file"), uacCodeGenerator.ForSampleFile);
 }
@@ -18,11 +19,11 @@ export default function GenerateUacsHandler(busApiClient: BusApiClient, googleSt
 export class UacCodeGenerator {
     busApiClient: BusApiClient;
     googleStorage: GoogleStorage;
-    bucketName: string;
+    config: Config;
 
-    constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string) {
+    constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config) {
         this.busApiClient = busApiClient;
-        this.bucketName = bucketName;
+        this.config = config;
         this.googleStorage = googleStorage;
         this.ForSampleFile = this.ForSampleFile.bind(this);
     }
@@ -59,7 +60,7 @@ export class UacCodeGenerator {
     }
 
     async uploadSampleFile(fileName: string, file: Express.Multer.File): Promise<void> {
-        await this.googleStorage.UploadFileToBucket(this.bucketName, file, fileName.toLowerCase());
+        await this.googleStorage.UploadFileToBucket(this.config.BucketName, file, fileName.toLowerCase());
     }
 
 }

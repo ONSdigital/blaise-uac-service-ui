@@ -7,6 +7,7 @@ import supertest from "supertest";
 //mock google storage
 jest.mock("../storage/google-storage-functions");
 import { GoogleStorage } from "../storage/google-storage-functions";
+import { GetConfigFromEnv } from "../config";
 const fileExistsInBucketMock = jest.fn();
 GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
 const googleStorageMock = new GoogleStorage("a-project-name");
@@ -26,7 +27,7 @@ describe("fileExists parameter tests", () => {
             params: {"fileName": undefined}
         });
 
-        const fileHandler = new FileHandler(googleStorageMock, "unique-bucket");
+        const fileHandler = new FileHandler(googleStorageMock, GetConfigFromEnv());
         await fileHandler.FileExists(req, res);
         expect(res.status).toHaveBeenCalledWith(400);
     });
@@ -34,7 +35,7 @@ describe("fileExists parameter tests", () => {
 
 describe("file-exists-handler tests", () => {
     const server = express();
-    server.use("/", FileExistsHandler(googleStorageMock, "unique-bucket"));
+    server.use("/", FileExistsHandler(googleStorageMock, GetConfigFromEnv()));
     const request = supertest(server);
 
     beforeEach(() => {

@@ -1,25 +1,26 @@
 import express, {Request, Response, Router} from "express";
 import {GoogleStorage} from "./../storage/google-storage-functions";
+import {Config} from "../config";
 
 const router = express.Router();
 
-export default function InstrumentListHandler(googleStorage: GoogleStorage, bucketName: string): Router {
-    const instrumentHandler = new InstrumentHandler(googleStorage, bucketName);
+export default function InstrumentListHandler(googleStorage: GoogleStorage, config: Config): Router {
+    const instrumentHandler = new InstrumentHandler(googleStorage, config);
     return router.get("/api/v1/instruments", instrumentHandler.GetListOfInstrumentsInBucket);
 }
 
 export class InstrumentHandler {
     googleStorage: GoogleStorage;
-    bucketName: string;
+    config: Config;
 
-    constructor(googleStorage: GoogleStorage, bucketName: string) {
-        this.bucketName = bucketName;
+    constructor(googleStorage: GoogleStorage, config: Config) {
+        this.config = config;
         this.googleStorage = googleStorage;
         this.GetListOfInstrumentsInBucket = this.GetListOfInstrumentsInBucket.bind(this);
     }
 
     async GetListOfInstrumentsInBucket(req: Request, res: Response): Promise<Response> {
-        const fileNames = await this.googleStorage.GetFileNamesInBucket(this.bucketName);
+        const fileNames = await this.googleStorage.GetFileNamesInBucket(this.config.BucketName);
         const instrumentNames: Array<string> = [];
 
         fileNames.forEach(fileName => {

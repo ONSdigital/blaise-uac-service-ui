@@ -22,6 +22,7 @@ const addUacCodesToFileMock = addUacCodesToFile as jest.Mock<Promise<string[]>>;
 
 import {matchedInstrumentUacDetails, validSampleCsv, validSampleFileWithUacArrayResponse} from "../../mocks/csv-mocks";
 import {SampleFileHandler} from "./get-file-with-uacs-handler";
+import { GetConfigFromEnv } from "../config";
 
 
 const {res, mockClear} = getMockRes();
@@ -103,7 +104,7 @@ async function callGetSampleFileWithParameters() {
     const req = getMockReq();
     req.params.instrumentName = instrumentName;
     req.params.fileName = filename;
-    const sampleFileHandler = new SampleFileHandler(busApiClientMock, googleStorageMock, "unique-bucket");
+    const sampleFileHandler = new SampleFileHandler(busApiClientMock, googleStorageMock, GetConfigFromEnv());
     await sampleFileHandler.GetSampleFileWithUacs(req, res);
 }
 

@@ -20,6 +20,7 @@ const googleStorageMock = new GoogleStorage("a-project-name");
 //mock csv parser
 jest.mock("../utils/csv-parser");
 import {getCaseIdsFromFile} from "../utils/csv-parser";
+import { GetConfigFromEnv } from "../config";
 
 const getCaseIdsFromFileMock = getCaseIdsFromFile as jest.Mock<Promise<string[]>>;
 
@@ -45,7 +46,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an filename is not provided", async () => {
         const req = getMockReq();
         req.file = sampleFile;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -55,7 +56,7 @@ describe("uac-generation-handler tests", () => {
     it("It should return a 400 if an file is not provided", async () => {
         const req = getMockReq();
         req.body.fileName = `${instrumentName}.csv`;
-        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
+        const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
         await uacCodeGenerator.ForSampleFile(req, res);
 
         expect(res.status).toHaveBeenCalledWith(400);
@@ -119,7 +120,7 @@ async function callGenerateUacCodesForSampleFileWithParameters() {
     req.params.instrumentName = instrumentName;
     req.body.fileName = `${instrumentName}.csv`;
     req.file = sampleFile;
-    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, "unique-bucket");
+    const uacCodeGenerator = new UacCodeGenerator(busApiClientMock, googleStorageMock, GetConfigFromEnv());
     await uacCodeGenerator.ForSampleFile(req, res);
 }
 

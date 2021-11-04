@@ -1,23 +1,24 @@
 import express, {Router, Request, Response} from "express";
 import {GoogleStorage} from "./../storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
-import {addUacCodesToFile} from "../utils/csv-parser";
+import { addUacCodesToFile } from "../utils/csv-parser";
+import { Config } from "../config";
 
 const router = express.Router();
 
-export default function GetFileWithUacsHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string): Router {
-    const sampleFileHandler = new SampleFileHandler(busApiClient, googleStorage, bucketName);
+export default function GetFileWithUacsHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): Router {
+    const sampleFileHandler = new SampleFileHandler(busApiClient, googleStorage, config);
     return router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", sampleFileHandler.GetSampleFileWithUacs);
 }
 
 export class SampleFileHandler {
     busApiClient: BusApiClient;
     googleStorage: GoogleStorage;
-    bucketName: string;
+    config: Config;
 
-    constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, bucketName: string) {
+    constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config) {
         this.busApiClient = busApiClient;
-        this.bucketName = bucketName;
+        this.config = config;
         this.googleStorage = googleStorage;
         this.GetSampleFileWithUacs = this.GetSampleFileWithUacs.bind(this);
     }
@@ -28,7 +29,7 @@ export class SampleFileHandler {
 
         try {
             console.log("Get sample file from bucket");
-            const fileBuffer = await this.googleStorage.GetFileFromBucket(this.bucketName, fileName.toLowerCase());
+            const fileBuffer = await this.googleStorage.GetFileFromBucket(this.config.BucketName, fileName.toLowerCase());
             console.log("Got sample file from bucket");
 
             console.log("Get UAC details from BUS");

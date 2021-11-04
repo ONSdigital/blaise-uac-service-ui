@@ -1,19 +1,20 @@
 import express, {Request, Response, Router} from "express";
-import {GoogleStorage} from "../storage/google-storage-functions";
+import { GoogleStorage } from "../storage/google-storage-functions";
+import { Config } from "../config";
 
 const router = express.Router();
 
-export default function FileExistsHandler(googleStorage: GoogleStorage, bucketName: string): Router {
-    const fileHandler = new FileHandler(googleStorage, bucketName);
+export default function FileExistsHandler(googleStorage: GoogleStorage, config: Config): Router {
+    const fileHandler = new FileHandler(googleStorage, config);
     return router.get("/api/v1/file/:fileName/exists", fileHandler.FileExists);
 }
 
 export class FileHandler {
     googleStorage: GoogleStorage;
-    bucketName: string;
+    config: Config;
 
-    constructor(googleStorage: GoogleStorage, bucketName: string) {
-        this.bucketName = bucketName;
+    constructor(googleStorage: GoogleStorage, config: Config) {
+        this.config = config;
         this.googleStorage = googleStorage;
         this.FileExists = this.FileExists.bind(this);
     }
@@ -26,7 +27,7 @@ export class FileHandler {
             return res.status(400).json("FileName not supplied");
         }
 
-        const exists = await this.googleStorage.FileExistsInBucket(this.bucketName, fileName.toLowerCase());
+        const exists = await this.googleStorage.FileExistsInBucket(this.config.BucketName, fileName.toLowerCase());
 
         return res.status(200).json(exists);
     }
