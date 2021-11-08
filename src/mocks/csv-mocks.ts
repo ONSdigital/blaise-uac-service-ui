@@ -26,11 +26,12 @@ export const validSampleCsvWithExistingUacEntries = `serial_number,Name,UAC1,UAC
 100000003,Bart Simpson,2242,5543,7676,2675465026,bart@spring.field
 `;
 
-export const inValidSampleCsv = `serial_number,Phone Number,Email
+export const invalidSampleCsv = `serial_number,Phone Number,Email
 100000001,Homer Simpson,5551234422,homer@springfield.com
 100000002,Seymour Skinner,1235663322,a@b.c
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
+
 
 export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {

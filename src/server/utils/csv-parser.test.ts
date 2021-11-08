@@ -2,7 +2,7 @@ import { addUacCodesToFile, getCaseIdsFromFile, getUacsFromFile, checkImportColu
 import {
     matchedInstrumentUacDetails,
     matchedInstrumentUac16Details,
-    inValidSampleCsv,
+    invalidSampleCsv,
     validSampleCsv,
     validUACImportCsv,
     unMatchedInstrumentUacDetails,
@@ -29,19 +29,6 @@ describe("getUacsFromFile tests", () => {
 
         await expect(getUacsFromFile(fileData)).rejects.toThrow("UAC column \"Full_UAC\" not in CSV");
     });
-
-
-    describe("column validation", () => {
-        const row: Record<string, unknown> = { Full_UAC: "123412341234" };
-        it("returns true", () => {
-            expect(checkImportColumns(row, "Full_UAC")).toBeTruthy();
-        });
-
-
-        it("Throws an error when expected column exists", () => {
-            expect(checkImportColumns(row, "random_column")).toBeFalsy();
-        });
-    });
 });
 
 describe("getCaseIdsFromFile tests", () => {
@@ -56,14 +43,24 @@ describe("getCaseIdsFromFile tests", () => {
         expect(result).toContain("100000003");
     });
 
-    it("Invalid CSV - error", async () => {
+    it("Missing column - error", async () => {
         console.error = jest.fn();
-        const fileData = Buffer.from(inValidSampleCsv);
+        const fileData = Buffer.from(validUACImportCsv);
 
         const result = await getCaseIdsFromFile(fileData);
         expect(result).toEqual([]);
 
-        expect(console.error).toHaveBeenCalledWith("Too many fields: expected 3 fields but parsed 4");
+        expect(console.error).toHaveBeenCalledWith("Missing column 'serial_number'");
+    });
+
+    it("Invalid CSV - error", async () => {
+        console.error = jest.fn();
+        const fileData = Buffer.from(invalidSampleCsv);
+
+        const result = await getCaseIdsFromFile(fileData);
+        expect(result).toEqual([]);
+
+        expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
 });
 
@@ -75,6 +72,7 @@ describe("addUacCodesToFile tests", () => {
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
 
+        expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
             "Name": "Homer Simpson",
@@ -109,6 +107,7 @@ describe("addUacCodesToFile tests", () => {
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUac16Details);
 
+        expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
             "Name": "Homer Simpson",
@@ -146,6 +145,7 @@ describe("addUacCodesToFile tests", () => {
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
 
+        expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
             "Name": "Homer Simpson",
@@ -180,6 +180,7 @@ describe("addUacCodesToFile tests", () => {
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
 
+        expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
             "Name": "Homer Simpson",
@@ -246,11 +247,11 @@ describe("addUacCodesToFile tests", () => {
 
     it("Invalid CSV - returns an empty array", async () => {
         console.error = jest.fn();
-        const fileData = Buffer.from(inValidSampleCsv);
+        const fileData = Buffer.from(invalidSampleCsv);
 
         const result = await addUacCodesToFile(fileData, emptyInstrumentUacDetails);
         expect(result).toEqual([]);
 
-        expect(console.error).toHaveBeenCalledWith("Too many fields: expected 3 fields but parsed 4");
+        expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
 });

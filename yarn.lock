@@ -8824,11 +8824,6 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
-papaparse@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.1.tgz#770b7a9124d821d4b2132132b7bd7dce7194b5b1"
-  integrity sha512-Dbt2yjLJrCwH2sRqKFFJaN5XgIASO9YOFeFP8rIBRG2Ain8mqk5r1M6DkfvqEVozVcz3r3HaUGw253hA1nLIcA==
-
 parallel-transform@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/parallel-transform/-/parallel-transform-1.2.0.tgz#9049ca37d6cb2182c3b1d2c720be94d14a5814fc"
@@ -10455,11 +10450,6 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
-rereadable-stream@^1.4.12:
-  version "1.4.12"
-  resolved "https://registry.yarnpkg.com/rereadable-stream/-/rereadable-stream-1.4.12.tgz#51d375d3eb7f4708a4bb592d057d4858502defd9"
-  integrity sha512-X6DO4q5q+QWIKP/B3MO+W0fNlu7x2xJDYvZ6LqM3kSFtyRp/0E/W1NOoxg5Zp9gUB0kKTFXUiubhxgb/c+tZEw==
-
 resolve-cwd@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-2.0.0.tgz#00a9f7387556e27038eae232caa372a6a59b665a"
@@ -10772,20 +10762,6 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.8"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
-
-scramjet-core@^4.32.0:
-  version "4.32.0"
-  resolved "https://registry.yarnpkg.com/scramjet-core/-/scramjet-core-4.32.0.tgz#fe25081c5f80fc7f948c7dbe49a0d3291834a09c"
-  integrity sha512-74F/2knCThhWuoh2Ucc0gLXyCN6MXve8kThS3dMFiJwIjgfE/FyislMIYmrtzDoPnzFCENo+dAcZXbqoGIi4CQ==
-
-scramjet@^4.35.20:
-  version "4.36.0"
-  resolved "https://registry.yarnpkg.com/scramjet/-/scramjet-4.36.0.tgz#d5e0365590fcc6d1afc5d483002e7f97c13d3711"
-  integrity sha512-YQ2w3mtie5RmQQVIoj+NlNf+VwhxaTEsRhorAPC9pTsvbQhroa313E/jCoyCvWLfKxJg7PQkZJoU3t/sq7G5Yg==
-  dependencies:
-    papaparse "^5.3.1"
-    rereadable-stream "^1.4.12"
-    scramjet-core "^4.32.0"
 
 select-hose@^2.0.0:
   version "2.0.0"
