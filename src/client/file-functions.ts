@@ -19,7 +19,7 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
     .then((response) => {
         console.log("import-file-function - true");
         console.log(response.data);
-        return response.data.uacs_imported;
+        return response.data?.uacs_imported;
     })
     .catch((error) => {
         console.log("import-file-function - false");

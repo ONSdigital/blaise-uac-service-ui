@@ -6,7 +6,8 @@ import {
     generateUacCodesForSampleFile,
     sampleFileAlreadyExists,
     getSampleFileWithUacCodes,
-    getListOfInstrumentsWhichHaveExistingSampleFiles
+    getListOfInstrumentsWhichHaveExistingSampleFiles,
+    importUacsFromFile
 } from "./file-functions";
 import {fileMock} from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
@@ -155,5 +156,32 @@ describe("getListOfInstrumentsWhichHaveExistingSampleFiles tests", () => {
 
         const result = await getListOfInstrumentsWhichHaveExistingSampleFiles();
         expect(result).toStrictEqual(instrumentNames);
+    });
+});
+
+
+describe("importUacsFromFile", async () => {
+    const sampleFile = fileMock({
+        name: "sample.csv",
+        type: "image/png",
+        size: 50000,
+    });
+
+    beforeAll(() => {
+        jest.clearAllMocks();
+        mock.reset();
+    });
+
+    it("It should return the number of uacs imported", async () => {
+        mock.onPost("/api/v1/uac/import").reply(200, {uacs_imported: 12});
+
+        const result = await importUacsFromFile(sampleFile);
+        expect(result).toStrictEqual(12);
+    });
+
+    it("It should throw an error if imprting is a problem", async() => {
+        mock.onPost("/api/v1/uac/import").reply(500, { error: "Something went wrong" });
+
+        await expect(importUacsFromFile(sampleFile)).rejects.toThrow();
     });
 });
