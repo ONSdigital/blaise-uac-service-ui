@@ -19,7 +19,7 @@ describe("All expected routes are registered", () => {
         },
         { "methods": ["GET"], "middlewares": ["bound FileExists"], "path": "/api/v1/file/:fileName/exists" },
         { "methods": ["GET"], "middlewares": ["bound GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments" },
-        { "methods": ["POST"], "middlewares": ["bound ImportUacs"], "path": "/api/v1/uac/import" },
+        { "methods": ["POST"], "middlewares": ["multerMiddleware", "bound ImportUacs"], "path": "/api/v1/uac/import" },
         { "methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health" },
         { "methods": ["GET"], "middlewares": ["anonymous"], "path": "*" }
     ];

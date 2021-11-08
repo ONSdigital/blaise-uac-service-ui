@@ -2,6 +2,7 @@ import { getMockReq, getMockRes } from "@jest-mock/express";
 import { ImportUacHandler } from "./import-uac-handler";
 import { GetConfigFromEnv } from "../config";
 import { multerFileMock } from "../../mocks/file-mocks";
+import { AxiosError, AxiosResponse } from "axios";
 
 const config = GetConfigFromEnv();
 
@@ -78,6 +79,28 @@ describe("import uac tests", () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith("Could not import uacs, please try again");
   });
+
+  it("returns the status code and response body from import uac, if it can get them from an error", async () => {
+    const req = getMockReq();
+    req.file = uacFile;
+
+    mockImportUacs.mockImplementation(() => {
+      const error: AxiosError = <AxiosError>{};
+      const response: AxiosResponse = <AxiosResponse>{};
+      response.status = 400;
+      response.data = {error: "Something went wrong"};
+      error.response = response;
+      throw error;
+    });
+
+    const importUacHandler = new ImportUacHandler(busApiClientMock);
+
+    await importUacHandler.ImportUacs(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ "error": "Something went wrong" });
+  });
+
 
   afterEach(() => {
     mockClear();

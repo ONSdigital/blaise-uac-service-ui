@@ -1,4 +1,4 @@
-import express, {Request, Response, Router} from "express";
+import express, { Request, Response, Router } from "express";
 import {GoogleStorage} from "./../storage/google-storage-functions";
 import {Config} from "../config";
 

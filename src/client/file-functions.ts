@@ -1,6 +1,33 @@
 import axios from "axios";
 import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
 
+export async function importUacsFromFile(file: File | undefined): Promise<number> {
+    if (file === undefined) {
+        throw new Error("file was not supplied");
+    }
+
+    const data = new FormData();
+    data.append("file", file);
+
+    const config = {
+        headers: { "Content-Type": "multipart/form-data" },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+    };
+
+    return axios.post("/api/v1/uac/import", data, config)
+    .then((response) => {
+        console.log("import-file-function - true");
+        console.log(response.data);
+        return response.data.uacs_imported;
+    })
+    .catch((error) => {
+        console.log("import-file-function - false");
+        console.error(`Something went wrong importing uacs ${error}`);
+        throw error;
+    });
+}
+
 export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
     if (instrumentName === undefined) {
         throw new Error("Questionnaire name was not supplied");

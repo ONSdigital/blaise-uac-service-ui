@@ -24,16 +24,22 @@ describe("getUacsFromFile tests", () => {
         expect(result).toContain("987698769876");
     });
 
+    it("Throws an error when columns are invalid", async() => {
+        const fileData = Buffer.from(validSampleCsv);
+
+        await expect(getUacsFromFile(fileData)).rejects.toThrow("UAC column \"Full_UAC\" not in CSV");
+    });
+
 
     describe("column validation", () => {
-        const rows: Record<string, unknown>[] = [{ Full_UAC: "123412341234" }];
-        it("Does not throw an error when expected column exists", () => {
-            expect(() => checkImportColumns(rows, "Full_UAC")).not.toThrow();
+        const row: Record<string, unknown> = { Full_UAC: "123412341234" };
+        it("returns true", () => {
+            expect(checkImportColumns(row, "Full_UAC")).toBeTruthy();
         });
 
 
         it("Throws an error when expected column exists", () => {
-            expect(() => checkImportColumns(rows, "random_column")).toThrow("UAC column \"random_column\" not in CSV");
+            expect(checkImportColumns(row, "random_column")).toBeFalsy();
         });
     });
 });

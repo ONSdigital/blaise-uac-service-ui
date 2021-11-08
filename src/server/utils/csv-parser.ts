@@ -1,34 +1,30 @@
 import { Readable } from "stream";
 import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
 import { StringStream } from "scramjet";
+import { parseStream } from "fast-csv";
 
-export function getUacsFromFile(fileData: string | Buffer, uacColumn = "Full_UAC"): Promise<string[]> {
-    const uacs: string[] = [];
+export async function getUacsFromFile(fileData: string | Buffer, uacColumn = "Full_UAC"): Promise<string[]> {
     const readStream = Readable.from(fileData);
 
-    return StringStream
-        .from(readStream)
-        .CSVParse({
-            skipEmptyLines: true,
-            header: true,
-            delimiter: ","
+    return new Promise((resolve, reject) => {
+        const uacs: string[] = [];
+        parseStream(readStream, {headers: true, ignoreEmpty: true, discardUnmappedColumns: true})
+        .validate((row: any): boolean => {
+            return checkImportColumns(row, uacColumn);
         })
-        .setOptions({ maxParallel: 32 })
-        .peek(1, rows => {
-            checkImportColumns(rows, uacColumn);
+        .on("data-invalid", () => {
+            reject(new Error(`UAC column "${uacColumn}" not in CSV`));
         })
-        .map((line) => {
-            mapUAC(line, uacs, uacColumn);
-            return line;
+        .on("error", (error) => {
+            reject(error);
         })
-        .catch((error: Error) => {
-            console.error(error.message);
-            return Promise.reject(error);
+        .on("data", (row) => {
+            uacs.push(row[uacColumn]);
         })
-        .run()
-        .then(() => {
-            return uacs;
+        .on("end", () => {
+            resolve(uacs);
         });
+    });
 }
 
 export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]> {
@@ -94,12 +90,6 @@ function mapUacChunk(line: any, instrumentUacDetails: InstrumentUacDetailsByCase
     }
 }
 
-function mapUAC(line: any, uacs: string[], uacColumn: string) {
-    uacs.push(line[uacColumn]);
-}
-
-export function checkImportColumns(rows: any[], uacColumn: string): void {
-    if (!(uacColumn in rows[0])) {
-        throw new Error(`UAC column "${uacColumn}" not in CSV`);
-    }
+export function checkImportColumns(row: Record<string, unknown>, uacColumn: string): boolean {
+    return (uacColumn in row);
 }
