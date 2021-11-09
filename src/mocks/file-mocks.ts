@@ -1,4 +1,8 @@
-import {Readable} from "stream";
+/**
+ * @jest-environment jsdom
+ */
+
+import { Readable } from "stream";
 
 export function fileMock(
     {
@@ -9,7 +13,7 @@ export function fileMock(
     const blob = new Blob(["a".repeat(size)], {type});
 
     return new File([blob], name);
-};
+}
 
 export function multerFileMock(
     {

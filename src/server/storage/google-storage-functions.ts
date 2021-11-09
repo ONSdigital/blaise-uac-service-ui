@@ -1,40 +1,39 @@
-import {CreateStorage} from "./google-storage";
+import {CreateStorageClient} from "./google-storage";
+import Cloud from "@google-cloud/storage";
 
-export async function uploadFileToBucket(bucketName: string, file: Express.Multer.File, fileName: string) {
-    const bucket = getBucket(bucketName);
-    const uploadFile = bucket.file(fileName);
+export class GoogleStorage {
+    projectID: string
+    storageClient: Cloud.Storage
 
-    await uploadFile.save(Buffer.from(file.buffer));
-}
+    constructor(projectID: string) {
+        this.projectID = projectID;
+        this.storageClient = CreateStorageClient(this.projectID);
+    }
 
-export async function fileExistsInBucket(bucketName: string, fileName: string): Promise<boolean> {
-    const bucket = getBucket(bucketName);
+    bucket(bucketName: string): Cloud.Bucket {
+        return this.storageClient.bucket(bucketName);
+    }
 
-    return (await bucket.file(fileName).exists())[0];
-}
+    async UploadFileToBucket(bucketName: string, file: Express.Multer.File, fileName: string): Promise<void> {
+        await this.bucket(bucketName).file(fileName).save(Buffer.from(file.buffer));
+    }
 
-export async function getFileNamesInBucket(bucketName: string): Promise<string[]> {
-    const bucket = getBucket(bucketName);
-    const [files] = await bucket.getFiles();
-    const fileNames: Array<string> = [];
+    async FileExistsInBucket(bucketName: string, fileName: string): Promise<boolean> {
+        return (await this.bucket(bucketName).file(fileName).exists())[0];
+    }
 
-    files.forEach(file => {
-        fileNames.push(file.name);
-    });
+    async GetFileNamesInBucket(bucketName: string): Promise<string[]> {
+        const [files] = await this.bucket(bucketName).getFiles();
+        const fileNames: Array<string> = [];
 
-    return fileNames;
-}
+        files.forEach(file => {
+            fileNames.push(file.name);
+        });
 
-export async function getFileFromBucket(bucketName: string, fileName: string): Promise<Buffer> {
-    const bucket = getBucket(bucketName);
-    const file = await bucket
-        .file(fileName)
-        .download();
+        return fileNames;
+    }
 
-    return file[0];
-}
-
-function getBucket(bucketName: string) {
-    const storage = CreateStorage();
-    return storage.bucket(bucketName);
+    async GetFileFromBucket(bucketName: string, fileName: string): Promise<Buffer> {
+        return (await this.bucket(bucketName).file(fileName).download())[0];
+    }
 }

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import React from "react";
 import {render, waitFor, screen, act, cleanup} from "@testing-library/react";
 import InstrumentListPage from "./InstrumentListPage";
