@@ -1,41 +1,41 @@
 import express, {Request, Response} from "express";
-import dotenv from "dotenv";
 import path from "path";
 import ejs from "ejs";
-import GenerateUacsHandler from "./handlers/generate-uacs-handler";
 import HealthCheckHandler from "./handlers/health-check-handler";
-import FileExistsHandler from "./handlers/file-exists-handler";
-import InstrumentListHandler from "./handlers/instrument-list-handler";
-import GetFileWithUacsHandler from "./handlers/get-file-with-uacs-handler";
+import NewFileHandler from "./handlers/file-handler";
+import NewInstrumentListHandler from "./handlers/instrument-list-handler";
+import { Config } from "./config";
+import BusApiClient from "blaise-uac-service-node-client";
+import { GoogleStorage } from "./storage/google-storage-functions";
+import NewInstrumentUacHandler from "./handlers/instrument-uac-handler";
+import NewImportUacHandler from "./handlers/import-uac-handler";
 
-if (process.env.NODE_ENV !== "production") {
-    dotenv.config({path: __dirname + "/../.env"});
+function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): any {
+    const server = express();
+    const buildFolder = "../build";
+    server.set("views", path.join(__dirname, buildFolder));
+    server.engine("html", ejs.renderFile);
+    server.use("/static", express.static(path.join(__dirname, `${buildFolder}/static`)));
+
+    server.use(express.json());
+    server.use(express.urlencoded({ extended: true }));
+
+    //define handlers
+    server.use("/api/v1/instrument/:instrumentName/uac", NewInstrumentUacHandler(busApiClient, googleStorage, config));
+    server.use("/api/v1/file", NewFileHandler(googleStorage, config));
+    server.use("/", NewInstrumentListHandler(googleStorage, config));
+    server.use("/", NewImportUacHandler(busApiClient));
+    server.use("/", HealthCheckHandler());
+
+    //define entry point
+    server.get("*", function (req: Request, res: Response) {
+        res.render("index.html");
+    });
+
+    server.use(function (err: Error, req: Request, res: Response) {
+        res.render("../src/views/500.html", {});
+    });
+    return server;
 }
 
-const server = express();
-// treat the index.html as a template and substitute the values at runtime
-const buildFolder = "../build";
-server.set("views", path.join(__dirname, buildFolder));
-server.engine("html", ejs.renderFile);
-server.use("/static", express.static(path.join(__dirname, `${buildFolder}/static`)));
-
-server.use(express.json());
-server.use(express.urlencoded({extended: true}));
-
-//define handlers
-server.use("/", GenerateUacsHandler());
-server.use("/", GetFileWithUacsHandler());
-server.use("/", FileExistsHandler());
-server.use("/", InstrumentListHandler());
-server.use("/", HealthCheckHandler());
-
-//define entry point
-server.get("*", function (req: Request, res: Response) {
-    res.render("index.html");
-});
-
-server.use(function (err: Error, req: Request, res: Response) {
-    res.render("../src/views/500.html", {});
-});
-
-export default server;
+export default NewServer;
