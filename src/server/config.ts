@@ -1,11 +1,17 @@
-export interface EnvironmentVariables {
-    PROJECT_ID: string,
-    BUCKET_NAME: string,
-    BUS_API_URL: string,
-    BUS_CLIENT_ID: string
+
+import dotenv from "dotenv";
+export interface Config {
+    ProjectID: string,
+    BucketName: string,
+    BusApiUrl: string,
+    BusClientId: string
 }
 
-export function getEnvironmentVariables(): EnvironmentVariables {
+export function GetConfigFromEnv(): Config {
+    if (process.env.NODE_ENV !== "production") {
+        dotenv.config({ path: __dirname + "/../.env" });
+    }
+
     let {PROJECT_ID, BUCKET_NAME, BUS_API_URL, BUS_CLIENT_ID} = process.env;
 
     if (PROJECT_ID === undefined) {
@@ -28,5 +34,10 @@ export function getEnvironmentVariables(): EnvironmentVariables {
         BUS_CLIENT_ID = "ENV_VAR_NOT_SET";
     }
 
-    return { PROJECT_ID, BUCKET_NAME, BUS_API_URL, BUS_CLIENT_ID};
+    return {
+        ProjectID: PROJECT_ID,
+        BucketName: BUCKET_NAME,
+        BusApiUrl: BUS_API_URL,
+        BusClientId: BUS_CLIENT_ID,
+    };
 }

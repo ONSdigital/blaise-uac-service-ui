@@ -116,6 +116,16 @@ Object {
                 Upload sample
               </a>
             </li>
+            <li
+              class="list__item"
+            >
+              <a
+                href="/import"
+                id="import-uacs-link"
+              >
+                Upload used UACs
+              </a>
+            </li>
           </ul>
           <h2
             class="u-mt-m"
@@ -278,6 +288,16 @@ Object {
               id="upload-sample-link"
             >
               Upload sample
+            </a>
+          </li>
+          <li
+            class="list__item"
+          >
+            <a
+              href="/import"
+              id="import-uacs-link"
+            >
+              Upload used UACs
             </a>
           </li>
         </ul>

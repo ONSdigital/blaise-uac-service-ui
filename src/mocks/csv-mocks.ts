@@ -1,6 +1,13 @@
 import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
 import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
 
+export const validUACImportCsv = `Full_UAC
+123412341234
+432143214321
+678967896789
+987698769876
+`;
+
 export const validSampleCsv = `serial_number,Name,Phone Number,Email
 100000001,Homer Simpson,5551234422,homer@springfield.com
 100000002,Seymour Skinner,1235663322,a@b.c
@@ -19,11 +26,12 @@ export const validSampleCsvWithExistingUacEntries = `serial_number,Name,UAC1,UAC
 100000003,Bart Simpson,2242,5543,7676,2675465026,bart@spring.field
 `;
 
-export const inValidSampleCsv = `serial_number,Phone Number,Email
+export const invalidSampleCsv = `serial_number,Phone Number,Email
 100000001,Homer Simpson,5551234422,homer@springfield.com
 100000002,Seymour Skinner,1235663322,a@b.c
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
+
 
 export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {

@@ -1,11 +1,21 @@
-import server from "./../server";
-import {fileExists} from "./file-exists-handler";
+import { FileHandler } from "./file-handler";
 import {getMockReq, getMockRes} from "@jest-mock/express";
-import {fileExistsInBucket} from "./../storage/google-storage-functions";
 import supertest from "supertest";
+import NewServer from "../server";
 
-jest.mock("./../storage/google-storage-functions");
-const fileExistsInBucketMock = fileExistsInBucket as jest.Mock<Promise<boolean>>;
+
+import BusApiClient from "blaise-uac-service-node-client";
+import { GetConfigFromEnv } from "../config";
+
+const config = GetConfigFromEnv();
+const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
+
+//mock google storage
+jest.mock("../storage/google-storage-functions");
+import { GoogleStorage } from "../storage/google-storage-functions";
+const fileExistsInBucketMock = jest.fn();
+GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
+const googleStorageMock = new GoogleStorage("a-project-name");
 
 const fileName = "DST2101A.csv";
 
@@ -18,17 +28,18 @@ describe("fileExists parameter tests", () => {
     });
 
     it("It should return a 400 status if a filename is not provided", async () => {
-
         const req = getMockReq({
             params: {"fileName": undefined}
         });
 
-        await expect(fileExists(req, res));
+        const fileHandler = new FileHandler(googleStorageMock, config);
+        await fileHandler.FileExists(req, res);
         expect(res.status).toHaveBeenCalledWith(400);
     });
 });
 
 describe("file-exists-handler tests", () => {
+    const server = NewServer(busApiClient, googleStorageMock, config);
     const request = supertest(server);
 
     beforeEach(() => {
@@ -37,9 +48,7 @@ describe("file-exists-handler tests", () => {
     });
 
     it("It should be called with correct parameters with filename converted to lowercase", async () => {
-        fileExistsInBucketMock.mockImplementationOnce(() => {
-            return Promise.resolve(true);
-        });
+        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(true));
 
         await request
             .get(`/api/v1/file/${fileName}/exists`)
@@ -49,9 +58,7 @@ describe("file-exists-handler tests", () => {
     });
 
     it("It should return a 200 response with true if the file exists", async () => {
-        fileExistsInBucketMock.mockImplementationOnce(() => {
-            return Promise.resolve(true);
-        });
+        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(true));
 
         await request
             .get(`/api/v1/file/${fileName}/exists`)
@@ -59,13 +66,7 @@ describe("file-exists-handler tests", () => {
     });
 
     it("It should return a 200 response with false if the file does not exist", async () => {
-        const req = getMockReq({
-            params: {"fileName": "DST2012A.csv"}
-        });
-
-        fileExistsInBucketMock.mockImplementationOnce(() => {
-            return Promise.resolve(false);
-        });
+        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(false));
 
         await request
             .get(`/api/v1/file/${fileName}/exists`)
@@ -77,4 +78,3 @@ describe("file-exists-handler tests", () => {
         jest.resetModules();
     });
 });
-
