@@ -21,8 +21,8 @@ function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, con
     server.use(express.urlencoded({ extended: true }));
 
     //define handlers
-    server.use("/api/v1/instrument/:instrumentName/uac", NewInstrumentUacHandler(busApiClient, googleStorage, config));
-    server.use("/api/v1/file", NewFileHandler(googleStorage, config));
+    server.use("/", NewInstrumentUacHandler(busApiClient, googleStorage, config));
+    server.use("/", NewFileHandler(googleStorage, config));
     server.use("/", NewInstrumentListHandler(googleStorage, config));
     server.use("/", NewImportUacHandler(busApiClient));
     server.use("/", HealthCheckHandler());
