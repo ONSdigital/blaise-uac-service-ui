@@ -13,8 +13,8 @@ export default function NewInstrumentUacHandler(busApiClient: BusApiClient, goog
 
   const instrumentUacHandler = new InstrumentUacHandler(busApiClient, googleStorage, config);
 
-  router.post("/sample", upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
-  router.get("/sample/:fileName", instrumentUacHandler.GetSampleFileWithUacs);
+  router.post("/api/v1/instrument/:instrumentName/uac/sample", upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
+  router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", instrumentUacHandler.GetSampleFileWithUacs);
   return router;
 }
 
@@ -45,13 +45,21 @@ export class InstrumentUacHandler {
     }
 
     try {
+      console.log(`InstrumentName: ${instrumentName}`);
       await this.generateUacCodes(instrumentName, file);
       await this.uploadSampleFile(fileName, file);
 
       console.log("GenerateUacCodesForSampleFile - 201");
       return res.status(201).json("Success");
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Response: ${error}`);
+      if (error.response) {
+        if (error.response.data.error) {
+          console.error(`${error.response.data.error}`);
+        } else {
+          console.error(`${error.response.data}`);
+        }
+      }
       return res.status(500).json("Failure");
     }
   }
@@ -76,7 +84,7 @@ export class InstrumentUacHandler {
       return fileWithUacsArray.length === 0
         ? res.status(400).json()
         : res.status(200).json(fileWithUacsArray);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Response: ${error}`);
       return res.status(500).json(`Get sample file with uacs failed for instrument ${instrumentName}`);
     }
