@@ -6,7 +6,7 @@ import { Config } from "../config";
 export default function NewFileHandler(googleStorage: GoogleStorage, config: Config): Router {
     const router = express.Router();
     const fileHandler = new FileHandler(googleStorage, config);
-    return router.get("/:fileName/exists", fileHandler.FileExists);
+    return router.get("/api/v1/file/:fileName/exists", fileHandler.FileExists);
 }
 
 export class FileHandler {
