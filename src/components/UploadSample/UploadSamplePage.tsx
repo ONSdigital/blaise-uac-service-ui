@@ -9,9 +9,11 @@ import { sampleFileAlreadyExists, generateUacCodesForSampleFile } from "../../cl
 import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
+import ConfirmName from "./Sections/ConfirmName";
 
 enum Step {
     InstrumentName,
+    ConfirmName,
     AlreadyExists,
     SelectFile,
     DownloadFile,
@@ -19,7 +21,8 @@ enum Step {
 }
 
 function UploadSamplePage(): ReactElement {
-    const [instrumentName, setInstrumentName] = useState<string>();
+    const [instrumentName, setInstrumentName] = useState<string>("");
+    const [nameConfirmation, setNameConfirmation] = useState<boolean>(false);
     const [overwrite, setOverwrite] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState<Step>(Step.InstrumentName);
@@ -30,6 +33,8 @@ function UploadSamplePage(): ReactElement {
         switch (step) {
             case Step.InstrumentName:
                 return (<InstrumentName instrumentName={instrumentName} setInstrumentName={setInstrumentName} />);
+            case Step.ConfirmName:
+                return (<ConfirmName instrumentName={instrumentName} setNameConfirmation={setNameConfirmation} />);
             case Step.AlreadyExists:
                 return (
                     <FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite} />);
@@ -45,7 +50,15 @@ function UploadSamplePage(): ReactElement {
     async function _handleSubmit() {
         switch (activeStep) {
             case Step.InstrumentName:
-                setActiveStep(await sampleFileAlreadyExists(instrumentName) ? Step.AlreadyExists : Step.SelectFile);
+                setActiveStep(Step.ConfirmName);
+                break;
+            case Step.ConfirmName:
+                console.log(nameConfirmation);
+                if (nameConfirmation) {
+                    setActiveStep(await sampleFileAlreadyExists(instrumentName) ? Step.AlreadyExists : Step.SelectFile);
+                    break;
+                }
+                setActiveStep(Step.InstrumentName);
                 break;
             case Step.AlreadyExists:
                 setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
