@@ -86,12 +86,12 @@ function mapUacChunk(line: Record<string, string>, instrumentUacDetails: Instrum
     line["UAC2"] ? line["UAC2"] = uacDetails.uac_chunks.uac2 : line.UAC2 = uacDetails.uac_chunks.uac2;
     line["UAC3"] ? line["UAC3"] = uacDetails.uac_chunks.uac3 : line.UAC3 = uacDetails.uac_chunks.uac3;
 
-    if (uacDetails.full_uac) {
-        line["UAC"] ? line["UAC"] = uacDetails.full_uac : line.UAC = uacDetails.full_uac;
-    }
-
     if (uacDetails.uac_chunks.uac4) {
         line["UAC4"] ? line["UAC4"] = uacDetails.uac_chunks.uac4 : line.UAC4 = uacDetails.uac_chunks.uac4;
+    }
+
+    if (uacDetails.full_uac) {
+        line["UAC"] ? line["UAC"] = uacDetails.full_uac : line.UAC = uacDetails.full_uac;
     }
 
     return line;
