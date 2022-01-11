@@ -7,21 +7,21 @@ export async function getUacsFromFile(fileData: string | Buffer, uacColumn = "Fu
 
     return new Promise((resolve, reject) => {
         const uacs: string[] = [];
-        parseStream(readStream, {headers: true, ignoreEmpty: true, discardUnmappedColumns: true})
-        .on("headers", (headers: string[]) => {
-            if (!headers.includes(uacColumn)) {
-                reject(new Error(`UAC column "${uacColumn}" not in CSV`));
-            }
-        })
-        .on("error", (error) => {
-            reject(error);
-        })
-        .on("data", (row) => {
-            uacs.push(row[uacColumn]);
-        })
-        .on("end", () => {
-            resolve(uacs);
-        });
+        parseStream(readStream, { headers: true, ignoreEmpty: true, discardUnmappedColumns: true })
+            .on("headers", (headers: string[]) => {
+                if (!headers.includes(uacColumn)) {
+                    reject(new Error(`UAC column "${uacColumn}" not in CSV`));
+                }
+            })
+            .on("error", (error) => {
+                reject(error);
+            })
+            .on("data", (row) => {
+                uacs.push(row[uacColumn]);
+            })
+            .on("end", () => {
+                resolve(uacs);
+            });
     });
 }
 
@@ -31,22 +31,22 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
     return new Promise((resolve, reject) => {
         const caseIds: string[] = [];
         parseStream(readStream, { headers: true, ignoreEmpty: true })
-        .on("headers", (headers: string[]) => {
-            if (!headers.includes("serial_number")) {
-                console.error("Missing column 'serial_number'");
+            .on("headers", (headers: string[]) => {
+                if (!headers.includes("serial_number")) {
+                    console.error("Missing column 'serial_number'");
+                    resolve([]);
+                }
+            })
+            .on("error", (error) => {
+                console.error(error.message);
                 resolve([]);
-            }
-        })
-        .on("error", (error) => {
-            console.error(error.message);
-            resolve([]);
-        })
-        .on("data", (row) => {
-            caseIds.push(row.serial_number);
-        })
-        .on("end", () => {
-            resolve(caseIds);
-        });
+            })
+            .on("data", (row) => {
+                caseIds.push(row.serial_number);
+            })
+            .on("end", () => {
+                resolve(caseIds);
+            });
     });
 }
 
@@ -85,14 +85,13 @@ function mapUacChunk(line: Record<string, string>, instrumentUacDetails: Instrum
     line["UAC1"] ? line["UAC1"] = uacDetails.uac_chunks.uac1 : line.UAC1 = uacDetails.uac_chunks.uac1;
     line["UAC2"] ? line["UAC2"] = uacDetails.uac_chunks.uac2 : line.UAC2 = uacDetails.uac_chunks.uac2;
     line["UAC3"] ? line["UAC3"] = uacDetails.uac_chunks.uac3 : line.UAC3 = uacDetails.uac_chunks.uac3;
-    line["UAC"] ? line["UAC"] = uacDetails.FullUAC : line.UAC = [uacDetails.uac_chunks.uac1, uacDetails.uac_chunks.uac2,
-        uacDetails.uac_chunks.uac3].join("");
 
+    if (uacDetails.full_uac) {
+        line["UAC"] ? line["UAC"] = uacDetails.full_uac : line.UAC = uacDetails.full_uac;
+    }
 
     if (uacDetails.uac_chunks.uac4) {
         line["UAC4"] ? line["UAC4"] = uacDetails.uac_chunks.uac4 : line.UAC4 = uacDetails.uac_chunks.uac4;
-        line["UAC"] ? line["UAC"] = uacDetails.FullUAC : line.UAC = [uacDetails.uac_chunks.uac1, uacDetails.uac_chunks.uac2,
-            uacDetails.uac_chunks.uac3, uacDetails.uac_chunks.uac4].join("");
     }
 
     return line;
