@@ -37,38 +37,32 @@ export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {
         instrument_name: "dst2106a",
         case_id: "100000001",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "0009",
             uac2: "7565",
             uac3: "3827"
         },
-        FullUAC: "000975653827"
+        full_uac: "000975653827"
     },
     "100000002": {
         instrument_name: "dst2106a",
         case_id: "100000002",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "3453",
             uac2: "6545",
             uac3: "4564"
         },
-        FullUAC: "345365454564"
+        full_uac: "345365454564"
     },
     "100000003": {
         instrument_name: "dst2106a",
         case_id: "100000003",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "9789",
             uac2: "7578",
             uac3: "5367"
         },
-        FullUAC: "978975785367"
+        full_uac: "978975785367"
     }
 };
 
@@ -76,41 +70,35 @@ export const matchedInstrumentUac16Details: InstrumentUacDetailsByCaseId = {
     "100000001": {
         instrument_name: "dst2106a",
         case_id: "100000001",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "0009",
             uac2: "7565",
             uac3: "3827",
             uac4: "7512"
         },
-        FullUAC: "0009756538277512"
+        full_uac: "0009756538277512"
     },
     "100000002": {
         instrument_name: "dst2106a",
         case_id: "100000002",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "3453",
             uac2: "6545",
             uac3: "4564",
             uac4: "3213"
         },
-        FullUAC: "3453654545643213"
+        full_uac: "3453654545643213"
     },
     "100000003": {
         instrument_name: "dst2106a",
         case_id: "100000003",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "9789",
             uac2: "7578",
             uac3: "5367",
             uac4: "8765"
         },
-        FullUAC: "9789757853678765"
+        full_uac: "9789757853678765"
     }
 };
 
@@ -118,38 +106,32 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000997": {
         instrument_name: "dst2106a",
         case_id: "100000997",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "0009",
             uac2: "7565",
             uac3: "3827"
         },
-        FullUAC: "000975653827"
+        full_uac: "000975653827"
     },
     "100000998": {
         instrument_name: "dst2106a",
         case_id: "100000998",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "3453",
             uac2: "6545",
             uac3: "4564"
         },
-        FullUAC: "345365454564"
+        full_uac: "345365454564"
     },
     "100000999": {
         instrument_name: "dst2106a",
         case_id: "100000999",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "9789",
             uac2: "7578",
             uac3: "5367"
         },
-        FullUAC: "978975785367"
+        full_uac: "978975785367"
     }
 };
 
@@ -157,14 +139,12 @@ export const partialMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = 
     "100000002": {
         instrument_name: "dst2106a",
         case_id: "100000002",
-        postcode_attempts: 0,
-        postcode_attempt_timestamp: "",
         uac_chunks: {
             uac1: "3453",
             uac2: "6545",
             uac3: "4564"
         },
-        FullUAC: "345365454564"
+        full_uac: "345365454564"
     }
 };
 
