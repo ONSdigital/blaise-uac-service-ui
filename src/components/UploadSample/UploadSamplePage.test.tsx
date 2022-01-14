@@ -3,16 +3,16 @@
  */
 
 import React from "react";
-import {Router} from "react-router";
-import {render, waitFor, fireEvent, cleanup, screen, act} from "@testing-library/react";
+import { Router } from "react-router";
+import { render, waitFor, fireEvent, cleanup, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import {createMemoryHistory} from "history";
+import { createMemoryHistory } from "history";
 import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import {getFileName} from "../../client/file-functions";
+import { getFileName } from "../../client/file-functions";
 
-const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
+const mock = new MockAdapter(axios, { onNoMatch: "throwException" });
 
 const instrumentName = "DST1234A";
 const fileName = getFileName(instrumentName);
@@ -28,7 +28,7 @@ describe("Upload Sample Page", () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
-                <UploadSamplePage/>
+                <UploadSamplePage />
             </Router>
         );
 
@@ -39,9 +39,9 @@ describe("Upload Sample Page", () => {
 
     it("should render correctly", async () => {
         const history = createMemoryHistory();
-        const {queryByText} = render(
+        const { queryByText } = render(
             <Router history={history}>
-                <UploadSamplePage/>
+                <UploadSamplePage />
             </Router>
         );
 
@@ -68,12 +68,12 @@ describe("Upload Sample Page", () => {
             const history = createMemoryHistory();
             render(
                 <Router history={history}>
-                    <UploadSamplePage/>
+                    <UploadSamplePage />
                 </Router>
             );
 
             const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);
-            fireEvent.change(inputInstrumentName, {target: {value: test.instrumentName}});
+            fireEvent.change(inputInstrumentName, { target: { value: test.instrumentName } });
 
             await fireEvent.click(screen.getByText(/Continue/));
 
@@ -83,10 +83,45 @@ describe("Upload Sample Page", () => {
         });
     });
 
+    it("Enter instrument name - Should navigate to confirm screen", async () => {
+
+        mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
+
+        await EnterInstrumentNameAndContinue();
+
+        await waitFor(() => {
+            expect(screen.getByText(/Can you confirm/i)).toBeDefined();
+        });
+    });
+
+    it("Confirm instrument name - should navigate to select file", async () => {
+        mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
+
+        await EnterInstrumentNameAndContinue();
+        await ConfirmInstrumentName();
+
+        await waitFor(() => {
+            expect(screen.queryAllByText("Select a sample file")).toHaveLength(1);
+        });
+    });
+
+
+    it("Confirm instrument name - should navigate to Enter instrument name", async () => {
+        mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
+
+        await EnterInstrumentNameAndContinue();
+        await AmendInstrumentName();
+
+        await waitFor(() => {
+            expect(screen.queryByText(/Which questionnaire do you wish to generate UACs for?/i)).toBeInTheDocument();
+        });
+    });
+
     it("Enter instrument name - should navigate to the select file option if a sample for the instrument has not been previously uploaded", async () => {
         mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
 
         await EnterInstrumentNameAndContinue();
+        await ConfirmInstrumentName();
 
         await waitFor(() => {
             expect(screen.queryAllByText("Select a sample file")).toHaveLength(1);
@@ -97,6 +132,7 @@ describe("Upload Sample Page", () => {
         mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, true);
 
         await EnterInstrumentNameAndContinue();
+        await ConfirmInstrumentName();
 
         await waitFor(() => {
             expect(screen.queryAllByText("Overwrite sample file?")).toHaveLength(1);
@@ -164,14 +200,32 @@ async function EnterInstrumentNameAndContinue() {
     const history = createMemoryHistory();
     render(
         <Router history={history}>
-            <UploadSamplePage/>
+            <UploadSamplePage />
         </Router>
     );
 
     //Enter instrument name
     const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);
-    fireEvent.change(inputInstrumentName, {target: {value: instrumentName}});
+    fireEvent.change(inputInstrumentName, { target: { value: instrumentName } });
 
+    await fireEvent.click(screen.getByText(/Continue/));
+}
+
+async function ConfirmInstrumentName() {
+    await waitFor(() => {
+        expect(screen.getByText(/Can you confirm/i)).toBeDefined();
+    });
+
+    await fireEvent.click(screen.getByText(/Yes, the questionnaire name is correct/i));
+    await fireEvent.click(screen.getByText(/Continue/));
+}
+
+async function AmendInstrumentName() {
+    await waitFor(() => {
+        expect(screen.getByText(/Can you confirm/i)).toBeDefined();
+    });
+
+    await fireEvent.click(screen.getByText(/No, I need to amend it/i));
     await fireEvent.click(screen.getByText(/Continue/));
 }
 
@@ -179,6 +233,7 @@ async function NavigateToOverwriteFileAndContinue(overwrite: boolean) {
     mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, true);
 
     await EnterInstrumentNameAndContinue();
+    await ConfirmInstrumentName();
 
     await waitFor(() => {
         expect(screen.queryAllByText("Overwrite sample file?")).toHaveLength(1);
@@ -195,6 +250,7 @@ async function NavigateToSelectFile() {
     mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
 
     await EnterInstrumentNameAndContinue();
+    await ConfirmInstrumentName();
 
     await waitFor(() => {
         expect(screen.queryAllByText("Select a sample file")).toHaveLength(1);

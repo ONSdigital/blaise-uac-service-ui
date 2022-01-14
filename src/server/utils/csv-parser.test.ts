@@ -1,4 +1,4 @@
-import { addUacCodesToFile, getCaseIdsFromFile, getUacsFromFile, checkImportColumns } from "./csv-parser";
+import { addUacCodesToFile, getCaseIdsFromFile, getUacsFromFile } from "./csv-parser";
 import {
     matchedInstrumentUacDetails,
     matchedInstrumentUac16Details,
@@ -64,7 +64,6 @@ describe("getCaseIdsFromFile tests", () => {
     });
 });
 
-
 describe("addUacCodesToFile tests", () => {
 
     it("Adds expected UAC chunks to the CSV where there are no UAC entries in the file", async () => {
@@ -80,7 +79,8 @@ describe("addUacCodesToFile tests", () => {
             "Email": "homer@springfield.com",
             "UAC1": "0009",
             "UAC2": "7565",
-            "UAC3": "3827"
+            "UAC3": "3827",
+            "UAC": "000975653827"
         });
         expect(result).toContainEqual({
             "serial_number": "100000002",
@@ -89,7 +89,8 @@ describe("addUacCodesToFile tests", () => {
             "Email": "a@b.c",
             "UAC1": "3453",
             "UAC2": "6545",
-            "UAC3": "4564"
+            "UAC3": "4564",
+            "UAC": "345365454564"
         });
         expect(result).toContainEqual({
             "serial_number": "100000003",
@@ -98,7 +99,8 @@ describe("addUacCodesToFile tests", () => {
             "Email": "bart@spring.field",
             "UAC1": "9789",
             "UAC2": "7578",
-            "UAC3": "5367"
+            "UAC3": "5367",
+            "UAC": "978975785367"
         });
     });
 
@@ -116,7 +118,8 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "0009",
             "UAC2": "7565",
             "UAC3": "3827",
-            "UAC4": "7512"
+            "UAC4": "7512",
+            "UAC": "0009756538277512"
         });
         expect(result).toContainEqual({
             "serial_number": "100000002",
@@ -126,7 +129,8 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "3453",
             "UAC2": "6545",
             "UAC3": "4564",
-            "UAC4": "3213"
+            "UAC4": "3213",
+            "UAC": "3453654545643213"
         });
         expect(result).toContainEqual({
             "serial_number": "100000003",
@@ -136,7 +140,8 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "9789",
             "UAC2": "7578",
             "UAC3": "5367",
-            "UAC4": "8765"
+            "UAC4": "8765",
+            "UAC": "9789757853678765"
         });
     });
 
@@ -152,6 +157,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "0009",
             "UAC2": "7565",
             "UAC3": "3827",
+            "UAC": "000975653827",
             "Phone Number": "5551234422",
             "Email": "homer@springfield.com"
         });
@@ -161,6 +167,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "3453",
             "UAC2": "6545",
             "UAC3": "4564",
+            "UAC": "345365454564",
             "Phone Number": "1235663322",
             "Email": "a@b.c"
         });
@@ -170,6 +177,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "9789",
             "UAC2": "7578",
             "UAC3": "5367",
+            "UAC": "978975785367",
             "Phone Number": "2675465026",
             "Email": "bart@spring.field"
         });
@@ -187,6 +195,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "0009",
             "UAC2": "7565",
             "UAC3": "3827",
+            "UAC": "000975653827",
             "Phone Number": "5551234422",
             "Email": "homer@springfield.com"
         });
@@ -196,6 +205,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "3453",
             "UAC2": "6545",
             "UAC3": "4564",
+            "UAC": "345365454564",
             "Phone Number": "1235663322",
             "Email": "a@b.c"
         });
@@ -205,6 +215,7 @@ describe("addUacCodesToFile tests", () => {
             "UAC1": "9789",
             "UAC2": "7578",
             "UAC3": "5367",
+            "UAC": "978975785367",
             "Phone Number": "2675465026",
             "Email": "bart@spring.field"
         });
