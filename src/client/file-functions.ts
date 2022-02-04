@@ -6,6 +6,11 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
         throw new Error("file was not supplied");
     }
 
+    const allowedFileTypes = /(\.csv)$/i;
+    if (!allowedFileTypes.exec(file.name)) {
+        throw new Error("File format is not CSV");
+    }
+
     const data = new FormData();
     data.append("file", file);
 
@@ -16,16 +21,16 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
     };
 
     return axios.post("/api/v1/uac/import", data, config)
-    .then((response) => {
-        console.log("import-file-function - true");
-        console.log(response.data);
-        return response.data?.uacs_imported;
-    })
-    .catch((error) => {
-        console.log("import-file-function - false");
-        console.error(`Something went wrong importing uacs ${error}`);
-        throw error;
-    });
+        .then((response) => {
+            console.log("import-file-function - true");
+            console.log(response.data);
+            return response.data?.uacs_imported;
+        })
+        .catch((error) => {
+            console.log("import-file-function - false");
+            console.error(`Something went wrong importing uacs ${error}`);
+            throw error;
+        });
 }
 
 export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
@@ -51,7 +56,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
         .catch((error) => {
             console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-            return false;
+            throw error;
         });
 
     console.log("file-functions - balls");

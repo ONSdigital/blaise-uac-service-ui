@@ -47,10 +47,7 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(validUACImportCsv);
 
-        const result = await getCaseIdsFromFile(fileData);
-        expect(result).toEqual([]);
-
-        expect(console.error).toHaveBeenCalledWith("Missing column 'serial_number'");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("Missing column 'serial_number'");
     });
 
     it("Invalid CSV - error", async () => {

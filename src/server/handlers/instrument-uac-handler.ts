@@ -57,7 +57,7 @@ export class InstrumentUacHandler {
         if (error.response.data.error) {
           console.error(`${error.response.data.error}`);
         } else {
-          console.error(`${error.response.data}`);
+          errorResponse = error.response.data;
         }
       }
       return res.status(500).json("Failure");

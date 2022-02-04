@@ -179,7 +179,7 @@ describe("importUacsFromFile", async () => {
         expect(result).toStrictEqual(12);
     });
 
-    it("It should throw an error if imprting is a problem", async() => {
+    it("It should throw an error if importing is a problem", async() => {
         mock.onPost("/api/v1/uac/import").reply(500, { error: "Something went wrong" });
 
         await expect(importUacsFromFile(sampleFile)).rejects.toThrow();
