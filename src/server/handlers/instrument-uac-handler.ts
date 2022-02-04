@@ -52,15 +52,16 @@ export class InstrumentUacHandler {
       console.log("GenerateUacCodesForSampleFile - 201");
       return res.status(201).json("Success");
     } catch (error: any) {
-      console.error(`Response: ${error}`);
+      let errorResponse: any = error.message;
       if (error.response) {
         if (error.response.data.error) {
-          console.error(`${error.response.data.error}`);
+          errorResponse = error.response.data.error;
         } else {
           errorResponse = error.response.data;
         }
       }
-      return res.status(500).json("Failure");
+      console.error(errorResponse);
+      return res.status(500).json({error: errorResponse});
     }
   }
 

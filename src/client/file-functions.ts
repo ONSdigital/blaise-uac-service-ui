@@ -58,9 +58,6 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
             throw error;
         });
-
-    console.log("file-functions - balls");
-    return false;
 }
 
 export async function getSampleFileWithUacCodes(instrumentName: string | undefined, fileName: string | undefined): Promise<Datas> {
