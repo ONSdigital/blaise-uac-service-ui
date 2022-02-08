@@ -178,6 +178,16 @@ describe("Upload Sample Page", () => {
         });
     });
 
+    it(("Select sample file - should return a specific error when the import fails with a reason"), async () => {
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(500, {error: "All the bunnies melted"});
+
+        await NavigateToSelectFileAndUpload("csv");
+
+        await waitFor(() => {
+            expect(screen.queryAllByText("All the bunnies melted")).toHaveLength(1);
+        });
+    });
+
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
