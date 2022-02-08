@@ -100,8 +100,13 @@ describe("generate uac from sample tests", () => {
 
     it("It should return a 500 response if the file fails to parse", async () => {
         getCaseIdsFromFileMock.mockImplementation(() => {
-            throw new Error();
-        });
+        const error: AxiosError = <AxiosError>{};
+        const response: AxiosResponse = <AxiosResponse>{};
+        response.status = 400;
+        response.data = {error: "Something went wrong getting case ids"};
+        error.response = response;
+        throw error;
+    });
 
         await callGenerateUacCodesForSampleFileWithParameters();
 

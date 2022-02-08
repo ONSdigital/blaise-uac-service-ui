@@ -160,7 +160,7 @@ describe("getListOfInstrumentsWhichHaveExistingSampleFiles tests", () => {
 });
 
 
-describe("importUacsFromFile", async () => {
+describe("importUacsFromFile", () => {
     const sampleFile = fileMock({
         name: "sample.csv",
         type: "image/png",
