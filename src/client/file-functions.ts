@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
+import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
 
 export async function importUacsFromFile(file: File | undefined): Promise<number> {
     if (file === undefined) {
@@ -46,7 +46,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     data.append("fileName", getFileName(instrumentName));
     data.append("file", file);
 
-    const config = {headers: {"Content-Type": "multipart/form-data"}};
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
 
     return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, config)
         .then(() => {
@@ -56,7 +56,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
         .catch((error) => {
             console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-            return false;
+            throw error;
         });
 }
 

@@ -9,14 +9,14 @@ import {
     getListOfInstrumentsWhichHaveExistingSampleFiles,
     importUacsFromFile
 } from "./file-functions";
-import {fileMock} from "../mocks/file-mocks";
+import { fileMock } from "../mocks/file-mocks";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import {validSampleFileWithUacDatasResponse} from "../mocks/csv-mocks";
-import {instrumentNames} from "../mocks/api-mocks";
+import { validSampleFileWithUacDatasResponse } from "../mocks/csv-mocks";
+import { instrumentNames } from "../mocks/api-mocks";
 
 // This sets the mock adapter on the default instance
-const mock = new MockAdapter(axios, {onNoMatch: "throwException"});
+const mock = new MockAdapter(axios, { onNoMatch: "throwException" });
 
 const instrumentName = "DST2101A";
 const fileName = "DST2101A.csv";
@@ -67,11 +67,10 @@ describe("generateUacCodesForFile file tests", () => {
         expect(result).toStrictEqual(true);
     });
 
-    it("It should return false if the UAC generation is not successful", async () => {
+    it("It should return the error if the UAC generation is not successful", async () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).networkError();
 
-        const result = await generateUacCodesForSampleFile(instrumentName, sampleFile);
-        expect(result).toStrictEqual(false);
+        await expect(generateUacCodesForSampleFile(instrumentName, sampleFile)).rejects.toThrow("Network Error");
     });
 });
 
@@ -173,13 +172,13 @@ describe("importUacsFromFile", () => {
     });
 
     it("It should return the number of uacs imported", async () => {
-        mock.onPost("/api/v1/uac/import").reply(200, {uacs_imported: 12});
+        mock.onPost("/api/v1/uac/import").reply(200, { uacs_imported: 12 });
 
         const result = await importUacsFromFile(sampleFile);
         expect(result).toStrictEqual(12);
     });
 
-    it("It should throw an error if importing is a problem", async() => {
+    it("It should throw an error if importing is a problem", async () => {
         mock.onPost("/api/v1/uac/import").reply(500, { error: "Something went wrong" });
 
         await expect(importUacsFromFile(sampleFile)).rejects.toThrow();
