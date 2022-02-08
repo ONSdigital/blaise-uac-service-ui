@@ -28,6 +28,7 @@ const googleStorageMock = new GoogleStorage(config.ProjectID);
 //mock csv parser
 jest.mock("../utils/csv-parser");
 import { getCaseIdsFromFile, addUacCodesToFile} from "../utils/csv-parser";
+import {AxiosError, AxiosResponse} from "axios";
 
 const getCaseIdsFromFileMock = getCaseIdsFromFile as jest.Mock<Promise<string[]>>;
 const addUacCodesToFileMock = addUacCodesToFile as jest.Mock<Promise<string[]>>;
@@ -88,32 +89,46 @@ describe("generate uac from sample tests", () => {
 
     it("It should return a 500 response if the uac generation fails", async () => {
         mockGenerateUacCodes.mockImplementation(() => {
-            throw new Error();
+            throw new Error("Cannot generate uac codes");
         });
 
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({error: "Cannot generate uac codes"});
     });
 
     it("It should return a 500 response if the file fails to parse", async () => {
         getCaseIdsFromFileMock.mockImplementation(() => {
-            throw new Error();
-        });
+        const error: AxiosError = <AxiosError>{};
+        const response: AxiosResponse = <AxiosResponse>{};
+        response.status = 400;
+        response.data = {error: "Something went wrong getting case ids"};
+        error.response = response;
+        throw error;
+    });
 
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({error: "Something went wrong getting case ids"});
     });
 
     it("It should return a 500 response if the upload fails", async () => {
+        mockGenerateUacCodes.mockReturnValue(true);
         mockUploadFileToBucket.mockImplementation(() => {
-            throw new Error();
+          const error: AxiosError = <AxiosError>{};
+          const response: AxiosResponse = <AxiosResponse>{};
+          response.status = 400;
+          response.data = "Something went wrong uploading file to bucket";
+          error.response = response;
+          throw error;
         });
 
         await callGenerateUacCodesForSampleFileWithParameters();
 
         expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({error: "Something went wrong uploading file to bucket"});
     });
 
     afterEach(() => {

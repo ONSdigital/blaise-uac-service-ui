@@ -27,20 +27,21 @@ git clone https://github.com/ONSdigital/blaise-uac-service-ui.git
 
 Create a new .env file and add the following variables.
 
-| Variable                      | Description                                                                     | Var Example                  |
-|-------------------------------|---------------------------------------------------------------------------------|------------------------------|
-| PROJECT_ID                    | GCP Project ID                                                                  | ons-blaise-dev-jam-04        |
-| BUCKET_NAME                   | GCP Bucket name for the sample file to be stored                                | ons-blaise-dev-jam-04-bus    |
+| Variable                      | Description                                                                         | Var Example                  |
+|-------------------------------|-------------------------------------------------------------------------------------|------------------------------|
+| PROJECT_ID                    | GCP Project ID                                                                      | ons-blaise-dev-v2-jam-04        |
+| BUCKET_NAME                   | GCP Bucket name for the sample file to be stored                                    | ons-blaise-dev-v2-jam-04-bus    |
 | BUS_API_URL                   | Url that the [BUS Service](https://github.com/ONSdigital/blaise-uac-service) is running on to send calls to set and get the live date.  | localhost:5011 |
-| BUS_CLIENT_ID                | GCP IAP ID for the [BUS Service](https://github.com/ONSdigital/blaise-uac-service)  | randomKey0112 |
-
+| BUS_CLIENT_ID                 | GCP IAP ID for the [BUS Service](https://github.com/ONSdigital/blaise-uac-service)  | randomKey0112 |
+|GOOGLE_APPLICATION_CREDENTIALS | Your keys.json file                                                                 |keys.json|
 The .env file should be setup as below
 
 ```.env
-PROJECT_ID='ons-blaise-dev-jam-04'             
-BUCKET_NAME='ons-blaise-dev-jam-04-bus'
+PROJECT_ID='ons-blaise-dev-v2-jam-04'             
+BUCKET_NAME='ons-blaise-dev-v2-jam-04-bus'
 BUS_API_URL=localhost:5011
 BUS_CLIENT_ID=randomKey0778
+GOOGLE_APPLICATION_CREDENTIALS=keys.json
 ```
 
 Install required modules

@@ -10,6 +10,7 @@ import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
 import ConfirmName from "./Sections/ConfirmName";
+import {AxiosError} from "axios";
 
 enum Step {
     InstrumentName,
@@ -26,6 +27,7 @@ function UploadSamplePage(): ReactElement {
     const [overwrite, setOverwrite] = useState<string>();
     const [file, setFile] = useState<File>();
     const [activeStep, setActiveStep] = useState<Step>(Step.InstrumentName);
+    const [error, setError] = useState<Error | AxiosError>();
 
     const history = useHistory();
 
@@ -43,7 +45,7 @@ function UploadSamplePage(): ReactElement {
             case Step.DownloadFile:
                 return (<DownloadUacFile instrumentName={instrumentName} />);
             case Step.UploadFailed:
-                return (<UploadFailed instrumentName={instrumentName} />);
+                return (<UploadFailed instrumentName={instrumentName} error={error} />);
         }
     }
 
@@ -64,7 +66,12 @@ function UploadSamplePage(): ReactElement {
                 setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
                 break;
             case Step.SelectFile:
-                setActiveStep(await generateUacCodesForSampleFile(instrumentName, file) ? Step.DownloadFile : Step.UploadFailed);
+                generateUacCodesForSampleFile(instrumentName, file).then(() => {
+                    setActiveStep(Step.DownloadFile);
+                }).catch((error: Error) => {
+                    setError(error);
+                    setActiveStep(Step.UploadFailed);
+                });
                 break;
             case Step.DownloadFile:
                 history.push("/");

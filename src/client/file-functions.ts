@@ -1,9 +1,14 @@
 import axios from "axios";
-import {Datas} from "react-csv-downloader/dist/esm/lib/csv";
+import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
 
 export async function importUacsFromFile(file: File | undefined): Promise<number> {
     if (file === undefined) {
         throw new Error("file was not supplied");
+    }
+
+    const allowedFileTypes = /(\.csv)$/i;
+    if (!allowedFileTypes.exec(file.name)) {
+        throw new Error("File format is not CSV");
     }
 
     const data = new FormData();
@@ -16,16 +21,16 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
     };
 
     return axios.post("/api/v1/uac/import", data, config)
-    .then((response) => {
-        console.log("import-file-function - true");
-        console.log(response.data);
-        return response.data?.uacs_imported;
-    })
-    .catch((error) => {
-        console.log("import-file-function - false");
-        console.error(`Something went wrong importing uacs ${error}`);
-        throw error;
-    });
+        .then((response) => {
+            console.log("import-file-function - true");
+            console.log(response.data);
+            return response.data?.uacs_imported;
+        })
+        .catch((error) => {
+            console.log("import-file-function - false");
+            console.error(`Something went wrong importing uacs ${error}`);
+            throw error;
+        });
 }
 
 export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
@@ -41,7 +46,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     data.append("fileName", getFileName(instrumentName));
     data.append("file", file);
 
-    const config = {headers: {"Content-Type": "multipart/form-data"}};
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
 
     return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, config)
         .then(() => {
@@ -51,11 +56,8 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
         .catch((error) => {
             console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-            return false;
+            throw error;
         });
-
-    console.log("file-functions - balls");
-    return false;
 }
 
 export async function getSampleFileWithUacCodes(instrumentName: string | undefined, fileName: string | undefined): Promise<Datas> {
