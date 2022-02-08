@@ -56,7 +56,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
         .catch((error) => {
             console.log("file-functions - false");
             console.error(`Something went wrong in calling generate UAC endpoint ${error}`);
-            throw error;
+            return false;
         });
 }
 
