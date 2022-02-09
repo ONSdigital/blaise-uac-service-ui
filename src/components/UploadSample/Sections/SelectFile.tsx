@@ -1,6 +1,6 @@
-import {ONSPanel, StyledFormErrorSummary, StyledFormField} from "blaise-design-system-react-components";
-import React, {ChangeEvent, ReactElement} from "react";
-import {FormikContextType, useFormikContext} from "formik";
+import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
+import React, { ChangeEvent, ReactElement } from "react";
+import { FormikContextType, useFormikContext } from "formik";
 
 interface SelectFilePageProps {
     file: File | undefined,
@@ -8,8 +8,8 @@ interface SelectFilePageProps {
 }
 
 function SelectFile(props: SelectFilePageProps): ReactElement {
-    const {file, setFile} = props;
-    const {isSubmitting}: FormikContextType<unknown> = useFormikContext();
+    const { file, setFile } = props;
+    const { isSubmitting }: FormikContextType<unknown> = useFormikContext();
 
     function validateInput() {
         let error;
@@ -48,7 +48,7 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                     <ONSPanel>
                         <p>
                             The sample file must be a Comma-Separated Values (CSV) file containing the column <em
-                            className="highlight">serial_number</em>.
+                                className="highlight">serial_number</em>.
                         </p>
                         <p>
                             If the sample file already contains UACs, these may be overwritten if they were generated
@@ -56,15 +56,14 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                         </p>
                         <p>
                             When a sample file is selected and you continue to upload this sample file, <b>this
-                            may take a few minutes</b>.
-                            <br/>
-                            <br/>
+                                may take a few minutes</b>.
+                            <br />
+                            <br />
                             Given this, <b>do not navigate away</b> from this page during this process. You will
                             be re-directed when there is an update regarding the upload of the sample.
                         </p>
                     </ONSPanel>
-                    <StyledFormErrorSummary/>
-                    <StyledFormField {...field}/>
+                    <StyledFormField {...field} />
                 </div>
             </div>
         </>

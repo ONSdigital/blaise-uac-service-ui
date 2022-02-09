@@ -33,13 +33,12 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
         parseStream(readStream, { headers: true, ignoreEmpty: true })
             .on("headers", (headers: string[]) => {
                 if (!headers.includes("serial_number")) {
-                    console.error("Missing column 'serial_number'");
-                    resolve([]);
+                    reject(new Error("Missing column 'serial_number'"));
                 }
             })
             .on("error", (error) => {
                 console.error(error.message);
-                resolve([]);
+                reject(new Error("There is a problem with the .csv file."));
             })
             .on("data", (row) => {
                 caseIds.push(row.serial_number);

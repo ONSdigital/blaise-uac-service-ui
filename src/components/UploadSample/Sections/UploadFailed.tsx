@@ -1,12 +1,31 @@
 import {ONSPanel} from "blaise-design-system-react-components";
 import React, {ReactElement} from "react";
+import {AxiosError} from "axios";
 
 interface UploadFailedProps {
     instrumentName: string | undefined;
+    error: Error | AxiosError | undefined
+}
+
+function isAxiosError(error: any): error is AxiosError {
+    return (error as AxiosError).isAxiosError !== undefined;
 }
 
 function UploadFailed(props: UploadFailedProps): ReactElement {
-    const {instrumentName} = props;
+    const {instrumentName, error} = props;
+
+    function errorDetailPanel(): ReactElement {
+        console.error(error);
+        if (isAxiosError(error)) {
+            console.log(error.response);
+            if (error?.response?.data?.error) {
+                return <ONSPanel status="error">
+                    <p>{error.response.data.error}</p>
+                </ONSPanel>;
+            }
+        }
+        return <></>;
+    }
 
     return (
         <>
@@ -20,6 +39,7 @@ function UploadFailed(props: UploadFailedProps): ReactElement {
                     date of the failure.
                 </p>
             </ONSPanel>
+            {errorDetailPanel()}
         </>
     );
 }

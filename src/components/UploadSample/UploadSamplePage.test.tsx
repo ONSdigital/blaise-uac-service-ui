@@ -154,7 +154,7 @@ describe("Upload Sample Page", () => {
         await fireEvent.click(screen.getByText(/Continue/));
 
         await waitFor(() => {
-            expect(screen.queryAllByText("Select a file")).toHaveLength(2);
+            expect(screen.queryAllByText("Select a file")).toHaveLength(1);
         });
     });
 
@@ -164,7 +164,7 @@ describe("Upload Sample Page", () => {
         await fireEvent.click(screen.getByText(/Continue/));
 
         await waitFor(() => {
-            expect(screen.queryAllByText("File must be a .csv")).toHaveLength(2);
+            expect(screen.queryAllByText("File must be a .csv")).toHaveLength(1);
         });
     });
 
@@ -175,6 +175,16 @@ describe("Upload Sample Page", () => {
 
         await waitFor(() => {
             expect(screen.queryAllByText("File upload failed")).toHaveLength(1);
+        });
+    });
+
+    it(("Select sample file - should return a specific error when the import fails with a reason"), async () => {
+        mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(500, { error: "All the bunnies melted" });
+
+        await NavigateToSelectFileAndUpload("csv");
+
+        await waitFor(() => {
+            expect(screen.queryAllByText("All the bunnies melted")).toHaveLength(1);
         });
     });
 
