@@ -9,37 +9,44 @@ import UploadFailed from "./Sections/UploadFailed";
 import UploadSuccessful from "./Sections/UploadSuccessful";
 import { AxiosError } from "axios";
 
+
+enum Step {
+  SelectFile,
+  UploadFailed,
+  UploadSuccessful
+}
+
 function ImportUacPage(): ReactElement {
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<Error | AxiosError>();
   const [uacsImported, setUacsImported] = useState<number>();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(Step.SelectFile);
 
   function _renderStepContent(step: number) {
     switch (step) {
-      case 0:
+      case Step.SelectFile:
         return (<SelectFile file={file} setFile={setFile}/>);
-      case 1:
+      case Step.UploadFailed:
         return (<UploadFailed error={error} />);
-      case 2:
+      case Step.UploadSuccessful:
         return (<UploadSuccessful uacsImported={uacsImported} />);
     }
   }
 
   async function _handleSubmit() {
     switch (activeStep) {
-      case 0: {
+      case Step.SelectFile: {
         await importUacsFromFile(file).then((uacsImported: number) => {
           setUacsImported(uacsImported);
-          setActiveStep(2);
+          setActiveStep(Step.UploadSuccessful);
         }).catch((error: Error) => {
           setError(error);
-          setActiveStep(1);
+          setActiveStep(Step.UploadFailed);
         });
         break;
       }
       default:
-        setActiveStep(0);
+        setActiveStep(Step.SelectFile);
     }
   }
 

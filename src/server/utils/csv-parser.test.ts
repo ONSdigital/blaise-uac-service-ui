@@ -44,21 +44,16 @@ describe("getCaseIdsFromFile tests", () => {
     });
 
     it("Missing column - error", async () => {
-        console.error = jest.fn();
         const fileData = Buffer.from(validUACImportCsv);
 
-        const result = await getCaseIdsFromFile(fileData);
-        expect(result).toEqual([]);
-
-        expect(console.error).toHaveBeenCalledWith("Missing column 'serial_number'");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("Missing column 'serial_number'");
     });
 
     it("Invalid CSV - error", async () => {
         console.error = jest.fn();
         const fileData = Buffer.from(invalidSampleCsv);
 
-        const result = await getCaseIdsFromFile(fileData);
-        expect(result).toEqual([]);
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the .csv file.");
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
