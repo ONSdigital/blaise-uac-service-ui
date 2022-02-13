@@ -9,6 +9,7 @@ env_variables:
     BUCKET_NAME: _BUCKET_NAME
     BUS_API_URL: _BUS_API_URL
     BUS_CLIENT_ID: _BUS_CLIENT_ID
+    BLAISE_API_URL: _BLAISE_API_URL
 
 basic_scaling:
     idle_timeout: 10m

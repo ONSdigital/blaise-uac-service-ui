@@ -2,20 +2,20 @@ import { FileHandler } from "./file-handler";
 import {getMockReq, getMockRes} from "@jest-mock/express";
 import supertest from "supertest";
 import NewServer from "../server";
-
-
 import BusApiClient from "blaise-uac-service-node-client";
+import BlaiseApiClient from "blaise-api-node-client";
 import { GetConfigFromEnv } from "../config";
 
 const config = GetConfigFromEnv();
 const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
+const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
 
 //mock google storage
 jest.mock("../storage/google-storage-functions");
 import { GoogleStorage } from "../storage/google-storage-functions";
 const fileExistsInBucketMock = jest.fn();
 GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
-const googleStorageMock = new GoogleStorage("a-project-name");
+const googleStorageMock = new GoogleStorage("ProjectID-mock");
 
 const fileName = "DST2101A.csv";
 
@@ -39,7 +39,7 @@ describe("fileExists parameter tests", () => {
 });
 
 describe("file-exists-handler tests", () => {
-    const server = NewServer(busApiClient, googleStorageMock, config);
+    const server = NewServer(busApiClient, googleStorageMock, config, blaiseApiClient);
     const request = supertest(server);
 
     beforeEach(() => {
@@ -54,7 +54,7 @@ describe("file-exists-handler tests", () => {
             .get(`/api/v1/file/${fileName}/exists`)
             .expect(200);
 
-        expect(fileExistsInBucketMock).toHaveBeenCalledWith("unique-bucket", fileName.toLowerCase());
+        expect(fileExistsInBucketMock).toHaveBeenCalledWith("BucketName-mock", fileName.toLowerCase());
     });
 
     it("It should return a 200 response with true if the file exists", async () => {

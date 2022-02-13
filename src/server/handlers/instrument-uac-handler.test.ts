@@ -78,7 +78,7 @@ describe("generate uac from sample tests", () => {
     it("Upload file should be called with correct parameters with filename converted to lowercase if successful", async () => {
         await callGenerateUacCodesForSampleFileWithParameters();
 
-        expect(mockUploadFileToBucket).toHaveBeenCalledWith("unique-bucket", sampleFile, `${instrumentName.toLowerCase()}.csv`);
+        expect(mockUploadFileToBucket).toHaveBeenCalledWith("BucketName-mock", sampleFile, `${instrumentName.toLowerCase()}.csv`);
     });
 
     it("It should return a 201 response with expected data if uac generation is successful", async () => {

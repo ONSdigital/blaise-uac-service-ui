@@ -5,6 +5,12 @@ Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
+      <a
+        class="skip__link"
+        href="#main-content"
+      >
+        Skip to main content
+      </a>
       <div
         class="phase-banner"
       >
@@ -99,53 +105,95 @@ Object {
         class="page__container container"
         style="min-height: calc(67vh);"
       >
-        <main
-          class="page__main"
-          id="main-content"
+        <div
+          class="panel panel--info panel--no-title  u-mt-m"
         >
-          <ul
-            class="list list--bare list--inline u-mt-m"
+          <div
+            class="panel__body "
           >
-            <li
-              class="list__item"
-            >
-              <a
-                href="/upload"
-                id="upload-sample-link"
-              >
-                Upload sample
-              </a>
-            </li>
-            <li
-              class="list__item"
-            >
-              <a
-                href="/import"
-                id="import-uacs-link"
-              >
-                Upload used UACs
-              </a>
-            </li>
-          </ul>
-          <h2
-            class="u-mt-m"
-          >
-            Previously uploaded questionnaire samples
-          </h2>
-          <div>
             <div
-              class="u-mt-m"
+              style="text-align: center;"
             >
               <div
-                class="panel panel--info panel--no-title panel--spacious u-mt-m"
+                aria-busy="true"
+                class=""
               >
-                <div
-                  class="panel__body "
-                />
+                <svg
+                  aria-label="audio-loading"
+                  height="30"
+                  viewBox="0 0 38 38"
+                  width="30"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <lineargradient
+                      id="a"
+                      x1="8.042%"
+                      x2="65.682%"
+                      y1="0%"
+                      y2="23.865%"
+                    >
+                      <stop
+                        offset="0%"
+                        stop-color="#064868"
+                        stop-opacity="0"
+                      />
+                      <stop
+                        offset="63.146%"
+                        stop-color="#064868"
+                        stop-opacity=".631"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#064868"
+                      />
+                    </lineargradient>
+                  </defs>
+                  <g
+                    fill="none"
+                    fill-rule="evenodd"
+                  >
+                    <g
+                      transform="translate(1 1)"
+                    >
+                      <path
+                        d="M36 18c0-9.94-8.06-18-18-18"
+                        id="Oval-2"
+                        stroke="#064868"
+                        stroke-width="2"
+                      >
+                        <animatetransform
+                          attributeName="transform"
+                          dur="0.9s"
+                          from="0 18 18"
+                          repeatCount="indefinite"
+                          to="360 18 18"
+                          type="rotate"
+                        />
+                      </path>
+                      <circle
+                        cx="36"
+                        cy="18"
+                        fill="#fff"
+                        r="1"
+                      >
+                        <animatetransform
+                          attributeName="transform"
+                          dur="0.9s"
+                          from="0 18 18"
+                          repeatCount="indefinite"
+                          to="360 18 18"
+                          type="rotate"
+                        />
+                      </circle>
+                    </g>
+                  </g>
+                </svg>
               </div>
+              Loading
             </div>
           </div>
-        </main>
+        </div>
       </div>
       <footer
         class="footer"
@@ -179,6 +227,12 @@ Object {
     </div>
   </body>,
   "container": <div>
+    <a
+      class="skip__link"
+      href="#main-content"
+    >
+      Skip to main content
+    </a>
     <div
       class="phase-banner"
     >
@@ -273,53 +327,95 @@ Object {
       class="page__container container"
       style="min-height: calc(67vh);"
     >
-      <main
-        class="page__main"
-        id="main-content"
+      <div
+        class="panel panel--info panel--no-title  u-mt-m"
       >
-        <ul
-          class="list list--bare list--inline u-mt-m"
+        <div
+          class="panel__body "
         >
-          <li
-            class="list__item"
-          >
-            <a
-              href="/upload"
-              id="upload-sample-link"
-            >
-              Upload sample
-            </a>
-          </li>
-          <li
-            class="list__item"
-          >
-            <a
-              href="/import"
-              id="import-uacs-link"
-            >
-              Upload used UACs
-            </a>
-          </li>
-        </ul>
-        <h2
-          class="u-mt-m"
-        >
-          Previously uploaded questionnaire samples
-        </h2>
-        <div>
           <div
-            class="u-mt-m"
+            style="text-align: center;"
           >
             <div
-              class="panel panel--info panel--no-title panel--spacious u-mt-m"
+              aria-busy="true"
+              class=""
             >
-              <div
-                class="panel__body "
-              />
+              <svg
+                aria-label="audio-loading"
+                height="30"
+                viewBox="0 0 38 38"
+                width="30"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <lineargradient
+                    id="a"
+                    x1="8.042%"
+                    x2="65.682%"
+                    y1="0%"
+                    y2="23.865%"
+                  >
+                    <stop
+                      offset="0%"
+                      stop-color="#064868"
+                      stop-opacity="0"
+                    />
+                    <stop
+                      offset="63.146%"
+                      stop-color="#064868"
+                      stop-opacity=".631"
+                    />
+                    <stop
+                      offset="100%"
+                      stop-color="#064868"
+                    />
+                  </lineargradient>
+                </defs>
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                >
+                  <g
+                    transform="translate(1 1)"
+                  >
+                    <path
+                      d="M36 18c0-9.94-8.06-18-18-18"
+                      id="Oval-2"
+                      stroke="#064868"
+                      stroke-width="2"
+                    >
+                      <animatetransform
+                        attributeName="transform"
+                        dur="0.9s"
+                        from="0 18 18"
+                        repeatCount="indefinite"
+                        to="360 18 18"
+                        type="rotate"
+                      />
+                    </path>
+                    <circle
+                      cx="36"
+                      cy="18"
+                      fill="#fff"
+                      r="1"
+                    >
+                      <animatetransform
+                        attributeName="transform"
+                        dur="0.9s"
+                        from="0 18 18"
+                        repeatCount="indefinite"
+                        to="360 18 18"
+                        type="rotate"
+                      />
+                    </circle>
+                  </g>
+                </g>
+              </svg>
             </div>
+            Loading
           </div>
         </div>
-      </main>
+      </div>
     </div>
     <footer
       class="footer"

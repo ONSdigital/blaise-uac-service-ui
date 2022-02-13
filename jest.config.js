@@ -5,8 +5,12 @@ module.exports = {
 };
 
 process.env = Object.assign(process.env, {
-    PROJECT_ID: "a-project-name",
-    BUCKET_NAME: "unique-bucket",
-    BUS_API_URL: "bus-api-url",
-    BUS_CLIENT_ID: "bus-client-id",
+    PROJECT_ID: "ProjectID-mock",
+    BUCKET_NAME: "BucketName-mock",
+    BUS_API_URL: "BusApiUrl-mock",
+    BUS_CLIENT_ID: "BusClientId-mock",
+    BLAISE_API_URL: "BlaiseApiUrl-mock",
+    ROLES: ["MockRole1", "MockRole2", "MockRole3"],
+    SESSION_TIMEOUT: "SessionTimeout-mock",
+    SESSION_SECRET: "SessionSecret-mock",
 });

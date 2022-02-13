@@ -9,6 +9,12 @@ import {createMemoryHistory} from "history";
 import {Router} from "react-router";
 import "@testing-library/jest-dom";
 import {instrumentNames} from "./mocks/api-mocks";
+import { AuthManager } from "blaise-login-react-client";
+
+jest.mock("blaise-login-react-client");
+AuthManager.prototype.loggedIn = jest.fn().mockImplementation(() => {
+    return Promise.resolve(true);
+});
 
 jest.mock("./client/file-functions");
 import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./client/file-functions";

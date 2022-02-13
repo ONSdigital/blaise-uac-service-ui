@@ -31,7 +31,8 @@ function FileExists(props: FileExistsPageProps): ReactElement {
             {
                 id: "No", label: "No", value: "No"
             },
-        ]
+        ],
+        props: {}
     };
 
     return (

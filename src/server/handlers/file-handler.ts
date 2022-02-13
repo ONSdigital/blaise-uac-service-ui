@@ -1,12 +1,12 @@
-import express, {Request, Response, Router} from "express";
+import express, { Request, Response, Router } from "express";
 import { GoogleStorage } from "../storage/google-storage-functions";
 import { Config } from "../config";
+import { Auth } from "blaise-login-react-server";
 
-
-export default function NewFileHandler(googleStorage: GoogleStorage, config: Config): Router {
+export default function NewFileHandler(googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
     const router = express.Router();
     const fileHandler = new FileHandler(googleStorage, config);
-    return router.get("/api/v1/file/:fileName/exists", fileHandler.FileExists);
+    return router.get("/api/v1/file/:fileName/exists", auth.Middleware, fileHandler.FileExists);
 }
 
 export class FileHandler {
