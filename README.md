@@ -30,7 +30,7 @@ Create an .env file in the root of the project and add the following variables:
 | BUCKET_NAME | GCP bucket name for the sample file to be stored. | ons-blaise-v2-dev-sandbox123-bus |
 | BUS_API_URL | The BUS API URL the application will use to generate UACs. | ons-blaise-v2-dev-sandbox123-bus  |
 | BUS_CLIENT_ID | The client ID the application will use to authenticate with BUS. | blah.apps.googleusercontent.com |
-| BLAISE_API_URL | The Blaise API URL the application will use to check the users role has permission to use this service. | localhost:90 |
+| BLAISE_API_URL | The Blaise API URL the application will use to check the users role has permission to use this service. | http://localhost:90 |
 
 Example .env file:
 
@@ -39,7 +39,7 @@ PROJECT_ID=ons-blaise-v2-dev-sandbox123
 BUCKET_NAME=ons-blaise-v2-dev-sandbox123-bus
 BUS_API_URL=https://dev-sandbox123-bus.social-surveys.gcp.onsdigital.uk
 BUS_CLIENT_ID=blah.apps.googleusercontent.com
-BLAISE_API_URL=localhost:90
+BLAISE_API_URL=http://localhost:90
 ```
 
 Install the project dependencies:
@@ -68,7 +68,7 @@ Temporary set your local GOOGLE_APPLICATION_CREDENTIALS environment variable to 
 
 ```
 Unix: export GOOGLE_APPLICATION_CREDENTIALS=keys.json
-Windows:set GOOGLE_APPLICATION_CREDENTIALS=keys.json
+Windows: set GOOGLE_APPLICATION_CREDENTIALS=keys.json
 ```
 
 Open a tunnel to the Blaise API in your GCP project:

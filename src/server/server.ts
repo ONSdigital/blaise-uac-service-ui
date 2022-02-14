@@ -34,15 +34,14 @@ function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, con
     server.use("/", HealthCheckHandler());
 
     //define entry point
+    server.use("/", loginHandler);
     server.get("*", function (req: Request, res: Response) {
         res.render("index.html");
     });
-
+    
     server.use(function (err: Error, req: Request, res: Response) {
         res.render("../src/views/500.html", {});
     });
-
-    server.use("/", loginHandler);
 
     return server;
 }
