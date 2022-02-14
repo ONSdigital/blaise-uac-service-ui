@@ -33,12 +33,13 @@ function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, con
     server.use("/", NewImportUacHandler(busApiClient, auth));
     server.use("/", HealthCheckHandler());
 
-    //define entry point
     server.use("/", loginHandler);
+
+    //define entry point
     server.get("*", function (req: Request, res: Response) {
         res.render("index.html");
     });
-    
+
     server.use(function (err: Error, req: Request, res: Response) {
         res.render("../src/views/500.html", {});
     });
