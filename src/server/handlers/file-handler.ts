@@ -22,11 +22,6 @@ export class FileHandler {
     async FileExists(req: Request, res: Response): Promise<Response> {
         const { fileName } = req.params;
 
-        if (fileName === undefined) {
-            console.error("FileName not supplied");
-            return res.status(400).json("FileName not supplied");
-        }
-
         const exists = await this.googleStorage.FileExistsInBucket(this.config.BucketName, fileName.toLowerCase());
 
         return res.status(200).json(exists);
