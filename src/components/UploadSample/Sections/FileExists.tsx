@@ -1,5 +1,5 @@
-import {ONSPanel, StyledFormErrorSummary, StyledFormField} from "blaise-design-system-react-components";
-import React, {ChangeEvent, ReactElement} from "react";
+import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
+import React, { ChangeEvent, ReactElement } from "react";
 
 interface FileExistsPageProps {
     instrumentName: string | undefined,
@@ -8,7 +8,7 @@ interface FileExistsPageProps {
 }
 
 function FileExists(props: FileExistsPageProps): ReactElement {
-    const {instrumentName, overwrite, setOverwrite} = props;
+    const { overwrite, setOverwrite } = props;
 
     function validateOverwrite() {
         let error;
@@ -42,8 +42,8 @@ function FileExists(props: FileExistsPageProps): ReactElement {
                     <b>UACs have already been generated for this questionnaire</b>
                 </p>
             </ONSPanel>
-            <StyledFormField {...field}/>
-            <StyledFormErrorSummary/>
+            <StyledFormField {...field} />
+            <StyledFormErrorSummary />
         </>
     );
 }

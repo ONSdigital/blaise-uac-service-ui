@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { AuthManager } from "blaise-login-react-client";
 import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
 
@@ -21,12 +21,6 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
 
     const data = new FormData();
     data.append("file", file);
-
-    const config = {
-        headers: { "Content-Type": "multipart/form-data" },
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-    };
 
     return axios.post("/api/v1/uac/import", data, axiosConfig())
         .then((response) => {
@@ -53,8 +47,6 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     const data = new FormData();
     data.append("fileName", getFileName(instrumentName));
     data.append("file", file);
-
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
 
     return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, axiosConfig())
         .then(() => {

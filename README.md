@@ -58,6 +58,11 @@ Set your GCP project:
 gcloud config set project ons-blaise-v2-dev-sandbox123
 ```
 
+Open a tunnel to the Blaise API in your GCP project:
+```shell
+gcloud compute start-iap-tunnel restapi-1 80 --local-host-port=localhost:90 --zone europe-west2-a
+```
+
 Download a service account JSON key for accessing the bucket in your GCP project:
 
 ```
@@ -69,11 +74,6 @@ Temporary set your local GOOGLE_APPLICATION_CREDENTIALS environment variable to 
 ```
 Unix: export GOOGLE_APPLICATION_CREDENTIALS=keys.json
 Windows: set GOOGLE_APPLICATION_CREDENTIALS=keys.json
-```
-
-Open a tunnel to the Blaise API in your GCP project:
-```shell
-gcloud compute start-iap-tunnel restapi-1 80 --local-host-port=localhost:90 --zone europe-west2-a
 ```
 
 Run Node.js server and React.js client via the following package.json script:

@@ -52,7 +52,7 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
 export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetailsByCaseId): Promise<Record<string, string>[]> {
     const readStream = Readable.from(fileData);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const results: Record<string, string>[] = [];
         parseStream(readStream, { headers: true, ignoreEmpty: true })
             .validate((row: any): boolean => {

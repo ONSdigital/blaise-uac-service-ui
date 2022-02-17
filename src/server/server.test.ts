@@ -20,13 +20,13 @@ describe("All expected routes are registered", () => {
         { "methods": ["GET"], "middlewares": ["bound ", "bound FileExists"], "path": "/api/v1/file/:fileName/exists" },
         { "methods": ["GET"], "middlewares": ["bound ", "bound GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments" },
         { "methods": ["POST"], "middlewares": ["bound ", "multerMiddleware", "bound ImportUacs"], "path": "/api/v1/uac/import" },
-        { "methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health" },
-        { "methods": ["GET"], "middlewares": ["anonymous"], "path": "*" },
+        { "methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health" },        
         { "methods": ["GET"], "middlewares": ["bound ",], "path": "/api/login/users/:username" },
         { "methods": ["GET"], "middlewares": ["bound ",], "path": "/api/login/current-user" },
         { "methods": ["GET"], "middlewares": ["bound ",], "path": "/api/login/users/:username/authorised" },
         { "methods": ["POST"], "middlewares": ["bound ",], "path": "/api/login/token/validate" },
-        { "methods": ["POST"], "middlewares": ["bound ",], "path": "/api/login/users/password/validate" }
+        { "methods": ["POST"], "middlewares": ["bound ",], "path": "/api/login/users/password/validate" },
+        { "methods": ["GET"], "middlewares": ["anonymous"], "path": "*" },
 
     ];
 
