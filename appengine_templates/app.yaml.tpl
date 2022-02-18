@@ -10,6 +10,9 @@ env_variables:
     BUS_API_URL: _BUS_API_URL
     BUS_CLIENT_ID: _BUS_CLIENT_ID
     BLAISE_API_URL: _BLAISE_API_URL
+    SESSION_TIMEOUT: _SESSION_TIMEOUT
+    SESSION_SECRET: _SESSION_SECRET
+    ROLES: _ROLES
 
 basic_scaling:
     idle_timeout: 10m
