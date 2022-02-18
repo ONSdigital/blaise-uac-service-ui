@@ -1,4 +1,4 @@
-import NewServer from "../server";
+import { NewServer } from "../server";
 import supertest from "supertest";
 import BusApiClient from "blaise-uac-service-node-client";
 import BlaiseApiClient from "blaise-api-node-client";

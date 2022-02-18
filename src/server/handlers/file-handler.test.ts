@@ -1,5 +1,5 @@
 import supertest, { Response } from "supertest";
-import NewServer from "../server";
+import { NewServer } from "../server";
 import BusApiClient from "blaise-uac-service-node-client";
 import BlaiseApiClient from "blaise-api-node-client";
 import { GetConfigFromEnv } from "../config";

@@ -1,7 +1,7 @@
 import listEndpoints from "express-list-endpoints";
 import BusApiClient from "blaise-uac-service-node-client";
 import { GetConfigFromEnv } from "./config";
-import NewServer from "./server";
+import { NewServer } from "./server";
 import { GoogleStorage } from "./storage/google-storage-functions";
 import BlaiseApiClient from "blaise-api-node-client";
 
