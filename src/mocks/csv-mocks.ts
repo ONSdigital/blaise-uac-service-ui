@@ -32,6 +32,12 @@ export const invalidSampleCsv = `serial_number,Phone Number,Email
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
 
+export const duplicateColumnSampleCsv = `serial_number,Phone Number,Email,serial_number
+100000001,Homer Simpson,5551234422,homer@springfield.com,100000001
+100000002,Seymour Skinner,1235663322,a@b.c,100000002
+100000003,Bart Simpson,2675465026,bart@spring.field,100000003
+`;
+
 
 export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {

@@ -38,6 +38,9 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
             })
             .on("error", (error) => {
                 console.error(error.message);
+                if (error.message === "Duplicate headers found [\"serial_number\"]"){
+                    reject(new Error("There is a problem with the CSV file, please ensure all column headings are unique. Return to Home page"));
+                }
                 reject(new Error("There is a problem with the .csv file."));
             })
             .on("data", (row) => {
