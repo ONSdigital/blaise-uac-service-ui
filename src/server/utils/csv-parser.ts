@@ -99,16 +99,16 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
 function mapUacChunk(uacHeadings: string[], line: Record<string, string>, instrumentUacDetails: InstrumentUacDetailsByCaseId): Record<string, string> {
     const uacDetails = instrumentUacDetails[line.serial_number];
        
-    line[uacHeadings[0]] ? line[uacHeadings[0]] = uacDetails.uac_chunks.uac1 : line[uacHeadings[0]] = uacDetails.uac_chunks.uac1;
-    line[uacHeadings[1]] ? line[uacHeadings[1]] = uacDetails.uac_chunks.uac2 : line[uacHeadings[1]] = uacDetails.uac_chunks.uac2;
-    line[uacHeadings[2]] ? line[uacHeadings[2]] = uacDetails.uac_chunks.uac3 : line[uacHeadings[2]] = uacDetails.uac_chunks.uac3;
+    line[uacHeadings[0]] = uacDetails.uac_chunks.uac1;
+    line[uacHeadings[1]] = uacDetails.uac_chunks.uac2;
+    line[uacHeadings[2]] = uacDetails.uac_chunks.uac3;
 
     if (uacDetails.uac_chunks.uac4) {
-        line[uacHeadings[3]] ? line[uacHeadings[3]] = uacDetails.uac_chunks.uac4 : line[uacHeadings[3]] = uacDetails.uac_chunks.uac4;
+        line[uacHeadings[3]] = uacDetails.uac_chunks.uac4;
     }
 
     if (uacDetails.full_uac) {
-        line[uacHeadings[4]] ? line[uacHeadings[4]] = uacDetails.full_uac : line[uacHeadings[4]] = uacDetails.full_uac;
+        line[uacHeadings[4]] = uacDetails.full_uac;
     }
 
     return line;
