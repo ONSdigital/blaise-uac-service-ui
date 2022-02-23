@@ -30,7 +30,8 @@ function ConfirmName({ instrumentName, setNameConfirmation }: ConfirmName): Reac
     radioOptions: [
       { id: "yes", label: "Yes, the questionnaire name is correct", value: "confirm" },
       { id: "cancel", label: "No, I need to amend it", value: "cancel" },
-    ]
+    ],
+    props: {}
   };
 
   return (

@@ -4,17 +4,17 @@ import { GoogleStorage } from "../storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
 import { getCaseIdsFromFile, addUacCodesToFile } from "../utils/csv-parser";
 import { Config } from "../config";
+import { Auth } from "blaise-login-react-server";
 
-
-export default function NewInstrumentUacHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config): Router {
+export default function NewInstrumentUacHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
   const router = express.Router();
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
 
   const instrumentUacHandler = new InstrumentUacHandler(busApiClient, googleStorage, config);
 
-  router.post("/api/v1/instrument/:instrumentName/uac/sample", upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
-  router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", instrumentUacHandler.GetSampleFileWithUacs);
+  router.post("/api/v1/instrument/:instrumentName/uac/sample", auth.Middleware, upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
+  router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", auth.Middleware, instrumentUacHandler.GetSampleFileWithUacs);
   return router;
 }
 
@@ -61,7 +61,7 @@ export class InstrumentUacHandler {
         }
       }
       console.error(errorResponse);
-      return res.status(500).json({error: errorResponse});
+      return res.status(500).json({ error: errorResponse });
     }
   }
 

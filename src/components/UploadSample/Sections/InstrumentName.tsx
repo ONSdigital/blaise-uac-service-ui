@@ -25,7 +25,8 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
         value: instrumentName,
         onChange: (e: ChangeEvent<HTMLInputElement>) => setInstrumentName(e.target.value),
         className: "input input--text input-type__input",
-        autoFocus: true
+        autoFocus: true,
+        props: {}
     };
 
     return (

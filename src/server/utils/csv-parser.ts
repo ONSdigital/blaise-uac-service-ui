@@ -58,7 +58,7 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
     var uacHeadingFull = "UAC";
     var uacHeadings = [uacHeading1, uacHeading2, uacHeading3, uacHeading4, uacHeadingFull];
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const results: Record<string, string>[] = [];
         parseStream(readStream, { headers: true, ignoreEmpty: true })
             .validate((row: any): boolean => {
