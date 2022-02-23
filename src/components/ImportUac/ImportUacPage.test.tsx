@@ -13,8 +13,6 @@ import axios from "axios";
 
 const mock = new MockAdapter(axios, { onNoMatch: "throwException" });
 
-const fileName = "import.csv";
-
 describe("Import UAC Page", () => {
   beforeEach(() => {
     jest.clearAllMocks();

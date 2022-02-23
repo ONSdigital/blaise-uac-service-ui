@@ -77,6 +77,7 @@ Object {
                       class="input input--text input-type__input input--upload"
                       id="uac-selector"
                       name="Select a uac file"
+                      props="[object Object]"
                       type="file"
                       value=""
                     />
@@ -178,6 +179,7 @@ Object {
                     class="input input--text input-type__input input--upload"
                     id="uac-selector"
                     name="Select a uac file"
+                    props="[object Object]"
                     type="file"
                     value=""
                   />

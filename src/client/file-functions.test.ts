@@ -49,7 +49,7 @@ describe("generateUacCodesForFile file tests", () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(201);
 
         await generateUacCodesForSampleFile(instrumentName, sampleFile);
-        expect(mock.history.post[0].headers["Content-Type"]).toBe("multipart/form-data");
+        expect(mock.history.post[0].headers["Content-Type"]).toBe("application/x-www-form-urlencoded");
     });
 
     it("It should pass the correct parameters", async () => {
