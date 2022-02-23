@@ -6,6 +6,7 @@ import { Footer, Header, BetaBanner, DefaultErrorBoundary, NotProductionWarning,
 import "./style.css";
 import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 import { LoginForm, AuthManager } from "blaise-login-react-client";
+import { isProduction } from "./client/env";
 
 const divStyle = {
     minHeight: "calc(67vh)"
@@ -25,7 +26,7 @@ function App(): ReactElement {
         });
     });
 
-    function loginPage(): ReactElement {
+    function LoginPage(): ReactElement {
         if (loaded && loggedIn) {
             return <></>;
         }
@@ -37,14 +38,14 @@ function App(): ReactElement {
         setLoggedIn(false);
     }
 
-    function loading(): ReactElement {
+    function Loading(): ReactElement {
         if (loaded) {
             return <></>;
         }
         return <ONSLoadingPanel />;
     }
 
-    function appContent(): ReactElement | undefined {
+    function AppContent(): ReactElement {
         if (loaded && loggedIn) {
             return (
                 <DefaultErrorBoundary>
@@ -75,21 +76,21 @@ function App(): ReactElement {
                 </DefaultErrorBoundary>
             );
         }
-        return undefined;
+        return <></>;
     }
 
     return (
         <>
             <a className="skip__link" href="#main-content">Skip to main content</a>
             {
-                (window.location.hostname.includes("dev")) && <NotProductionWarning />
+                isProduction(window.location.hostname) ? <></> : <NotProductionWarning />
             }
             <BetaBanner />
             <Header title={"Generate UACs"} signOutButton={loggedIn} noSave={true} signOutFunction={signOut} />
             <div style={divStyle} className="page__container container">
-                {loading()}
-                {loginPage()}
-                {appContent()}
+                <Loading />
+                <LoginPage />
+                <AppContent />
             </div>
             <Footer />
         </>
