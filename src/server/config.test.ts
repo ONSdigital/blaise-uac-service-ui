@@ -39,7 +39,7 @@ describe("Config setup", () => {
         expect(config.BusApiUrl).toBe("ENV_VAR_NOT_SET");
         expect(config.BusClientId).toBe("ENV_VAR_NOT_SET");
         expect(config.BlaiseApiUrl).toBe("ENV_VAR_NOT_SET");
-        expect(config.Roles).toStrictEqual(["DST", "BDSS"]);
+        expect(config.Roles).toStrictEqual(["DST", "BDSS", "Researcher"]);
         expect(config.SessionTimeout).toBe("12h");
         expect(config.SessionSecret).toHaveLength(40);
     });
