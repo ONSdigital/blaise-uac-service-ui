@@ -1,5 +1,13 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
+import { AuthManager } from "blaise-login-react-client";
 import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
+
+function axiosConfig(): AxiosRequestConfig {
+    const authManager = new AuthManager();
+    return {
+        headers: authManager.authHeader()
+    };
+}
 
 export async function importUacsFromFile(file: File | undefined): Promise<number> {
     if (file === undefined) {
@@ -14,13 +22,7 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
     const data = new FormData();
     data.append("file", file);
 
-    const config = {
-        headers: { "Content-Type": "multipart/form-data" },
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-    };
-
-    return axios.post("/api/v1/uac/import", data, config)
+    return axios.post("/api/v1/uac/import", data, axiosConfig())
         .then((response) => {
             console.log("import-file-function - true");
             console.log(response.data);
@@ -46,9 +48,7 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     data.append("fileName", getFileName(instrumentName));
     data.append("file", file);
 
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-
-    return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, config)
+    return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, axiosConfig())
         .then(() => {
             console.log("file-functions - true");
             return true;
@@ -69,7 +69,7 @@ export async function getSampleFileWithUacCodes(instrumentName: string | undefin
         throw new Error("file name was not supplied");
     }
 
-    const response = await axios.get(`/api/v1/instrument/${instrumentName}/uac/sample/${fileName}`);
+    const response = await axios.get(`/api/v1/instrument/${instrumentName}/uac/sample/${fileName}`, axiosConfig());
 
     return response.data;
 }
@@ -80,7 +80,7 @@ export async function sampleFileAlreadyExists(instrumentName: string | undefined
     }
 
     const fileName = getFileName(instrumentName);
-    return axios.get(`/api/v1/file/${fileName}/exists`)
+    return axios.get(`/api/v1/file/${fileName}/exists`, axiosConfig())
         .then((response) => response.data === true)
         .catch((error) => {
             console.error(error);
@@ -89,7 +89,7 @@ export async function sampleFileAlreadyExists(instrumentName: string | undefined
 }
 
 export async function getListOfInstrumentsWhichHaveExistingSampleFiles(): Promise<string[]> {
-    const response = await axios.get("/api/v1/instruments");
+    const response = await axios.get("/api/v1/instruments", axiosConfig());
 
     return response.data;
 }

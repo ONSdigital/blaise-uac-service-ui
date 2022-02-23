@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import {render, waitFor, screen, act, cleanup} from "@testing-library/react";
+import {render, waitFor, act, cleanup} from "@testing-library/react";
 import InstrumentListPage from "./InstrumentListPage";
 import {createMemoryHistory} from "history";
 import {Router} from "react-router";

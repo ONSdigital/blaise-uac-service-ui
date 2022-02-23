@@ -1,4 +1,4 @@
-import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
+import { ONSPanel, StyledFormField } from "blaise-design-system-react-components";
 import React, { ChangeEvent, ReactElement } from "react";
 import { FormikContextType, useFormikContext } from "formik";
 
@@ -37,7 +37,8 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
         className: "input input--text input-type__input input--upload",
         onChange: (e: ChangeEvent<HTMLInputElement>) => handleFileChange(e.target.files),
         accept: ".csv",
-        disabled: isSubmitting
+        disabled: isSubmitting,
+        props: {}
     };
 
     return (

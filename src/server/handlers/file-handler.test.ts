@@ -1,80 +1,88 @@
-import { FileHandler } from "./file-handler";
-import {getMockReq, getMockRes} from "@jest-mock/express";
-import supertest from "supertest";
-import NewServer from "../server";
-
-
+import supertest, { Response } from "supertest";
+import { NewServer } from "../server";
 import BusApiClient from "blaise-uac-service-node-client";
+import BlaiseApiClient from "blaise-api-node-client";
 import { GetConfigFromEnv } from "../config";
+
+//mock login
+import { Auth } from "blaise-login-react-server";
+jest.mock("blaise-login-react-server", () => {
+  const loginReact = jest.requireActual("blaise-login-react-server");
+  return {
+    ...loginReact,
+  };
+});
+Auth.prototype.ValidateToken = jest.fn().mockReturnValue(true);
+
+//mock google storage
+import { GoogleStorage } from "../storage/google-storage-functions";
+jest.mock("../storage/google-storage-functions");
+const fileExistsInBucketMock = jest.fn();
+GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
+const googleStorageMock = new GoogleStorage("ProjectID-mock");
 
 const config = GetConfigFromEnv();
 const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
-
-//mock google storage
-jest.mock("../storage/google-storage-functions");
-import { GoogleStorage } from "../storage/google-storage-functions";
-const fileExistsInBucketMock = jest.fn();
-GoogleStorage.prototype.FileExistsInBucket = fileExistsInBucketMock;
-const googleStorageMock = new GoogleStorage("a-project-name");
+const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
 
 const fileName = "DST2101A.csv";
 
-//have to test the parameter separately as technically you cannot call the endpoint with a null or empty filename :/
-describe("fileExists parameter tests", () => {
-    const {res, mockClear} = getMockRes();
-
-    beforeEach(() => {
-        mockClear();
-    });
-
-    it("It should return a 400 status if a filename is not provided", async () => {
-        const req = getMockReq({
-            params: {"fileName": undefined}
-        });
-
-        const fileHandler = new FileHandler(googleStorageMock, config);
-        await fileHandler.FileExists(req, res);
-        expect(res.status).toHaveBeenCalledWith(400);
-    });
-});
+const server = NewServer(
+  busApiClient,
+  googleStorageMock,
+  config,
+  blaiseApiClient
+);
+const request = supertest(server);
 
 describe("file-exists-handler tests", () => {
-    const server = NewServer(busApiClient, googleStorageMock, config);
-    const request = supertest(server);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.resetModules();
+  });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
-        jest.resetModules();
+  it("It should be called with correct parameters with filename converted to lowercase", async () => {
+    fileExistsInBucketMock.mockImplementationOnce(() => {
+      return Promise.resolve(true);
     });
 
-    it("It should be called with correct parameters with filename converted to lowercase", async () => {
-        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(true));
+    const response: Response = await request.get(
+      `/api/v1/file/${fileName}/exists`
+    );
+    expect(response.status).toEqual(200);
 
-        await request
-            .get(`/api/v1/file/${fileName}/exists`)
-            .expect(200);
+    expect(fileExistsInBucketMock).toHaveBeenCalledWith(
+      "BucketName-mock",
+      fileName.toLowerCase()
+    );
+  });
 
-        expect(fileExistsInBucketMock).toHaveBeenCalledWith("unique-bucket", fileName.toLowerCase());
+  it("It should return a 200 response with true if the file exists", async () => {
+    fileExistsInBucketMock.mockImplementationOnce(() => {
+      return Promise.resolve(true);
     });
 
-    it("It should return a 200 response with true if the file exists", async () => {
-        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(true));
+    const response: Response = await request.get(
+      `/api/v1/file/${fileName}/exists`
+    );
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(true);
+  });
 
-        await request
-            .get(`/api/v1/file/${fileName}/exists`)
-            .expect(200, "true");
+  it("It should return a 200 response with false if the file does not exist", async () => {
+    fileExistsInBucketMock.mockImplementationOnce(() => {
+      return Promise.resolve(false);
     });
 
-    it("It should return a 200 response with false if the file does not exist", async () => {
-        fileExistsInBucketMock.mockReturnValueOnce(Promise.resolve(false));
+    const response: Response = await request.get(
+      `/api/v1/file/${fileName}/exists`
+    );
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(false);
+  });
 
-        await request
-            .get(`/api/v1/file/${fileName}/exists`)
-            .expect(200, "false");
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-        jest.resetModules();
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetModules();
+  });
 });

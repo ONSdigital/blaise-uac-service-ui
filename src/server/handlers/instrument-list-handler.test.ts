@@ -1,21 +1,32 @@
-import NewServer from "../server";
+import { NewServer } from "../server";
 import supertest from "supertest";
-
 import BusApiClient from "blaise-uac-service-node-client";
+import BlaiseApiClient from "blaise-api-node-client";
 import { GetConfigFromEnv } from "../config";
 
-const config = GetConfigFromEnv();
-const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
+//mock login
+import { Auth } from "blaise-login-react-server";
+jest.mock("blaise-login-react-server", () => {
+    const loginReact = jest.requireActual("blaise-login-react-server");
+    return {
+        ...loginReact
+    };
+});
+Auth.prototype.ValidateToken = jest.fn().mockReturnValue(true);
 
 //mock google storage
 import { GoogleStorage } from "../storage/google-storage-functions";
 jest.mock("../storage/google-storage-functions");
 const getFilenamesInBucketMock = jest.fn();
 GoogleStorage.prototype.GetFileNamesInBucket = getFilenamesInBucketMock;
-const googleStorageMock = new GoogleStorage("a-project-name");
+const googleStorageMock = new GoogleStorage("ProjectID-mock");
+
+const config = GetConfigFromEnv();
+const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
+const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
 
 describe("instrument-list-handler tests", () => {
-    const server = NewServer(busApiClient, googleStorageMock, config);
+    const server = NewServer(busApiClient, googleStorageMock, config, blaiseApiClient);
     const request = supertest(server);
     const url = "/api/v1/instruments";
 
@@ -33,7 +44,7 @@ describe("instrument-list-handler tests", () => {
             .get(url)
             .expect(200);
 
-        expect(getFilenamesInBucketMock).toHaveBeenCalledWith("unique-bucket");
+        expect(getFilenamesInBucketMock).toHaveBeenCalledWith("BucketName-mock");
     });
 
     it("It should return a 200 response with list of expected instruments in uppercase", async () => {

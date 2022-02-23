@@ -2,15 +2,16 @@ import express, { Router, Request, Response } from "express";
 import multer from "multer";
 import BusApiClient from "blaise-uac-service-node-client";
 import { getUacsFromFile } from "../utils/csv-parser";
+import { Auth } from "blaise-login-react-server";
 
-export default function NewImportUacHandler(busApiClient: BusApiClient): Router {
+export default function NewImportUacHandler(busApiClient: BusApiClient, auth: Auth): Router {
   const router = express.Router();
   const storage = multer.memoryStorage();
   const upload = multer({ storage: storage });
 
   const importUacHandler = new ImportUacHandler(busApiClient);
 
-  return router.post("/api/v1/uac/import", upload.single("file"), importUacHandler.ImportUacs);
+  return router.post("/api/v1/uac/import", auth.Middleware, upload.single("file"), importUacHandler.ImportUacs);
 }
 
 export class ImportUacHandler {
