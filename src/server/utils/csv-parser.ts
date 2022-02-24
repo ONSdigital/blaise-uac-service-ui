@@ -41,7 +41,11 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
                 reject(new Error("There is a problem with the .csv file."));
             })
             .on("data", (row) => {
-                caseIds.push(row.serial_number);
+                if(caseIds.includes(row.serial_number)){
+                    reject(new Error("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique"));
+                }else{
+                    caseIds.push(row.serial_number);
+                }
             })
             .on("end", () => {
                 resolve(caseIds);
