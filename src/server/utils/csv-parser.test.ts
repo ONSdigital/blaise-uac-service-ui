@@ -4,11 +4,15 @@ import {
     matchedInstrumentUac16Details,
     invalidSampleCsv,
     validSampleCsv,
+    validSampleCsvWithDuplicateSerialNumbers,
     validUACImportCsv,
     unMatchedInstrumentUacDetails,
     emptyInstrumentUacDetails,
     partialMatchedInstrumentUacDetails,
-    validSampleCsvWithExistingUacEntries, validSampleCsvWithExistingLowercaseUacColumns, validSampleCsvWithExistingMixedCaseUacColumns, validSampleCsvWithExistingUacColumns
+    validSampleCsvWithExistingUacEntries, 
+    validSampleCsvWithExistingLowercaseUacColumns, 
+    validSampleCsvWithExistingMixedCaseUacColumns, 
+    validSampleCsvWithExistingUacColumns
 } from "../../mocks/csv-mocks";
 
 describe("getUacsFromFile tests", () => {
@@ -57,6 +61,14 @@ describe("getCaseIdsFromFile tests", () => {
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
+
+    it("contains duplicate serial numbers", async () =>{
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsvWithDuplicateSerialNumbers);
+
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique")
+    });
+
 });
 
 describe("addUacCodesToFile tests", () => {

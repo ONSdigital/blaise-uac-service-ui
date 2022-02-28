@@ -44,6 +44,12 @@ export const invalidSampleCsv = `serial_number,Phone Number,Email
 100000003,Bart Simpson,2675465026,bart@spring.field
 `;
 
+export const validSampleCsvWithDuplicateSerialNumbers = `serial_number,Name,UAC1,UAC2,UAC3,Phone Number,Email
+100000001,Homer Simpson,3454,5453,5353,5551234422,homer@springfield.com
+100000001,Marge Simpson,1337,1234,5678,1251234422,marge@springfield.com
+100000002,Seymour Skinner,8786,2213,3343,1235663322,a@b.c
+100000003,Bart Simpson,2242,5543,7676,2675465026,bart@spring.field
+`;
 
 export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {
