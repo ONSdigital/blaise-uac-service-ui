@@ -20,6 +20,18 @@ export const validSampleCsvWithExistingUacColumns = `serial_number,Name,UAC1,UAC
 100000003,Bart Simpson,,,,2675465026,bart@spring.field
 `;
 
+export const validSampleCsvWithExistingLowercaseUacColumns = `serial_number,Name,uac1,uac2,uac3,Phone Number,Email
+100000001,Homer Simpson,,,,5551234422,homer@springfield.com
+100000002,Seymour Skinner,,,,1235663322,a@b.c
+100000003,Bart Simpson,,,,2675465026,bart@spring.field
+`;
+
+export const validSampleCsvWithExistingMixedCaseUacColumns = `serial_number,Name,UaC1,UaC2,UaC3,Phone Number,Email
+100000001,Homer Simpson,,,,5551234422,homer@springfield.com
+100000002,Seymour Skinner,,,,1235663322,a@b.c
+100000003,Bart Simpson,,,,2675465026,bart@spring.field
+`;
+
 export const validSampleCsvWithExistingUacEntries = `serial_number,Name,UAC1,UAC2,UAC3,Phone Number,Email
 100000001,Homer Simpson,3454,5453,5353,5551234422,homer@springfield.com
 100000002,Seymour Skinner,8786,2213,3343,1235663322,a@b.c
@@ -38,6 +50,12 @@ export const duplicateColumnSampleCsv = `serial_number,Phone Number,Email,serial
 100000003,Bart Simpson,2675465026,bart@spring.field,100000003
 `;
 
+export const validSampleCsvWithDuplicateSerialNumbers = `serial_number,Name,UAC1,UAC2,UAC3,Phone Number,Email
+100000001,Homer Simpson,3454,5453,5353,5551234422,homer@springfield.com
+100000001,Marge Simpson,1337,1234,5678,1251234422,marge@springfield.com
+100000002,Seymour Skinner,8786,2213,3343,1235663322,a@b.c
+100000003,Bart Simpson,2242,5543,7676,2675465026,bart@spring.field
+`;
 
 export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
     "100000001": {

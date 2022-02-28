@@ -52,6 +52,9 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
                 reject(new Error("There is a problem with the .csv file."));
             })
             .on("data", (row) => {
+                if(caseIds.includes(row.serial_number)){
+                    reject(new Error("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique"));
+                }
                 caseIds.push(row.serial_number);
             })
             .on("end", () => {
@@ -62,8 +65,14 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
 
 export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetailsByCaseId): Promise<Record<string, string>[]> {
     const readStream = Readable.from(fileData);
+    var uacHeading1 = "UAC1";
+    var uacHeading2 = "UAC2";
+    var uacHeading3 = "UAC3";
+    var uacHeading4 = "UAC4";
+    var uacHeadingFull = "UAC";
+    var uacHeadings = [uacHeading1, uacHeading2, uacHeading3, uacHeading4, uacHeadingFull];
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const results: Record<string, string>[] = [];
         parseStream(readStream, { headers: true, ignoreEmpty: true })
             .validate((row: any): boolean => {
@@ -71,6 +80,18 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
                     return false;
                 }
                 return true;
+            })
+            .on("headers", (headers: string[]) => { 
+                headers.forEach(function (string){
+                    uacHeadings.forEach(function (heading){
+                        if ((string.localeCompare(heading, 'en', { sensitivity: 'accent' }) == 0)){
+                            var index = uacHeadings.indexOf(heading);
+                            if (~index){
+                                uacHeadings[index] = string;
+                            }
+                        }    
+                    });
+                })
             })
             .on("data-invalid", (row) => {
                 console.error(`No UAC chunks found that matches the case id ${row.serial_number}`);
@@ -81,7 +102,7 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
                 resolve([]);
             })
             .on("data", (row) => {
-                results.push(mapUacChunk(row, instrumentUacDetails));
+                results.push(mapUacChunk(uacHeadings, row, instrumentUacDetails));
             })
             .on("end", () => {
                 resolve(results);
@@ -89,19 +110,19 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
     });
 }
 
-function mapUacChunk(line: Record<string, string>, instrumentUacDetails: InstrumentUacDetailsByCaseId): Record<string, string> {
+function mapUacChunk(uacHeadings: string[], line: Record<string, string>, instrumentUacDetails: InstrumentUacDetailsByCaseId): Record<string, string> {
     const uacDetails = instrumentUacDetails[line.serial_number];
-
-    line["UAC1"] ? line["UAC1"] = uacDetails.uac_chunks.uac1 : line.UAC1 = uacDetails.uac_chunks.uac1;
-    line["UAC2"] ? line["UAC2"] = uacDetails.uac_chunks.uac2 : line.UAC2 = uacDetails.uac_chunks.uac2;
-    line["UAC3"] ? line["UAC3"] = uacDetails.uac_chunks.uac3 : line.UAC3 = uacDetails.uac_chunks.uac3;
+       
+    line[uacHeadings[0]] = uacDetails.uac_chunks.uac1;
+    line[uacHeadings[1]] = uacDetails.uac_chunks.uac2;
+    line[uacHeadings[2]] = uacDetails.uac_chunks.uac3;
 
     if (uacDetails.uac_chunks.uac4) {
-        line["UAC4"] ? line["UAC4"] = uacDetails.uac_chunks.uac4 : line.UAC4 = uacDetails.uac_chunks.uac4;
+        line[uacHeadings[3]] = uacDetails.uac_chunks.uac4;
     }
 
     if (uacDetails.full_uac) {
-        line["UAC"] ? line["UAC"] = uacDetails.full_uac : line.UAC = uacDetails.full_uac;
+        line[uacHeadings[4]] = uacDetails.full_uac;
     }
 
     return line;

@@ -4,11 +4,16 @@ import {
     matchedInstrumentUac16Details,
     invalidSampleCsv,
     validSampleCsv,
+    validSampleCsvWithDuplicateSerialNumbers,
     validUACImportCsv,
     unMatchedInstrumentUacDetails,
     emptyInstrumentUacDetails,
     partialMatchedInstrumentUacDetails,
-    validSampleCsvWithExistingUacEntries, validSampleCsvWithExistingUacColumns, duplicateColumnSampleCsv
+    validSampleCsvWithExistingLowercaseUacColumns,
+    validSampleCsvWithExistingMixedCaseUacColumns,
+    validSampleCsvWithExistingUacEntries,
+    validSampleCsvWithExistingUacColumns,
+    duplicateColumnSampleCsv
 } from "../../mocks/csv-mocks";
 
 describe("getUacsFromFile tests", () => {
@@ -66,6 +71,14 @@ describe("getCaseIdsFromFile tests", () => {
 
         expect(console.error).toHaveBeenCalledWith("Duplicate headers found [\"serial_number\"]");
     });
+
+    it("contains duplicate serial numbers", async () =>{
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsvWithDuplicateSerialNumbers);
+
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique")
+    });
+
 });
 
 describe("addUacCodesToFile tests", () => {
@@ -269,5 +282,84 @@ describe("addUacCodesToFile tests", () => {
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
-});
 
+    it("Uploaded CSV with lowercase UAC headings - returns CSV with those columns populated", async () =>{
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsvWithExistingLowercaseUacColumns);
+
+        const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
+
+        expect(result).toHaveLength(3);
+        expect(result).toContainEqual({
+            "serial_number": "100000001",
+            "Name": "Homer Simpson",
+            "uac1": "0009",
+            "uac2": "7565",
+            "uac3": "3827",
+            "UAC": "000975653827",
+            "Phone Number": "5551234422",
+            "Email": "homer@springfield.com"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000002",
+            "Name": "Seymour Skinner",
+            "uac1": "3453",
+            "uac2": "6545",
+            "uac3": "4564",
+            "UAC": "345365454564",
+            "Phone Number": "1235663322",
+            "Email": "a@b.c"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000003",
+            "Name": "Bart Simpson",
+            "uac1": "9789",
+            "uac2": "7578",
+            "uac3": "5367",
+            "UAC": "978975785367",
+            "Phone Number": "2675465026",
+            "Email": "bart@spring.field"
+        });
+
+    });
+
+    it("Uploaded CSV with mixed case UAC headings - returns CSV with those columns populated", async () =>{
+        console.error = jest.fn();
+        const fileData = Buffer.from(validSampleCsvWithExistingMixedCaseUacColumns);
+
+        const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
+
+        expect(result).toHaveLength(3);
+        expect(result).toContainEqual({
+            "serial_number": "100000001",
+            "Name": "Homer Simpson",
+            "UaC1": "0009",
+            "UaC2": "7565",
+            "UaC3": "3827",
+            "UAC": "000975653827",
+            "Phone Number": "5551234422",
+            "Email": "homer@springfield.com"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000002",
+            "Name": "Seymour Skinner",
+            "UaC1": "3453",
+            "UaC2": "6545",
+            "UaC3": "4564",
+            "UAC": "345365454564",
+            "Phone Number": "1235663322",
+            "Email": "a@b.c"
+        });
+        expect(result).toContainEqual({
+            "serial_number": "100000003",
+            "Name": "Bart Simpson",
+            "UaC1": "9789",
+            "UaC2": "7578",
+            "UaC3": "5367",
+            "UAC": "978975785367",
+            "Phone Number": "2675465026",
+            "Email": "bart@spring.field"
+        });
+
+    });
+});
