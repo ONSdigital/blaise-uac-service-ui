@@ -58,7 +58,7 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(invalidSampleCsv);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the .csv file");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file");
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });

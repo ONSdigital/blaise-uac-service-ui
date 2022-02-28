@@ -42,7 +42,7 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
                 if (error.message.includes("Duplicate headers found")) {
                     reject(new Error("There is a problem with the CSV file, please ensure all column headings are unique"));
                 }
-                reject(new Error("There is a problem with the .csv file"));
+                reject(new Error("There is a problem with the CSV file"));
             })
             .on("data", (row) => {
                 if(caseIds.includes(row.serial_number)){
