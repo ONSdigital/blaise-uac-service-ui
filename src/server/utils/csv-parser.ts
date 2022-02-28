@@ -1,13 +1,7 @@
 import { Readable } from "stream";
 import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
 import { parseStream } from "fast-csv";
-// import {useHistory} from "react-router-dom";
 
-// const history = useHistory();
-//
-// function redirect() {
-//     history.push("/");
-// }
 
 export async function getUacsFromFile(fileData: string | Buffer, uacColumn = "Full_UAC"): Promise<string[]> {
     const readStream = Readable.from(fileData);
@@ -45,12 +39,10 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
             })
             .on("error", (error) => {
                 console.error(error.message);
-                // const foo = <Button onClick={redirect}>Home</Button>
                 if (error.message.includes("Duplicate headers found")) {
-                    // reject(new Error(`There is a problem with the CSV file, please ensure all column headings are unique. Return to ${foo} page`));
-                    reject(new Error("There is a problem with the CSV file, please ensure all column headings are unique. Return to Home page"));
+                    reject(new Error("There is a problem with the CSV file, please ensure all column headings are unique"));
                 }
-                reject(new Error("There is a problem with the .csv file."));
+                reject(new Error("There is a problem with the .csv file"));
             })
             .on("data", (row) => {
                 if(caseIds.includes(row.serial_number)){

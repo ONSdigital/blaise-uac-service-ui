@@ -58,7 +58,7 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(invalidSampleCsv);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the .csv file.");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the .csv file");
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
     });
@@ -67,7 +67,7 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(duplicateColumnSampleCsv);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all column headings are unique. Return to Home page");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all column headings are unique");
 
         expect(console.error).toHaveBeenCalledWith("Duplicate headers found [\"serial_number\"]");
     });
