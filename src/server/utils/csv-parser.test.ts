@@ -9,10 +9,11 @@ import {
     unMatchedInstrumentUacDetails,
     emptyInstrumentUacDetails,
     partialMatchedInstrumentUacDetails,
-    validSampleCsvWithExistingUacEntries, 
-    validSampleCsvWithExistingLowercaseUacColumns, 
-    validSampleCsvWithExistingMixedCaseUacColumns, 
-    validSampleCsvWithExistingUacColumns
+    validSampleCsvWithExistingLowercaseUacColumns,
+    validSampleCsvWithExistingMixedCaseUacColumns,
+    validSampleCsvWithExistingUacEntries,
+    validSampleCsvWithExistingUacColumns,
+    duplicateColumnSampleCsv
 } from "../../mocks/csv-mocks";
 
 describe("getUacsFromFile tests", () => {
@@ -57,9 +58,18 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(invalidSampleCsv);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the .csv file.");
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file");
 
         expect(console.error).toHaveBeenCalledWith("Unexpected Error: column header mismatch expected: 3 columns got: 4");
+    });
+
+    it("Duplicate column - error", async () => {
+        console.error = jest.fn();
+        const fileData = Buffer.from(duplicateColumnSampleCsv);
+
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all column headings are unique");
+
+        expect(console.error).toHaveBeenCalledWith("Duplicate headers found [\"serial_number\"]");
     });
 
     it("contains duplicate serial numbers", async () =>{
@@ -278,7 +288,7 @@ describe("addUacCodesToFile tests", () => {
         const fileData = Buffer.from(validSampleCsvWithExistingLowercaseUacColumns);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
-        
+
         expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
@@ -318,7 +328,7 @@ describe("addUacCodesToFile tests", () => {
         const fileData = Buffer.from(validSampleCsvWithExistingMixedCaseUacColumns);
 
         const result = await addUacCodesToFile(fileData, matchedInstrumentUacDetails);
-        
+
         expect(result).toHaveLength(3);
         expect(result).toContainEqual({
             "serial_number": "100000001",
