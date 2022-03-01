@@ -2,6 +2,7 @@ import { Readable } from "stream";
 import { InstrumentUacDetailsByCaseId } from "blaise-uac-service-node-client";
 import { parseStream } from "fast-csv";
 
+
 export async function getUacsFromFile(fileData: string | Buffer, uacColumn = "Full_UAC"): Promise<string[]> {
     const readStream = Readable.from(fileData);
 
@@ -38,7 +39,10 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
             })
             .on("error", (error) => {
                 console.error(error.message);
-                reject(new Error("There is a problem with the .csv file."));
+                if (error.message.includes("Duplicate headers found")) {
+                    reject(new Error("There is a problem with the CSV file, please ensure all column headings are unique"));
+                }
+                reject(new Error("There is a problem with the CSV file"));
             })
             .on("data", (row) => {
                 if(caseIds.includes(row.serial_number)){
@@ -54,12 +58,12 @@ export function getCaseIdsFromFile(fileData: string | Buffer): Promise<string[]>
 
 export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetails: InstrumentUacDetailsByCaseId): Promise<Record<string, string>[]> {
     const readStream = Readable.from(fileData);
-    var uacHeading1 = "UAC1";
-    var uacHeading2 = "UAC2";
-    var uacHeading3 = "UAC3";
-    var uacHeading4 = "UAC4";
-    var uacHeadingFull = "UAC";
-    var uacHeadings = [uacHeading1, uacHeading2, uacHeading3, uacHeading4, uacHeadingFull];
+    const uacHeading1 = "UAC1";
+    const uacHeading2 = "UAC2";
+    const uacHeading3 = "UAC3";
+    const uacHeading4 = "UAC4";
+    const uacHeadingFull = "UAC";
+    const uacHeadings = [uacHeading1, uacHeading2, uacHeading3, uacHeading4, uacHeadingFull];
 
     return new Promise((resolve) => {
         const results: Record<string, string>[] = [];
@@ -73,14 +77,14 @@ export function addUacCodesToFile(fileData: string | Buffer, instrumentUacDetail
             .on("headers", (headers: string[]) => { 
                 headers.forEach(function (string){
                     uacHeadings.forEach(function (heading){
-                        if ((string.localeCompare(heading, 'en', { sensitivity: 'accent' }) == 0)){
-                            var index = uacHeadings.indexOf(heading);
+                        if ((string.localeCompare(heading, "en", { sensitivity: "accent" }) == 0)){
+                            const index = uacHeadings.indexOf(heading);
                             if (~index){
                                 uacHeadings[index] = string;
                             }
                         }    
                     });
-                })
+                });
             })
             .on("data-invalid", (row) => {
                 console.error(`No UAC chunks found that matches the case id ${row.serial_number}`);
