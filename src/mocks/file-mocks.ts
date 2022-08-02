@@ -10,7 +10,7 @@ export function fileMock(
         size = 1024,
         type = "plain/txt"
     }) {
-    const blob = new Blob(["a".repeat(size)], {type});
+    const blob = new Blob(["a".repeat(size)], { type });
 
     return new File([blob], name);
 }
@@ -29,5 +29,5 @@ export function multerFileMock(
         encoding = ""
     }): Express.Multer.File {
 
-    return {filename, path, size, mimetype, buffer, destination, fieldname, stream, originalname, encoding};
+    return { filename, path, size, mimetype, buffer, destination, fieldname, stream, originalname, encoding };
 }

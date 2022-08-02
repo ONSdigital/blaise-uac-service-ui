@@ -7,10 +7,10 @@ import { GetConfigFromEnv } from "../config";
 //mock login
 import { Auth } from "blaise-login-react-server";
 jest.mock("blaise-login-react-server", () => {
-  const loginReact = jest.requireActual("blaise-login-react-server");
-  return {
-    ...loginReact,
-  };
+    const loginReact = jest.requireActual("blaise-login-react-server");
+    return {
+        ...loginReact,
+    };
 });
 Auth.prototype.ValidateToken = jest.fn().mockReturnValue(true);
 
@@ -28,61 +28,61 @@ const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
 const fileName = "DST2101A.csv";
 
 const server = NewServer(
-  busApiClient,
-  googleStorageMock,
-  config,
-  blaiseApiClient
+    busApiClient,
+    googleStorageMock,
+    config,
+    blaiseApiClient
 );
 const request = supertest(server);
 
 describe("file-exists-handler tests", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    jest.resetModules();
-  });
-
-  it("It should be called with correct parameters with filename converted to lowercase", async () => {
-    fileExistsInBucketMock.mockImplementationOnce(() => {
-      return Promise.resolve(true);
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
     });
 
-    const response: Response = await request.get(
-      `/api/v1/file/${fileName}/exists`
-    );
-    expect(response.status).toEqual(200);
+    it("It should be called with correct parameters with filename converted to lowercase", async () => {
+        fileExistsInBucketMock.mockImplementationOnce(() => {
+            return Promise.resolve(true);
+        });
 
-    expect(fileExistsInBucketMock).toHaveBeenCalledWith(
-      "BucketName-mock",
-      fileName.toLowerCase()
-    );
-  });
+        const response: Response = await request.get(
+            `/api/v1/file/${fileName}/exists`
+        );
+        expect(response.status).toEqual(200);
 
-  it("It should return a 200 response with true if the file exists", async () => {
-    fileExistsInBucketMock.mockImplementationOnce(() => {
-      return Promise.resolve(true);
+        expect(fileExistsInBucketMock).toHaveBeenCalledWith(
+            "BucketName-mock",
+            fileName.toLowerCase()
+        );
     });
 
-    const response: Response = await request.get(
-      `/api/v1/file/${fileName}/exists`
-    );
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(true);
-  });
+    it("It should return a 200 response with true if the file exists", async () => {
+        fileExistsInBucketMock.mockImplementationOnce(() => {
+            return Promise.resolve(true);
+        });
 
-  it("It should return a 200 response with false if the file does not exist", async () => {
-    fileExistsInBucketMock.mockImplementationOnce(() => {
-      return Promise.resolve(false);
+        const response: Response = await request.get(
+            `/api/v1/file/${fileName}/exists`
+        );
+        expect(response.status).toEqual(200);
+        expect(response.body).toEqual(true);
     });
 
-    const response: Response = await request.get(
-      `/api/v1/file/${fileName}/exists`
-    );
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(false);
-  });
+    it("It should return a 200 response with false if the file does not exist", async () => {
+        fileExistsInBucketMock.mockImplementationOnce(() => {
+            return Promise.resolve(false);
+        });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-    jest.resetModules();
-  });
+        const response: Response = await request.get(
+            `/api/v1/file/${fileName}/exists`
+        );
+        expect(response.status).toEqual(200);
+        expect(response.body).toEqual(false);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+        jest.resetModules();
+    });
 });

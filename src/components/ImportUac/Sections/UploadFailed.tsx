@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
-import {ONSPanel} from "blaise-design-system-react-components";
-import React, {ReactElement} from "react";
+import { ONSPanel } from "blaise-design-system-react-components";
+import React, { ReactElement } from "react";
 
 interface UploadFailedPageProps {
     error: Error | AxiosError | undefined
@@ -11,7 +11,7 @@ function isAxiosError(error: any): error is AxiosError {
 }
 
 function UploadFailed(props: UploadFailedPageProps): ReactElement {
-    const {error} = props;
+    const { error } = props;
     let errorDetailPanel: any;
 
     console.error(error);

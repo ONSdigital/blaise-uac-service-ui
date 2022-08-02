@@ -1,4 +1,4 @@
-import Cloud, {Storage, StorageOptions} from "@google-cloud/storage";
+import Cloud, { Storage, StorageOptions } from "@google-cloud/storage";
 import path from "path";
 
 export function CreateStorageClient(projectID: string): Cloud.Storage {
