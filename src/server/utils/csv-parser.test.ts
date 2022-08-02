@@ -76,7 +76,7 @@ describe("getCaseIdsFromFile tests", () => {
         console.error = jest.fn();
         const fileData = Buffer.from(validSampleCsvWithDuplicateSerialNumbers);
 
-        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique")
+        await expect(getCaseIdsFromFile(fileData)).rejects.toThrow("There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique");
     });
 
 });
