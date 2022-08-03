@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from "react";
 import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "./../../client/file-functions";
-import InstrumentList from "./Sections/InstrumentList";
+import QuestionnaireList from "./Sections/QuestionnaireList";
 import { ONSPanel } from "blaise-design-system-react-components";
 
 function InstrumentListPage(): ReactElement {
@@ -45,7 +45,7 @@ function InstrumentListPage(): ReactElement {
             <div>
                 <div className="u-mt-m">
                     {instruments.length > 0 ?
-                        <InstrumentList instrumentList={instruments} loading={listLoading}/>
+                        <QuestionnaireList instrumentList={instruments} loading={listLoading}/>
                         :
                         <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
                     }

@@ -50,7 +50,7 @@ function instrumentTableRow(item: string, index: number) {
     );
 }
 
-export const InstrumentList = (props: Props): ReactElement => {
+export const QuestionnaireList = (props: Props): ReactElement => {
     const { instrumentList, loading } = props;
     const tableColumns: TableColumns[] =
         [
@@ -84,4 +84,4 @@ export const InstrumentList = (props: Props): ReactElement => {
         );
     }
 };
-export default InstrumentList;
+export default QuestionnaireList;
