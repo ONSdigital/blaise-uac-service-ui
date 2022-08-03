@@ -4,7 +4,7 @@
 
 import React from "react";
 import { render, waitFor, act, cleanup } from "@testing-library/react";
-import InstrumentListPage from "./InstrumentListPage";
+import QuestionnaireListPage from "./QuestionnaireListPage";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router";
 import "@testing-library/jest-dom";
@@ -24,7 +24,7 @@ describe("Instrument list page", () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
-                <InstrumentListPage />
+                <QuestionnaireListPage />
             </Router>
         );
 
@@ -37,7 +37,7 @@ describe("Instrument list page", () => {
         const history = createMemoryHistory();
         const { queryByText } = render(
             <Router history={history}>
-                <InstrumentListPage />
+                <QuestionnaireListPage />
             </Router>
         );
 
@@ -53,7 +53,7 @@ describe("Instrument list page", () => {
         const history = createMemoryHistory();
         const { queryByText } = render(
             <Router history={history}>
-                <InstrumentListPage/>
+                <QuestionnaireListPage/>
             </Router>
         );
 
@@ -67,7 +67,7 @@ describe("Instrument list page", () => {
         const history = createMemoryHistory();
         const { queryByText } = render(
             <Router history={history}>
-                <InstrumentListPage/>
+                <QuestionnaireListPage/>
             </Router>
         );
 

@@ -3,7 +3,7 @@ import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "./../../client
 import QuestionnaireList from "./Sections/QuestionnaireList";
 import { ONSPanel } from "blaise-design-system-react-components";
 
-function InstrumentListPage(): ReactElement {
+function QuestionnaireListPage(): ReactElement {
     const [message, setMessage] = useState<string>("");
     const [instruments, setInstruments] = useState<string[]>([]);
     const [listLoading, setListLoading] = useState<boolean>(true);
@@ -55,4 +55,4 @@ function InstrumentListPage(): ReactElement {
     );
 }
 
-export default InstrumentListPage;
+export default QuestionnaireListPage;
