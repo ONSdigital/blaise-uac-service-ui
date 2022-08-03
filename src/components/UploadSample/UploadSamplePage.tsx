@@ -66,12 +66,15 @@ function UploadSamplePage(): ReactElement {
             setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
             break;
         case Step.SelectFile:
-            generateUacCodesForSampleFile(instrumentName, file).then(() => {
+            try{
+                // This await is important to prevent multiple submits.
+                await generateUacCodesForSampleFile(instrumentName, file);
                 setActiveStep(Step.DownloadFile);
-            }).catch((error: Error) => {
-                setError(error);
+            }
+            catch(error){
+                setError(error as Error);
                 setActiveStep(Step.UploadFailed);
-            });
+            }
             break;
         case Step.DownloadFile:
             history.push("/");
