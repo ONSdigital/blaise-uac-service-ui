@@ -1,7 +1,7 @@
-import React, {ReactElement, useState, useEffect} from "react";
-import {getListOfInstrumentsWhichHaveExistingSampleFiles} from "./../../client/file-functions";
+import React, { ReactElement, useState, useEffect } from "react";
+import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "./../../client/file-functions";
 import InstrumentList from "./Sections/InstrumentList";
-import {ONSPanel} from "blaise-design-system-react-components";
+import { ONSPanel } from "blaise-design-system-react-components";
 
 function InstrumentListPage(): ReactElement {
     const [message, setMessage] = useState<string>("");

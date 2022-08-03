@@ -1,5 +1,5 @@
-import {ONSPanel, StyledFormErrorSummary, StyledFormField} from "blaise-design-system-react-components";
-import React, {ChangeEvent, ReactElement} from "react";
+import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
+import React, { ChangeEvent, ReactElement } from "react";
 
 interface SelectFilePageProps {
     instrumentName: string | undefined,
@@ -7,7 +7,7 @@ interface SelectFilePageProps {
 }
 
 function InstrumentName(props: SelectFilePageProps): ReactElement {
-    const {instrumentName, setInstrumentName} = props;
+    const { instrumentName, setInstrumentName } = props;
 
     function validateInstrumentName() {
         const regExpr = new RegExp("^[a-zA-Z]{3}\\d{4}");

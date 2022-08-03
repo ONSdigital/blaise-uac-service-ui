@@ -7,15 +7,15 @@ import { Config } from "../config";
 import { Auth } from "blaise-login-react-server";
 
 export default function NewInstrumentUacHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
-  const router = express.Router();
-  const storage = multer.memoryStorage();
-  const upload = multer({ storage: storage });
+    const router = express.Router();
+    const storage = multer.memoryStorage();
+    const upload = multer({ storage: storage });
 
-  const instrumentUacHandler = new InstrumentUacHandler(busApiClient, googleStorage, config);
+    const instrumentUacHandler = new InstrumentUacHandler(busApiClient, googleStorage, config);
 
-  router.post("/api/v1/instrument/:instrumentName/uac/sample", auth.Middleware, upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
-  router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", auth.Middleware, instrumentUacHandler.GetSampleFileWithUacs);
-  return router;
+    router.post("/api/v1/instrument/:instrumentName/uac/sample", auth.Middleware, upload.single("file"), instrumentUacHandler.GenerateUacsForSampleFile);
+    router.get("/api/v1/instrument/:instrumentName/uac/sample/:fileName", auth.Middleware, instrumentUacHandler.GetSampleFileWithUacs);
+    return router;
 }
 
 export class InstrumentUacHandler {
@@ -24,81 +24,81 @@ export class InstrumentUacHandler {
   config: Config;
 
   constructor(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config) {
-    this.busApiClient = busApiClient;
-    this.config = config;
-    this.googleStorage = googleStorage;
-    this.GenerateUacsForSampleFile = this.GenerateUacsForSampleFile.bind(this);
-    this.GetSampleFileWithUacs = this.GetSampleFileWithUacs.bind(this);
+      this.busApiClient = busApiClient;
+      this.config = config;
+      this.googleStorage = googleStorage;
+      this.GenerateUacsForSampleFile = this.GenerateUacsForSampleFile.bind(this);
+      this.GetSampleFileWithUacs = this.GetSampleFileWithUacs.bind(this);
   }
 
   async GenerateUacsForSampleFile(req: Request, res: Response): Promise<Response> {
-    const { instrumentName } = req.params;
+      const { instrumentName } = req.params;
 
-    const fileName = req.body.fileName;
-    if (fileName === undefined) {
-      return res.status(400).json("Filename not supplied");
-    }
-
-    const file = req.file;
-    if (file === undefined) {
-      return res.status(400).json("File not supplied");
-    }
-
-    try {
-      console.log(`InstrumentName: ${instrumentName}`);
-      await this.generateUacCodes(instrumentName, file);
-      await this.uploadSampleFile(fileName, file);
-
-      console.log("GenerateUacCodesForSampleFile - 201");
-      return res.status(201).json("Success");
-    } catch (error: any) {
-      let errorResponse: any = error.message;
-      if (error.response) {
-        if (error.response.data.error) {
-          errorResponse = error.response.data.error;
-        } else {
-          errorResponse = error.response.data;
-        }
+      const fileName = req.body.fileName;
+      if (fileName === undefined) {
+          return res.status(400).json("Filename not supplied");
       }
-      console.error(errorResponse);
-      return res.status(500).json({ error: errorResponse });
-    }
+
+      const file = req.file;
+      if (file === undefined) {
+          return res.status(400).json("File not supplied");
+      }
+
+      try {
+          console.log(`InstrumentName: ${instrumentName}`);
+          await this.generateUacCodes(instrumentName, file);
+          await this.uploadSampleFile(fileName, file);
+
+          console.log("GenerateUacCodesForSampleFile - 201");
+          return res.status(201).json("Success");
+      } catch (error: any) {
+          let errorResponse: any = error.message;
+          if (error.response) {
+              if (error.response.data.error) {
+                  errorResponse = error.response.data.error;
+              } else {
+                  errorResponse = error.response.data;
+              }
+          }
+          console.error(errorResponse);
+          return res.status(500).json({ error: errorResponse });
+      }
   }
 
   async GetSampleFileWithUacs(req: Request, res: Response): Promise<Response> {
-    const { instrumentName } = req.params;
-    const { fileName } = req.params;
+      const { instrumentName } = req.params;
+      const { fileName } = req.params;
 
-    try {
-      console.log("Get sample file from bucket");
-      const fileBuffer = await this.googleStorage.GetFileFromBucket(this.config.BucketName, fileName.toLowerCase());
-      console.log("Got sample file from bucket");
+      try {
+          console.log("Get sample file from bucket");
+          const fileBuffer = await this.googleStorage.GetFileFromBucket(this.config.BucketName, fileName.toLowerCase());
+          console.log("Got sample file from bucket");
 
-      console.log("Get UAC details from BUS");
-      const instrumentUacDetails = await this.busApiClient.getUacCodesByCaseId(instrumentName);
-      console.log("Got UAC details from BUS");
+          console.log("Get UAC details from BUS");
+          const instrumentUacDetails = await this.busApiClient.getUacCodesByCaseId(instrumentName);
+          console.log("Got UAC details from BUS");
 
-      console.log("Add UAC details to file");
-      const fileWithUacsArray = await addUacCodesToFile(fileBuffer, instrumentUacDetails);
-      console.log("Added UAC details to file");
+          console.log("Add UAC details to file");
+          const fileWithUacsArray = await addUacCodesToFile(fileBuffer, instrumentUacDetails);
+          console.log("Added UAC details to file");
 
-      return fileWithUacsArray.length === 0
-        ? res.status(400).json()
-        : res.status(200).json(fileWithUacsArray);
-    } catch (error: any) {
-      console.error(`Response: ${error}`);
-      return res.status(500).json(`Get sample file with uacs failed for instrument ${instrumentName}`);
-    }
+          return fileWithUacsArray.length === 0
+              ? res.status(400).json()
+              : res.status(200).json(fileWithUacsArray);
+      } catch (error: any) {
+          console.error(`Response: ${error}`);
+          return res.status(500).json(`Get sample file with uacs failed for instrument ${instrumentName}`);
+      }
   }
 
   async generateUacCodes(instrumentName: string, file: Express.Multer.File): Promise<void> {
-    const caseIds = await getCaseIdsFromFile(file.buffer);
+      const caseIds = await getCaseIdsFromFile(file.buffer);
 
-    await this.busApiClient.generateUacCodes(instrumentName, caseIds);
+      await this.busApiClient.generateUacCodes(instrumentName, caseIds);
   }
 
   async uploadSampleFile(fileName: string, file: Express.Multer.File): Promise<void> {
-    await this.googleStorage.UploadFileToBucket(this.config.BucketName, file, fileName.toLowerCase());
+      await this.googleStorage.UploadFileToBucket(this.config.BucketName, file, fileName.toLowerCase());
   }
 
 }

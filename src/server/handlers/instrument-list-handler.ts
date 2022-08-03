@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
-import {GoogleStorage} from "./../storage/google-storage-functions";
-import {Config} from "../config";
+import { GoogleStorage } from "./../storage/google-storage-functions";
+import { Config } from "../config";
 import { Auth } from "blaise-login-react-server";
 
 export default function NewInstrumentListHandler(googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
