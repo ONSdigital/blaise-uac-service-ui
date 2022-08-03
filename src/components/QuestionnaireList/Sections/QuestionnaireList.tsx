@@ -10,7 +10,7 @@ interface Props {
     loading: boolean;
 }
 
-function instrumentTableRow(item: string, index: number) {
+function questionnaireTableRow(item: string, index: number) {
     const [loading, setLoading] = useState<boolean>(false);
     const [errored, setErrored] = useState<boolean>(false);
 
@@ -36,7 +36,7 @@ function instrumentTableRow(item: string, index: number) {
             </tr>
             }
             <tr className={`table__row ${(errored ? "summary__item--error" : "")}`} key={index}
-                data-testid={"instrument-table-row"}>
+                data-testid={"questionnaire-table-row"}>
                 <td className="table__cell" style={{ padding: "1rem" }}>
                     {item}
                 </td>
@@ -69,10 +69,10 @@ export const QuestionnaireList = (props: Props): ReactElement => {
             <>
                 <div className="u-mt-s">
                     {
-                        <ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                        <ONSTable columns={tableColumns} tableID={"questionnaire-table"}>
                             {
                                 questionnaireList.map((item: string, index: number) => {
-                                    return instrumentTableRow(item, index);
+                                    return questionnaireTableRow(item, index);
                                 })
                             }
                         </ONSTable>

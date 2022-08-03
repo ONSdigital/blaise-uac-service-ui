@@ -4,7 +4,7 @@ import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
 import ImportUacPage from "./components/ImportUac/ImportUacPage";
 import { Footer, Header, BetaBanner, DefaultErrorBoundary, NotProductionWarning, ONSLoadingPanel } from "blaise-design-system-react-components";
 import "./style.css";
-import QuestionnaireListPage from "./components/InstrumentList/QuestionnaireListPage";
+import QuestionnaireListPage from "./components/QuestionnaireList/QuestionnaireListPage";
 import { LoginForm, AuthManager } from "blaise-login-react-client";
 import { isProduction } from "./client/env";
 
