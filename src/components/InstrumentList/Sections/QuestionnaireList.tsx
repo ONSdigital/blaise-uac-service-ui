@@ -6,7 +6,7 @@ import { getSampleFileWithUacCodes } from "../../../client/file-functions";
 import { ONSButton } from "blaise-design-system-react-components";
 
 interface Props {
-    instrumentList: string[];
+    questionnaireList: string[];
     loading: boolean;
 }
 
@@ -51,7 +51,7 @@ function instrumentTableRow(item: string, index: number) {
 }
 
 export const QuestionnaireList = (props: Props): ReactElement => {
-    const { instrumentList, loading } = props;
+    const { questionnaireList, loading } = props;
     const tableColumns: TableColumns[] =
         [
             {
@@ -71,7 +71,7 @@ export const QuestionnaireList = (props: Props): ReactElement => {
                     {
                         <ONSTable columns={tableColumns} tableID={"instrument-table"}>
                             {
-                                instrumentList.map((item: string, index: number) => {
+                                questionnaireList.map((item: string, index: number) => {
                                     return instrumentTableRow(item, index);
                                 })
                             }

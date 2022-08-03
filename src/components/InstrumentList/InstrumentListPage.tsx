@@ -45,7 +45,7 @@ function InstrumentListPage(): ReactElement {
             <div>
                 <div className="u-mt-m">
                     {instruments.length > 0 ?
-                        <QuestionnaireList instrumentList={instruments} loading={listLoading}/>
+                        <QuestionnaireList questionnaireList={instruments} loading={listLoading}/>
                         :
                         <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
                     }
