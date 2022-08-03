@@ -2,11 +2,11 @@ import React, { ChangeEvent, ReactElement } from "react";
 import { StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
 
 interface ConfirmName {
-  instrumentName: string;
+  questionnaireName: string;
   setNameConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ConfirmName({ instrumentName, setNameConfirmation }: ConfirmName): ReactElement {
+function ConfirmName({ questionnaireName, setNameConfirmation }: ConfirmName): ReactElement {
 
     function validateRadio(value: string) {
         let error;
@@ -37,7 +37,7 @@ function ConfirmName({ instrumentName, setNameConfirmation }: ConfirmName): Reac
     return (
         <>
             <h1 className="u-mb-l">
-        Can you confirm <em className="highlight">{instrumentName}</em> is the correct questionnaire name?
+        Can you confirm <em className="highlight">{questionnaireName}</em> is the correct questionnaire name?
             </h1>
 
             <StyledFormErrorSummary />

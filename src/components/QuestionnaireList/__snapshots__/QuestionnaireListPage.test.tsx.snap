@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Instrument list page instrument list page matches Snapshot 1`] = `
+exports[`Questionnaire list page questionnaire list page matches Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>

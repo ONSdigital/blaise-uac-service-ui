@@ -3,7 +3,7 @@ import React, { ReactElement } from "react";
 import { AxiosError } from "axios";
 
 interface UploadFailedProps {
-    instrumentName: string | undefined;
+    questionnaireName: string | undefined;
     error: Error | AxiosError | undefined
 }
 
@@ -12,7 +12,7 @@ function isAxiosError(error: any): error is AxiosError {
 }
 
 function UploadFailed(props: UploadFailedProps): ReactElement {
-    const { instrumentName, error } = props;
+    const { questionnaireName, error } = props;
 
     function errorDetailPanel(): ReactElement {
         console.error(error);
@@ -32,7 +32,7 @@ function UploadFailed(props: UploadFailedProps): ReactElement {
             <ONSPanel status="error">
                 <h1>File upload failed</h1>
                 <p>
-                    Sample file for questionnaire <em className="highlight">{instrumentName}</em> has failed to upload.
+                    Sample file for questionnaire <em className="highlight">{questionnaireName}</em> has failed to upload.
                 </p>
                 <p>
                     When reporting this issue to the Service Desk, please provide the questionnaire name, and time and

@@ -35,8 +35,8 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
         });
 }
 
-export async function generateUacCodesForSampleFile(instrumentName: string | undefined, file: File | undefined): Promise<boolean> {
-    if (instrumentName === undefined) {
+export async function generateUacCodesForSampleFile(questionnaireName: string | undefined, file: File | undefined): Promise<boolean> {
+    if (questionnaireName === undefined) {
         throw new Error("Questionnaire name was not supplied");
     }
 
@@ -45,10 +45,10 @@ export async function generateUacCodesForSampleFile(instrumentName: string | und
     }
 
     const data = new FormData();
-    data.append("fileName", getFileName(instrumentName));
+    data.append("fileName", getFileName(questionnaireName));
     data.append("file", file);
 
-    return axios.post(`/api/v1/instrument/${instrumentName}/uac/sample`, data, axiosConfig())
+    return axios.post(`/api/v1/instrument/${questionnaireName}/uac/sample`, data, axiosConfig())
         .then(() => {
             console.log("file-functions - true");
             return true;

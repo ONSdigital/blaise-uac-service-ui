@@ -36,16 +36,16 @@ function UploadSamplePage(): ReactElement {
         case Step.InstrumentName:
             return (<InstrumentName instrumentName={instrumentName} setInstrumentName={setInstrumentName} />);
         case Step.ConfirmName:
-            return (<ConfirmName instrumentName={instrumentName} setNameConfirmation={setNameConfirmation} />);
+            return (<ConfirmName questionnaireName={instrumentName} setNameConfirmation={setNameConfirmation} />);
         case Step.AlreadyExists:
             return (
-                <FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite} />);
+                <FileExists questionnaireName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite} />);
         case Step.SelectFile:
             return (<SelectFile file={file} setFile={setFile} />);
         case Step.DownloadFile:
             return (<DownloadUacFile instrumentName={instrumentName} />);
         case Step.UploadFailed:
-            return (<UploadFailed instrumentName={instrumentName} error={error} />);
+            return (<UploadFailed questionnaireName={instrumentName} error={error} />);
         }
     }
 

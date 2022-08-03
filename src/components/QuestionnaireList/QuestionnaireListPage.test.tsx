@@ -15,12 +15,12 @@ import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "../../client/f
 
 const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
 
-describe("Instrument list page", () => {
+describe("Questionnaire list page", () => {
     beforeEach(() => {
         getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.resolve(instrumentNames));
     });
 
-    it("instrument list page matches Snapshot", async () => {
+    it("questionnaire list page matches Snapshot", async () => {
         const history = createMemoryHistory();
         const wrapper = render(
             <Router history={history}>
@@ -42,8 +42,8 @@ describe("Instrument list page", () => {
         );
 
         await act(async () => await waitFor(() => {
-            instrumentNames.forEach((instrumentName) => {
-                expect(queryByText(instrumentName)).toBeInTheDocument();
+            instrumentNames.forEach((questionnaireName) => {
+                expect(queryByText(questionnaireName)).toBeInTheDocument();
             });
         }));
     });

@@ -2,7 +2,7 @@ import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design
 import React, { ChangeEvent, ReactElement } from "react";
 
 interface FileExistsPageProps {
-    instrumentName: string | undefined,
+    questionnaireName: string | undefined,
     overwrite: string | undefined,
     setOverwrite: any,
 }
