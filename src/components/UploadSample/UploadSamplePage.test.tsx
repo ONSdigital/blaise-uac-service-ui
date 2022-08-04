@@ -105,7 +105,6 @@ describe("Upload Sample Page", () => {
         });
     });
 
-
     it("Confirm instrument name - should navigate to Enter instrument name", async () => {
         mock.onGet(`/api/v1/file/${fileName}/exists`).reply(200, false);
 
@@ -146,7 +145,6 @@ describe("Upload Sample Page", () => {
             expect(screen.queryAllByText("Select a sample file")).toHaveLength(1);
         });
     });
-
 
     it("Select sample file - should display an error message if you dont select a file", async () => {
         await NavigateToSelectFile();

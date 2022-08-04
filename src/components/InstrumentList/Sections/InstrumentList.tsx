@@ -1,9 +1,9 @@
-import React, {ReactElement, useState} from "react";
-import {ONSLoadingPanel} from "blaise-design-system-react-components";
-import ONSTable, {TableColumns} from "./ONSTable";
+import React, { ReactElement, useState } from "react";
+import { ONSLoadingPanel } from "blaise-design-system-react-components";
+import ONSTable, { TableColumns } from "./ONSTable";
 import CsvDownloader from "react-csv-downloader";
-import {getSampleFileWithUacCodes} from "../../../client/file-functions";
-import {ONSButton} from "blaise-design-system-react-components";
+import { getSampleFileWithUacCodes } from "../../../client/file-functions";
+import { ONSButton } from "blaise-design-system-react-components";
 
 interface Props {
     instrumentList: string[];
@@ -37,7 +37,7 @@ function instrumentTableRow(item: string, index: number) {
             }
             <tr className={`table__row ${(errored ? "summary__item--error" : "")}`} key={index}
                 data-testid={"instrument-table-row"}>
-                <td className="table__cell" style={{padding: "1rem"}}>
+                <td className="table__cell" style={{ padding: "1rem" }}>
                     {item}
                 </td>
                 <td className="table__cell">
@@ -51,7 +51,7 @@ function instrumentTableRow(item: string, index: number) {
 }
 
 export const InstrumentList = (props: Props): ReactElement => {
-    const {instrumentList, loading} = props;
+    const { instrumentList, loading } = props;
     const tableColumns: TableColumns[] =
         [
             {

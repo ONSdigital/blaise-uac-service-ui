@@ -1,14 +1,14 @@
-import {ONSButton, ONSPanel} from "blaise-design-system-react-components";
-import React, {ReactElement, useState} from "react";
+import { ONSButton, ONSPanel } from "blaise-design-system-react-components";
+import React, { ReactElement, useState } from "react";
 import CsvDownloader from "react-csv-downloader";
-import {getSampleFileWithUacCodes} from "../../../client/file-functions";
+import { getSampleFileWithUacCodes } from "../../../client/file-functions";
 
 interface DownloadUacPageProps {
     instrumentName: string | undefined
 }
 
 function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
-    const {instrumentName} = props;
+    const { instrumentName } = props;
     const [loading, setLoading] = useState<boolean>(false);
     const [errored, setErrored] = useState<boolean>();
 
