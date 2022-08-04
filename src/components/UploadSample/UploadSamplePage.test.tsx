@@ -177,7 +177,7 @@ describe("Upload Sample Page", () => {
         });
     });
 
-    it(("Select sample file - should return a specific error when the import fails with a reason"), async () => {
+    it("Select sample file - should return a specific error when the import fails with a reason", async () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(500, { error: "All the bunnies melted" });
 
         await NavigateToSelectFileAndUpload("csv");
@@ -187,7 +187,7 @@ describe("Upload Sample Page", () => {
         });
     });
 
-    it(("Select sample file and continue - protect against multiple uploads"), async () => {
+    it("Select sample file and continue - protect against multiple uploads", async () => {
         // arrange
         let completeRequest = (response: any[]) => {};
         mock.onPost(
