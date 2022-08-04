@@ -67,7 +67,6 @@ function UploadSamplePage(): ReactElement {
             break;
         case Step.SelectFile:
             try{
-                // This await is important to prevent multiple submits.
                 await generateUacCodesForSampleFile(instrumentName, file);
                 setActiveStep(Step.DownloadFile);
             }
