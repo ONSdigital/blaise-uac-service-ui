@@ -74,7 +74,6 @@ describe("generateUacCodesForFile file tests", () => {
     });
 });
 
-
 describe("getSampleFileWithUacCodes file tests", () => {
     beforeAll(() => {
         jest.clearAllMocks();
@@ -108,7 +107,6 @@ describe("getSampleFileWithUacCodes file tests", () => {
             .toThrow("Request failed with status code 400");
     });
 });
-
 
 describe("sampleFileAlreadyExists tests", () => {
     beforeAll(() => {
@@ -157,7 +155,6 @@ describe("getListOfInstrumentsWhichHaveExistingSampleFiles tests", () => {
         expect(result).toStrictEqual(instrumentNames);
     });
 });
-
 
 describe("importUacsFromFile", () => {
     const sampleFile = fileMock({

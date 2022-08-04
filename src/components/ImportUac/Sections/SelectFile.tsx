@@ -1,6 +1,6 @@
-import {ONSPanel, StyledFormErrorSummary, StyledFormField} from "blaise-design-system-react-components";
-import React, {ChangeEvent, ReactElement} from "react";
-import {FormikContextType, useFormikContext} from "formik";
+import { ONSPanel, StyledFormErrorSummary, StyledFormField } from "blaise-design-system-react-components";
+import React, { ChangeEvent, ReactElement } from "react";
+import { FormikContextType, useFormikContext } from "formik";
 
 interface SelectFilePageProps {
     file: File | undefined,
@@ -8,9 +8,8 @@ interface SelectFilePageProps {
 }
 
 function SelectFile(props: SelectFilePageProps): ReactElement {
-    const {file, setFile} = props;
-    const {isSubmitting}: FormikContextType<unknown> = useFormikContext();
-
+    const { file, setFile } = props;
+    const { isSubmitting }: FormikContextType<unknown> = useFormikContext();
 
     function validateInput() {
         let error;
@@ -50,7 +49,7 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
                     <ONSPanel>
                         <p>
                             The UAC file must be a Comma-Separated Values (CSV) file containing the column <em
-                            className="highlight">Full_UAC</em>.
+                                className="highlight">Full_UAC</em>.
                         </p>
                     </ONSPanel>
                     <StyledFormErrorSummary/>

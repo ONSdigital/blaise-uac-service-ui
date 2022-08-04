@@ -1,6 +1,6 @@
-import {ONSPanel} from "blaise-design-system-react-components";
-import React, {ReactElement} from "react";
-import {AxiosError} from "axios";
+import { ONSPanel } from "blaise-design-system-react-components";
+import React, { ReactElement } from "react";
+import { AxiosError } from "axios";
 
 interface UploadFailedProps {
     instrumentName: string | undefined;
@@ -12,7 +12,7 @@ function isAxiosError(error: any): error is AxiosError {
 }
 
 function UploadFailed(props: UploadFailedProps): ReactElement {
-    const {instrumentName, error} = props;
+    const { instrumentName, error } = props;
 
     function errorDetailPanel(): ReactElement {
         console.error(error);

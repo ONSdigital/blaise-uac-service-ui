@@ -1,4 +1,4 @@
-import {CreateStorageClient} from "./google-storage";
+import { CreateStorageClient } from "./google-storage";
 import Cloud from "@google-cloud/storage";
 
 export class GoogleStorage {

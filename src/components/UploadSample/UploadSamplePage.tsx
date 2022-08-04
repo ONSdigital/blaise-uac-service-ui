@@ -10,7 +10,7 @@ import UploadFailed from "./Sections/UploadFailed";
 import FileExists from "./Sections/FileExists";
 import DownloadUacFile from "./Sections/DownloadUacFile";
 import ConfirmName from "./Sections/ConfirmName";
-import {AxiosError} from "axios";
+import { AxiosError } from "axios";
 
 enum Step {
     InstrumentName,
@@ -33,51 +33,54 @@ function UploadSamplePage(): ReactElement {
 
     function _renderStepContent(step: number) {
         switch (step) {
-            case Step.InstrumentName:
-                return (<InstrumentName instrumentName={instrumentName} setInstrumentName={setInstrumentName} />);
-            case Step.ConfirmName:
-                return (<ConfirmName instrumentName={instrumentName} setNameConfirmation={setNameConfirmation} />);
-            case Step.AlreadyExists:
-                return (
-                    <FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite} />);
-            case Step.SelectFile:
-                return (<SelectFile file={file} setFile={setFile} />);
-            case Step.DownloadFile:
-                return (<DownloadUacFile instrumentName={instrumentName} />);
-            case Step.UploadFailed:
-                return (<UploadFailed instrumentName={instrumentName} error={error} />);
+        case Step.InstrumentName:
+            return (<InstrumentName instrumentName={instrumentName} setInstrumentName={setInstrumentName} />);
+        case Step.ConfirmName:
+            return (<ConfirmName instrumentName={instrumentName} setNameConfirmation={setNameConfirmation} />);
+        case Step.AlreadyExists:
+            return (
+                <FileExists instrumentName={instrumentName} overwrite={overwrite} setOverwrite={setOverwrite} />);
+        case Step.SelectFile:
+            return (<SelectFile file={file} setFile={setFile} />);
+        case Step.DownloadFile:
+            return (<DownloadUacFile instrumentName={instrumentName} />);
+        case Step.UploadFailed:
+            return (<UploadFailed instrumentName={instrumentName} error={error} />);
         }
     }
 
     async function _handleSubmit() {
         switch (activeStep) {
-            case Step.InstrumentName:
-                setActiveStep(Step.ConfirmName);
+        case Step.InstrumentName:
+            setActiveStep(Step.ConfirmName);
+            break;
+        case Step.ConfirmName:
+            console.log(nameConfirmation);
+            if (nameConfirmation) {
+                setActiveStep(await sampleFileAlreadyExists(instrumentName) ? Step.AlreadyExists : Step.SelectFile);
                 break;
-            case Step.ConfirmName:
-                console.log(nameConfirmation);
-                if (nameConfirmation) {
-                    setActiveStep(await sampleFileAlreadyExists(instrumentName) ? Step.AlreadyExists : Step.SelectFile);
-                    break;
-                }
-                setActiveStep(Step.InstrumentName);
-                break;
-            case Step.AlreadyExists:
-                setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
-                break;
-            case Step.SelectFile:
-                generateUacCodesForSampleFile(instrumentName, file).then(() => {
-                    setActiveStep(Step.DownloadFile);
-                }).catch((error: Error) => {
-                    setError(error);
-                    setActiveStep(Step.UploadFailed);
-                });
-                break;
-            case Step.DownloadFile:
-                history.push("/");
-                break;
-            default:
-                setActiveStep(Step.InstrumentName);
+            }
+            setActiveStep(Step.InstrumentName);
+            break;
+        case Step.AlreadyExists:
+            setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
+            break;
+        case Step.SelectFile:
+            try{
+                // This await is important to prevent multiple submits.
+                await generateUacCodesForSampleFile(instrumentName, file);
+                setActiveStep(Step.DownloadFile);
+            }
+            catch(error){
+                setError(error as Error);
+                setActiveStep(Step.UploadFailed);
+            }
+            break;
+        case Step.DownloadFile:
+            history.push("/");
+            break;
+        default:
+            setActiveStep(Step.InstrumentName);
         }
     }
 
