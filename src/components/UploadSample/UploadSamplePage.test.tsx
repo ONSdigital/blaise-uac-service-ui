@@ -22,6 +22,7 @@ describe("Upload Sample Page", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         jest.resetModules();
+        mock.reset();
     });
 
     it("select file page matches Snapshot", async () => {
@@ -166,7 +167,7 @@ describe("Upload Sample Page", () => {
         });
     });
 
-    it("Select sample file - should display an upload filed message if file fails to upload", async () => {
+    it("Select sample file - should display an upload failed message if file fails to upload", async () => {
         mock.onPost(`/api/v1/instrument/${instrumentName}/uac/sample`).reply(500);
 
         await NavigateToSelectFileAndUpload("csv");
@@ -184,6 +185,36 @@ describe("Upload Sample Page", () => {
         await waitFor(() => {
             expect(screen.queryAllByText("All the bunnies melted")).toHaveLength(1);
         });
+    });
+
+    it(("Select sample file and continue - protect against multiple uploads"), async () => {
+        // arrange
+        let completeRequest = (response: any[]) => {};
+        mock.onPost(
+            `/api/v1/instrument/${instrumentName}/uac/sample`
+        ).reply(() => new Promise((resolve) => {completeRequest = resolve;}));
+
+        // act
+        // (wait for the request to start, click Continue again,
+        // finish the mock request, wait for the next page to load
+        // and then assert. It's messy, I know but refactor it at
+        // your own risk!)
+        await NavigateToSelectFileAndUpload("csv");
+        await waitFor(() => {
+            expect(mock.history.post.length).toBe(1);
+        });
+
+        const continueButton = screen.getByRole("button", { name: "Continue" });
+        await fireEvent.click(continueButton);
+
+        completeRequest([201]);
+        await waitFor(() => {
+            expect(screen.queryByText("Successfully generated UACs")).toBeNull();
+        });
+
+        // assert
+        expect(mock.history.post.length).toBe(1);
+        expect(mock.history.post[0].url).toEqual("/api/v1/instrument/DST1234A/uac/sample");
     });
 
     it("Select sample file - should navigate to the download UAC option when a file is selected", async () => {
