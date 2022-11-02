@@ -22,6 +22,7 @@ function FileExists(props: FileExistsPageProps): ReactElement {
         name: "overwrite sample",
         description: "Overwrite sample file?",
         type: "radio",
+        autoFocus: true,
         validate: validateOverwrite,
         onClick: (e: ChangeEvent<HTMLInputElement>) => setOverwrite(e.target.value),
         radioOptions: [
