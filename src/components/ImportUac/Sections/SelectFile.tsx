@@ -38,7 +38,8 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
         onChange: (e: ChangeEvent<HTMLInputElement>) => handleFileChange(e.target.files),
         accept: ".csv",
         disabled: isSubmitting,
-        props: {}
+        props: {},
+        autoFocus: true
     };
 
     return (
