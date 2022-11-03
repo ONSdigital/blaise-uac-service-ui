@@ -8,7 +8,7 @@ This project is a React.js application which when built is rendered by a Node.js
 
 The application is being deployed to Google App Engine.
 
-### Local Setup
+### Local Setup 
 
 Prerequisites:
 
