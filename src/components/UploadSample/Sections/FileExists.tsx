@@ -32,6 +32,7 @@ function FileExists(props: FileExistsPageProps): ReactElement {
                 id: "No", label: "No", value: "No"
             },
         ],
+        autoFocus: true,
         props: {}
     };
 
