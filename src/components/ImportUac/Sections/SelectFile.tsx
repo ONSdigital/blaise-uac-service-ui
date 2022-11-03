@@ -39,7 +39,7 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
         accept: ".csv",
         disabled: isSubmitting,
         props: {},
-        autoFocus: true
+        autoFocus: false
     };
 
     return (
