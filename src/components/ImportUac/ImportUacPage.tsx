@@ -79,7 +79,7 @@ function ImportUacPage(): ReactElement {
                                 <div className="ons-u-mt-m">
                                     {_renderStepContent(activeStep)}
                                 </div>
-                                <div className="ons-btn-group u-mt-m">
+                                <div className="ons-btn-group ons-u-mt-m">
                                     <ONSButton
                                         id={"next-screen-button"}
                                         submit={true}
