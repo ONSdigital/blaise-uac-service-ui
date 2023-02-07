@@ -6,7 +6,7 @@ Object {
   "baseElement": <body>
     <div>
       <a
-        class="ons-skip__link"
+        class="ons-skip-link"
         href="#main-content"
       >
         Skip to main content
@@ -377,7 +377,7 @@ Object {
   </body>,
   "container": <div>
     <a
-      class="ons-skip__link"
+      class="ons-skip-link"
       href="#main-content"
     >
       Skip to main content
