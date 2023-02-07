@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from "react";
 import { Switch, Route, Link, useLocation } from "react-router-dom";
 import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
 import ImportUacPage from "./components/ImportUac/ImportUacPage";
-import { Footer, Header, BetaBanner, DefaultErrorBoundary, NotProductionWarning, ONSLoadingPanel } from "blaise-design-system-react-components";
+import { Footer, Header, DefaultErrorBoundary, NotProductionWarning, ONSLoadingPanel } from "blaise-design-system-react-components";
 import "./style.css";
 import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 import { LoginForm, AuthManager } from "blaise-login-react-client";
@@ -85,7 +85,6 @@ function App(): ReactElement {
             {
                 isProduction(window.location.hostname) ? <></> : <NotProductionWarning />
             }
-            <BetaBanner />
             <Header title={"Generate UACs"} signOutButton={loggedIn} noSave={true} signOutFunction={signOut} />
             <div style={divStyle} className="ons-page__container ons-container">
                 <Loading />
