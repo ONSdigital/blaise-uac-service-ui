@@ -86,7 +86,7 @@ Object {
               </div>
             </div>
             <div
-              class="ons-btn-group u-mt-m"
+              class="ons-btn-group ons-u-mt-m"
             >
               <button
                 class="ons-btn "
@@ -188,7 +188,7 @@ Object {
             </div>
           </div>
           <div
-            class="ons-btn-group u-mt-m"
+            class="ons-btn-group ons-u-mt-m"
           >
             <button
               class="ons-btn "
