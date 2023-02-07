@@ -57,19 +57,19 @@ function App(): ReactElement {
                             <ImportUacPage />
                         </Route>
                         <Route path="/">
-                            <ul className="list list--bare list--inline u-mt-m">
-                                <li className="list__item">
+                            <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
+                                <li className="ons-list__item">
                                     <Link to="/upload" id="upload-sample-link">
                                         Upload sample
                                     </Link>
                                 </li>
-                                <li className="list__item">
+                                <li className="ons-list__item">
                                     <Link to="/import" id="import-uacs-link">
                                         Upload used UACs
                                     </Link>
                                 </li>
                             </ul>
-                            <h2 className="u-mt-m">Previously uploaded questionnaire samples</h2>
+                            <h2 className="ons-u-mt-m">Previously uploaded questionnaire samples</h2>
                             <InstrumentListPage />
                         </Route>
                     </Switch>
@@ -81,13 +81,13 @@ function App(): ReactElement {
 
     return (
         <>
-            <a className="skip__link" href="#main-content">Skip to main content</a>
+            <a className="ons-skip__link" href="#main-content">Skip to main content</a>
             {
                 isProduction(window.location.hostname) ? <></> : <NotProductionWarning />
             }
             <BetaBanner />
             <Header title={"Generate UACs"} signOutButton={loggedIn} noSave={true} signOutFunction={signOut} />
-            <div style={divStyle} className="page__container container">
+            <div style={divStyle} className="ons-page__container ons-container">
                 <Loading />
                 <LoginPage />
                 <AppContent />
