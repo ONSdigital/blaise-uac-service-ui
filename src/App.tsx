@@ -81,7 +81,7 @@ function App(): ReactElement {
 
     return (
         <>
-            <a className="ons-skip__link" href="#main-content">Skip to main content</a>
+            <a className="ons-skip-link" href="#main-content">Skip to main content</a>
             {
                 isProduction(window.location.hostname) ? <></> : <NotProductionWarning />
             }
