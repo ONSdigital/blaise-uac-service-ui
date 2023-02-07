@@ -24,15 +24,15 @@ function InstrumentName(props: SelectFilePageProps): ReactElement {
         validate: validateInstrumentName,
         value: instrumentName,
         onChange: (e: ChangeEvent<HTMLInputElement>) => setInstrumentName(e.target.value),
-        className: "input input--text input-type__input",
+        className: "ons-input ons-input--text ons-input-type__input",
         autoFocus: true,
         props: {}
     };
 
     return (
         <>
-            <div className="grid">
-                <div className="grid__col col-8@m">
+            <div className="ons-grid">
+                <div className="ons-grid__col ons-col-8@m">
                     <h1>Which questionnaire do you wish to generate UACs for?</h1>
                     <StyledFormErrorSummary/>
                     <ONSPanel>
