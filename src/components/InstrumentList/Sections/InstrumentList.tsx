@@ -30,17 +30,17 @@ function instrumentTableRow(item: string, index: number) {
     return (
         <React.Fragment key={`row${index}`}>
             {errored &&
-            <tr className="table__row  summary__item--error">
-                <th colSpan={6} className="summary__row-title u-fs-r">There was an error downloading the file {item}.csv
+            <tr className="ons-table__row  ons-summary__item--error">
+                <th colSpan={6} className="ons-summary__row-title u-fs-r">There was an error downloading the file {item}.csv
                 </th>
             </tr>
             }
-            <tr className={`table__row ${(errored ? "summary__item--error" : "")}`} key={index}
+            <tr className={`ons-table__row ${(errored ? "ons-summary__item--error" : "")}`} key={index}
                 data-testid={"instrument-table-row"}>
-                <td className="table__cell" style={{ padding: "1rem" }}>
+                <td className="ons-table__cell" style={{ padding: "1rem" }}>
                     {item}
                 </td>
-                <td className="table__cell">
+                <td className="ons-table__cell">
                     <CsvDownloader datas={downloadCsvFile} filename={`${item}.csv`} bom={false}>
                         <ONSButton label={"Download"} primary={true} small={true} loading={loading}/>
                     </CsvDownloader>
@@ -67,7 +67,7 @@ export const InstrumentList = (props: Props): ReactElement => {
     } else {
         return (
             <>
-                <div className="u-mt-s">
+                <div className="ons-u-mt-s">
                     {
                         <ONSTable columns={tableColumns} tableID={"instrument-table"}>
                             {

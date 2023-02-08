@@ -85,15 +85,15 @@ function UploadSamplePage(): ReactElement {
 
     return (
         <>
-            <main id="main-content" className="page__main u-mt-no">
+            <main id="main-content" className="ons-page__main ons-u-mt-no">
                 <Switch>
                     <Route path="/app">
                         <App />
                     </Route>
                     <Route path="/">
 
-                        <ul className="list list--bare list--inline u-mt-m">
-                            <li className="list__item">
+                        <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
+                            <li className="ons-list__item">
                                 <Link to="/app" id="generate-uac-link">
                                     Home
                                 </Link>
@@ -110,10 +110,10 @@ function UploadSamplePage(): ReactElement {
                     {({ isSubmitting }) => (
                         <Form id={"formID"}>
                             <div>
-                                <div className="u-mt-m">
+                                <div className="ons-u-mt-m">
                                     {_renderStepContent(activeStep)}
                                 </div>
-                                <div className="btn-group u-mt-m">
+                                <div className="ons-btn-group ons-u-mt-m">
                                     <ONSButton
                                         id={"next-screen-button"}
                                         submit={true}

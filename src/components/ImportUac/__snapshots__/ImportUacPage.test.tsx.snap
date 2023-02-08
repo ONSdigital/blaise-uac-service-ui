@@ -6,14 +6,14 @@ Object {
   "baseElement": <body>
     <div>
       <main
-        class="page__main u-mt-no"
+        class="ons-page__main ons-u-mt-no"
         id="main-content"
       >
         <ul
-          class="list list--bare list--inline u-mt-m"
+          class="ons-list ons-list--bare ons-list--inline ons-u-mt-m"
         >
           <li
-            class="list__item"
+            class="ons-list__item"
           >
             <a
               href="/app"
@@ -29,27 +29,27 @@ Object {
         >
           <div>
             <div
-              class="u-mt-m"
+              class="ons-u-mt-m"
             >
               <div
-                class="grid"
+                class="ons-grid"
               >
                 <div
-                  class="grid__col col-8@m"
+                  class="ons-grid__col ons-col-8@m"
                 >
                   <h1>
                     Import UACs from file
                   </h1>
                   <div
-                    class="panel panel--info panel--no-title  u-mt-m"
+                    class="ons-panel ons-panel--info ons-panel--no-title  ons-u-mt-m"
                   >
                     <div
-                      class="panel__body "
+                      class="ons-panel__body "
                     >
                       <p>
                         The UAC file must be a Comma-Separated Values (CSV) file containing the column 
                         <em
-                          class="highlight"
+                          class="ons-highlight"
                         >
                           Full_UAC
                         </em>
@@ -58,23 +58,23 @@ Object {
                     </div>
                   </div>
                   <div
-                    class="field"
+                    class="ons-field"
                   >
                     <label
-                      class="label label--with-description"
+                      class="ons-label ons-label--with-description"
                       for="uac-selector"
                     >
                       Select a uac file
                     </label>
                     <span
-                      class="label__description  input--with-description"
+                      class="ons-label__description  ons-input--with-description"
                       id="description-hint"
                     >
                       File type accepted is .csv
                     </span>
                     <input
                       accept=".csv"
-                      class="input input--text input-type__input input--upload"
+                      class="ons-input ons-input--text ons-input-type__input ons-input--upload"
                       id="uac-selector"
                       name="Select a uac file"
                       props="[object Object]"
@@ -86,16 +86,16 @@ Object {
               </div>
             </div>
             <div
-              class="btn-group u-mt-m"
+              class="ons-btn-group ons-u-mt-m"
             >
               <button
-                class="btn "
+                class="ons-btn "
                 data-testid="button"
                 id="next-screen-button"
                 type="submit"
               >
                 <span
-                  class="btn__inner"
+                  class="ons-btn__inner"
                 >
                   Continue
                 </span>
@@ -108,14 +108,14 @@ Object {
   </body>,
   "container": <div>
     <main
-      class="page__main u-mt-no"
+      class="ons-page__main ons-u-mt-no"
       id="main-content"
     >
       <ul
-        class="list list--bare list--inline u-mt-m"
+        class="ons-list ons-list--bare ons-list--inline ons-u-mt-m"
       >
         <li
-          class="list__item"
+          class="ons-list__item"
         >
           <a
             href="/app"
@@ -131,27 +131,27 @@ Object {
       >
         <div>
           <div
-            class="u-mt-m"
+            class="ons-u-mt-m"
           >
             <div
-              class="grid"
+              class="ons-grid"
             >
               <div
-                class="grid__col col-8@m"
+                class="ons-grid__col ons-col-8@m"
               >
                 <h1>
                   Import UACs from file
                 </h1>
                 <div
-                  class="panel panel--info panel--no-title  u-mt-m"
+                  class="ons-panel ons-panel--info ons-panel--no-title  ons-u-mt-m"
                 >
                   <div
-                    class="panel__body "
+                    class="ons-panel__body "
                   >
                     <p>
                       The UAC file must be a Comma-Separated Values (CSV) file containing the column 
                       <em
-                        class="highlight"
+                        class="ons-highlight"
                       >
                         Full_UAC
                       </em>
@@ -160,23 +160,23 @@ Object {
                   </div>
                 </div>
                 <div
-                  class="field"
+                  class="ons-field"
                 >
                   <label
-                    class="label label--with-description"
+                    class="ons-label ons-label--with-description"
                     for="uac-selector"
                   >
                     Select a uac file
                   </label>
                   <span
-                    class="label__description  input--with-description"
+                    class="ons-label__description  ons-input--with-description"
                     id="description-hint"
                   >
                     File type accepted is .csv
                   </span>
                   <input
                     accept=".csv"
-                    class="input input--text input-type__input input--upload"
+                    class="ons-input ons-input--text ons-input-type__input ons-input--upload"
                     id="uac-selector"
                     name="Select a uac file"
                     props="[object Object]"
@@ -188,16 +188,16 @@ Object {
             </div>
           </div>
           <div
-            class="btn-group u-mt-m"
+            class="ons-btn-group ons-u-mt-m"
           >
             <button
-              class="btn "
+              class="ons-btn "
               data-testid="button"
               id="next-screen-button"
               type="submit"
             >
               <span
-                class="btn__inner"
+                class="ons-btn__inner"
               >
                 Continue
               </span>
