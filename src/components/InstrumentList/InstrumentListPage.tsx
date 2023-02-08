@@ -43,7 +43,7 @@ function InstrumentListPage(): ReactElement {
     return (
         <>
             <div>
-                <div className="u-mt-m">
+                <div className="ons-u-mt-m">
                     {instruments.length > 0 ?
                         <InstrumentList instrumentList={instruments} loading={listLoading}/>
                         :

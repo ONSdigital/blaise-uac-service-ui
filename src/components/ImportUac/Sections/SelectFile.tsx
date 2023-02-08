@@ -34,7 +34,7 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
         type: "file",
         id: "uac-selector",
         validate: validateInput,
-        className: "input input--text input-type__input input--upload",
+        className: "ons-input ons-input--text ons-input-type__input ons-input--upload",
         onChange: (e: ChangeEvent<HTMLInputElement>) => handleFileChange(e.target.files),
         accept: ".csv",
         disabled: isSubmitting,
@@ -44,13 +44,13 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
 
     return (
         <>
-            <div className="grid">
-                <div className="grid__col col-8@m">
+            <div className="ons-grid">
+                <div className="ons-grid__col ons-col-8@m">
                     <h1>Import UACs from file</h1>
                     <ONSPanel>
                         <p>
                             The UAC file must be a Comma-Separated Values (CSV) file containing the column <em
-                                className="highlight">Full_UAC</em>.
+                                className="ons-highlight">Full_UAC</em>.
                         </p>
                     </ONSPanel>
                     <StyledFormErrorSummary/>

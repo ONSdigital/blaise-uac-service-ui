@@ -66,7 +66,7 @@ gcloud compute start-iap-tunnel restapi-1 80 --local-host-port=localhost:90 --zo
 Download a service account JSON key for accessing the bucket in your GCP project:
 
 ```
-gcloud iam service-accounts keys create keys.json --iam-account ons-blaise-v2-dev-sandbox123@appspot.gserviceaccount.com
+gcloud iam service-accounts keys create keys.json --iam-account ons-blaise-v2-dev-<sandbox>@appspot.gserviceaccount.com
 ```
 
 Temporary set your local GOOGLE_APPLICATION_CREDENTIALS environment variable to this JSON file:

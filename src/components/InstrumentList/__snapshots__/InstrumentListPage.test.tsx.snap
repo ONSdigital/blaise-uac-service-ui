@@ -7,13 +7,13 @@ Object {
     <div>
       <div>
         <div
-          class="u-mt-m"
+          class="ons-u-mt-m"
         >
           <div
-            class="panel panel--info panel--no-title panel--spacious u-mt-m"
+            class="ons-panel ons-panel--info ons-panel--no-title ons-panel--spacious ons-u-mt-m"
           >
             <div
-              class="panel__body "
+              class="ons-panel__body "
             />
           </div>
         </div>
@@ -23,13 +23,13 @@ Object {
   "container": <div>
     <div>
       <div
-        class="u-mt-m"
+        class="ons-u-mt-m"
       >
         <div
-          class="panel panel--info panel--no-title panel--spacious u-mt-m"
+          class="ons-panel ons-panel--info ons-panel--no-title ons-panel--spacious ons-u-mt-m"
         >
           <div
-            class="panel__body "
+            class="ons-panel__body "
           />
         </div>
       </div>

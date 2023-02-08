@@ -36,8 +36,8 @@ function ConfirmName({ instrumentName, setNameConfirmation }: ConfirmName): Reac
 
     return (
         <>
-            <h1 className="u-mb-l">
-        Can you confirm <em className="highlight">{instrumentName}</em> is the correct questionnaire name?
+            <h1 className="ons-u-mb-l">
+        Can you confirm <em className="ons-highlight">{instrumentName}</em> is the correct questionnaire name?
             </h1>
 
             <StyledFormErrorSummary />
