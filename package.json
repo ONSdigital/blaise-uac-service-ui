@@ -28,10 +28,10 @@
   "dependencies": {
     "@google-cloud/storage": "^5.12.0",
     "axios": "^0.21.1",
-    "blaise-api-node-client": "https://github.com/ONSdigital/blaise-api-node-client",
+    "blaise-api-node-client": "ONSdigital/blaise-api-node-client",
     "blaise-design-system-react-components": "git+https://github.com/ONSdigital/blaise-design-system-react-components#0.13.2",
-    "blaise-login-react-client": "https://gitpkg.now.sh/ONSdigital/blaise-login-react/blaise-login-react-client?efadd8296708d3538c01e6a1561e85ee7b5256e9",
-    "blaise-login-react-server": "https://gitpkg.now.sh/ONSdigital/blaise-login-react/blaise-login-react-server?f8f2014510b2b9944746b996135cfe96733997cc",
+    "blaise-login-react-client": "https://gitpkg.now.sh/ONSdigital/blaise-login-react/blaise-login-react-client?BLAIS5-3849",
+    "blaise-login-react-server": "https://gitpkg.now.sh/ONSdigital/blaise-login-react/blaise-login-react-server?BLAIS5-3849",
     "blaise-uac-service-node-client": "https://github.com/ONSdigital/blaise-uac-service-node-client",
     "body-parser": "^1.18.3",
     "dotenv": "^10.0.0",
