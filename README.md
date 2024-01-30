@@ -92,6 +92,8 @@ The UI should now be accessible via:
 
 http://localhost:3000/
 
+**NB: Port 5000  may already be in use on a Mac, to release it go to System Preferences -> Sharing -> AirPlay Receiver and uncheck it**
+
 Tests can be run via the following package.json script:
 
 ```shell script

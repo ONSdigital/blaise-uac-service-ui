@@ -16,14 +16,14 @@
   ],
   "scripts": {
     "start": "node ./dist/index.js",
-    "build-react": "react-scripts build",
+    "build-react": "react-scripts --openssl-legacy-provider build",
     "test": "jest --coverage --watchAll=false --config=jest.config.js",
     "lint": "node_modules/.bin/eslint .",
     "lint-fix": "node_modules/.bin/eslint . --fix",
     "client": "react-scripts start",
     "server": "tsc --project tsconfig.server.json && node ./dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "gcp-build": "react-scripts build && tsc --project tsconfig.server.json"
+    "gcp-build": "react-scripts --openssl-legacy-provider build && tsc --project tsconfig.server.json"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.12.0",
