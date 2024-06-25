@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import { Formik, Form } from "formik";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import { ONSButton } from "blaise-design-system-react-components";
@@ -52,7 +52,7 @@ function ImportUacPage(): ReactElement {
     return (
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
-                <Switch>
+                <Routes>
                     <Route path="/app">
                         <App />
                     </Route>
@@ -66,7 +66,7 @@ function ImportUacPage(): ReactElement {
                             </li>
                         </ul>
                     </Route>
-                </Switch>
+                </Routes>
 
                 <Formik
                     validateOnBlur={false}

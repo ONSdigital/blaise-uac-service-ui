@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from "react";
-import { Switch, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import UploadSamplePage from "./components/UploadSample/UploadSamplePage";
 import ImportUacPage from "./components/ImportUac/ImportUacPage";
 import { Footer, Header, DefaultErrorBoundary, NotProductionWarning, ONSLoadingPanel } from "blaise-design-system-react-components";
@@ -49,7 +49,7 @@ function App(): ReactElement {
         if (loaded && loggedIn) {
             return (
                 <DefaultErrorBoundary>
-                    <Switch>
+                    <Routes>
                         <Route path="/upload">
                             <UploadSamplePage />
                         </Route>
@@ -72,7 +72,7 @@ function App(): ReactElement {
                             <h2 className="ons-u-mt-m">Previously uploaded questionnaire samples</h2>
                             <InstrumentListPage />
                         </Route>
-                    </Switch>
+                    </Routes>
                 </DefaultErrorBoundary>
             );
         }
