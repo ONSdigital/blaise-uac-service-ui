@@ -20,7 +20,7 @@
     "test": "jest --coverage --watchAll=false --config=jest.config.js",
     "lint": "node_modules/.bin/eslint .",
     "lint-fix": "node_modules/.bin/eslint . --fix",
-    "client": "react-scripts start",
+    "client": "react-scripts --openssl-legacy-provider start",
     "server": "tsc --project tsconfig.server.json && node ./dist/index.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "gcp-build": "react-scripts --openssl-legacy-provider build && tsc --project tsconfig.server.json"
@@ -44,9 +44,9 @@
     "multer": "^1.4.3",
     "pino": "^6.13.0",
     "pino-http": "^5.5.0",
-    "react": "^18.3.1",
+    "react": "^18.2.0",
     "react-csv-downloader": "^2.7.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",
     "typescript": "~5.3.3",
     "web-vitals": "^1.0.1"
