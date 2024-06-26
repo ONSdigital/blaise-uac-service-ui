@@ -50,27 +50,26 @@ function App(): ReactElement {
             return (
                 <DefaultErrorBoundary>
                     <Routes>
-                        <Route path="/upload">
-                            <UploadSamplePage />
-                        </Route>
-                        <Route path="/import">
-                            <ImportUacPage />
-                        </Route>
-                        <Route path="/">
-                            <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
-                                <li className="ons-list__item">
-                                    <Link to="/upload" id="upload-sample-link">
-                                        Upload sample
-                                    </Link>
-                                </li>
-                                <li className="ons-list__item">
-                                    <Link to="/import" id="import-uacs-link">
-                                        Upload used UACs
-                                    </Link>
-                                </li>
-                            </ul>
-                            <h2 className="ons-u-mt-m">Previously uploaded questionnaire samples</h2>
-                            <InstrumentListPage />
+                        <Route path="/upload" element={<UploadSamplePage />} />
+                        <Route path="/import" element={<ImportUacPage />} />
+                        <Route path="/" element={
+                            <>
+                                <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
+                                    <li className="ons-list__item">
+                                        <Link to="/upload" id="upload-sample-link">
+                                            Upload sample
+                                        </Link>
+                                    </li>
+                                    <li className="ons-list__item">
+                                        <Link to="/import" id="import-uacs-link">
+                                            Upload used UACs
+                                        </Link>
+                                    </li>
+                                </ul>
+                                <h2 className="ons-u-mt-m">Previously uploaded questionnaire samples</h2>
+                                <InstrumentListPage />
+                            </>
+                        }>
                         </Route>
                     </Routes>
                 </DefaultErrorBoundary>
