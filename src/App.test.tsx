@@ -43,17 +43,17 @@ describe("React homepage", () => {
         });
     });
 
-    // it("should render correctly", async () => {
-    //     const { queryByText } = render(<App />, { wrapper: Router });
+    it("should render correctly", async () => {
+        const { queryByText } = render(<App />, { wrapper: Router });
 
-    //     await act(async () => await waitFor(() => {
-    //         expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).toBeInTheDocument();
-    //         expect(queryByText(/Previously uploaded questionnaire samples/i)).toBeInTheDocument();
-    //         instrumentNames.forEach((instrumentName) => {
-    //             expect(queryByText(instrumentName)).toBeInTheDocument();
-    //         });
-    //     }));
-    // });
+        await waitFor(() => {
+            expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).toBeInTheDocument();
+            expect(queryByText(/Previously uploaded questionnaire samples/i)).toBeInTheDocument();
+            instrumentNames.forEach((instrumentName) => {
+                expect(queryByText(instrumentName)).toBeInTheDocument();
+            });
+        });
+    });
 
     it("view instrument page matches Snapshot in production", async () => {
         mockIsProduction.mockReturnValue(true);
