@@ -3,7 +3,6 @@
  */
 
 import React from "react";
-import { Router } from "react-router";
 import { MemoryRouter } from "react-router-dom";
 import { render, waitFor, fireEvent, cleanup, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -26,7 +25,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("select file page matches Snapshot", async () => {
-        const wrapper = render(<UploadSamplePage />, {wrapper: MemoryRouter});
+        const wrapper = render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
         await act(async () => await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
@@ -34,7 +33,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("should render correctly", async () => {
-        const { queryByText } = render(<UploadSamplePage />, {wrapper: MemoryRouter});
+        const { queryByText } = render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
         expect(queryByText(/Which questionnaire do you wish to generate UACs for?/i)).toBeInTheDocument();
     });
@@ -57,7 +56,7 @@ describe("Upload Sample Page", () => {
     invalidInstrumentNameTestCases.forEach(test => {
         it(`Enter instrument name - should display an error message if you enter an invalid instrument name - ${test.instrumentName}`, async () => {
             
-            render(<UploadSamplePage />, {wrapper: MemoryRouter});
+            render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
             const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);
             fireEvent.change(inputInstrumentName, { target: { value: test.instrumentName } });
@@ -222,7 +221,7 @@ describe("Upload Sample Page", () => {
 });
 
 async function EnterInstrumentNameAndContinue() {
-    render(<UploadSamplePage />, {wrapper: MemoryRouter});
+    render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
     //Enter instrument name
     const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);

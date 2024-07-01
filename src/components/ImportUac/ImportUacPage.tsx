@@ -64,7 +64,7 @@ function ImportUacPage(): ReactElement {
                                 </li>
                             </ul>
                         </>
-                        }
+                    }
                     />
                 </Routes>
 

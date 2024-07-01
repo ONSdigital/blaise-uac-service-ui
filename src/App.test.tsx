@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { render, waitFor, act } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import App from "./App";
 import { MemoryRouter as Router } from "react-router";
 import "@testing-library/jest-dom";

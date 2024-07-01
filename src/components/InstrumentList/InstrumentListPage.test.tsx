@@ -8,7 +8,7 @@ import InstrumentListPage from "./InstrumentListPage";
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { instrumentNames } from "./../../mocks/api-mocks";
-import {act} from 'react';
+import { act } from "react";
 
 jest.mock("../../client/file-functions");
 import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "../../client/file-functions";
@@ -25,7 +25,7 @@ describe("Instrument list page", () => {
         let wrapper:any;
         
         await act(async () => {
-            wrapper = render(<InstrumentListPage />, {wrapper: MemoryRouter});
+            wrapper = render(<InstrumentListPage />, { wrapper: MemoryRouter });
         });
 
         await waitFor(() => {
@@ -38,7 +38,7 @@ describe("Instrument list page", () => {
         let queryByText:any;
 
         await act(async () => {
-            const renderResult = render(<InstrumentListPage />, {wrapper: MemoryRouter});
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
             queryByText = renderResult.queryByText;
         });
 
@@ -55,7 +55,7 @@ describe("Instrument list page", () => {
         let queryByText:any;
 
         await act(async () => {
-            const renderResult = render(<InstrumentListPage />, {wrapper: MemoryRouter});
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
             queryByText = renderResult.queryByText;
         });
 
@@ -70,7 +70,7 @@ describe("Instrument list page", () => {
         let queryByText:any;
 
         await act(async () => {
-            const renderResult = render(<InstrumentListPage />, {wrapper: MemoryRouter});
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
             queryByText = renderResult.queryByText;
         });
 
