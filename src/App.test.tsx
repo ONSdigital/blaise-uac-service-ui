@@ -11,6 +11,8 @@ import "@testing-library/jest-dom";
 import { instrumentNames } from "./mocks/api-mocks";
 import { AuthManager } from "blaise-login-react/blaise-login-react-client";
 import {act} from 'react';
+import { User } from "blaise-api-node-client";
+import { Authenticate } from "blaise-login-react/blaise-login-react-client";
 
 jest.mock("blaise-login-react/blaise-login-react-client");
 AuthManager.prototype.loggedIn = jest.fn().mockImplementation(() => {
@@ -24,6 +26,19 @@ const mockIsProduction = jest.fn();
 jest.mock("./client/env", () => ({
     isProduction: () => mockIsProduction()
 }));
+
+jest.mock("blaise-login-react/blaise-login-react-client");
+const { MockAuthenticate } = jest.requireActual("blaise-login-react/blaise-login-react-client");
+Authenticate.prototype.render = MockAuthenticate.prototype.render;
+
+const userMockObject: User = {
+    name: "Jake Bullet",
+    role: "Manager",
+    serverParks: ["gusty"],
+    defaultServerPark: "gusty"
+};
+
+const user = userMockObject;
 
 const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
 
@@ -46,7 +61,7 @@ describe("React homepage", () => {
     });
 
     it("should render correctly", async () => {
-
+        MockAuthenticate.OverrideReturnValues(user, true);
         let queryByText:any;
 
         await act(async () => {
