@@ -10,7 +10,7 @@ import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { instrumentNames } from "./mocks/api-mocks";
 import { AuthManager } from "blaise-login-react/blaise-login-react-client";
-import {act} from 'react';
+import { act } from "react";
 import { User } from "blaise-api-node-client";
 import { Authenticate } from "blaise-login-react/blaise-login-react-client";
 
@@ -65,7 +65,7 @@ describe("React homepage", () => {
         let queryByText:any;
 
         await act(async () => {
-            const renderResult = render(<App />, {wrapper: MemoryRouter});
+            const renderResult = render(<App />, { wrapper: MemoryRouter });
             queryByText = renderResult.queryByText;
         });
 
