@@ -4,7 +4,7 @@ import { GoogleStorage } from "../storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
 import { getCaseIdsFromFile, addUacCodesToFile } from "../utils/csv-parser";
 import { Config } from "../config";
-import { Auth } from "blaise-login-react-server";
+import { Auth } from "blaise-login-react/blaise-login-react-server";
 
 export default function NewInstrumentUacHandler(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
     const router = express.Router();

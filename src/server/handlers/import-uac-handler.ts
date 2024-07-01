@@ -2,7 +2,7 @@ import express, { Router, Request, Response } from "express";
 import multer from "multer";
 import BusApiClient from "blaise-uac-service-node-client";
 import { getUacsFromFile } from "../utils/csv-parser";
-import { Auth } from "blaise-login-react-server";
+import { Auth } from "blaise-login-react/blaise-login-react-server";
 
 export default function NewImportUacHandler(busApiClient: BusApiClient, auth: Auth): Router {
     const router = express.Router();

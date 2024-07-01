@@ -6,11 +6,13 @@ import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import App from "./App";
 import { MemoryRouter as Router } from "react-router";
+import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { instrumentNames } from "./mocks/api-mocks";
-import { AuthManager } from "blaise-login-react-client";
+import { AuthManager } from "blaise-login-react/blaise-login-react-client";
+import {act} from 'react';
 
-jest.mock("blaise-login-react-client");
+jest.mock("blaise-login-react/blaise-login-react-client");
 AuthManager.prototype.loggedIn = jest.fn().mockImplementation(() => {
     return Promise.resolve(true);
 });
@@ -44,7 +46,13 @@ describe("React homepage", () => {
     });
 
     it("should render correctly", async () => {
-        const { queryByText } = render(<App />, { wrapper: Router });
+
+        let queryByText:any;
+
+        await act(async () => {
+            const renderResult = render(<App />, {wrapper: MemoryRouter});
+            queryByText = renderResult.queryByText;
+        });
 
         await waitFor(() => {
             expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).toBeInTheDocument();

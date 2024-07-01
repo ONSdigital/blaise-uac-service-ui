@@ -174,7 +174,9 @@ describe("Upload Sample Page", () => {
 
     it("Select sample file and continue - protect against multiple uploads", async () => {
         // arrange
-        let completeRequest = (response: any[]) => {};
+        let completeRequest = (response: any[]) => {
+            console.log(response);
+        };
         mock.onPost(
             `/api/v1/instrument/${instrumentName}/uac/sample`
         ).reply(() => new Promise((resolve) => {completeRequest = resolve;}));
