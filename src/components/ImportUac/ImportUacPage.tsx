@@ -53,19 +53,19 @@ function ImportUacPage(): ReactElement {
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
                 <Routes>
-                    <Route path="/app">
-                        <App />
-                    </Route>
-                    <Route path="/">
-
-                        <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
-                            <li className="ons-list__item">
-                                <Link to="/app" id="generate-uac-link">
-                  Home
-                                </Link>
-                            </li>
-                        </ul>
-                    </Route>
+                    <Route path="/app" element={<App />} />
+                    <Route path="/" element={
+                        <>
+                            <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
+                                <li className="ons-list__item">
+                                    <Link to="/app" id="generate-uac-link">
+                    Home
+                                    </Link>
+                                </li>
+                            </ul>
+                        </>
+                        }
+                    />
                 </Routes>
 
                 <Formik
