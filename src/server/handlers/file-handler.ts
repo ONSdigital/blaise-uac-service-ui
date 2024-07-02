@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import { GoogleStorage } from "../storage/google-storage-functions";
 import { Config } from "../config";
-import { Auth } from "blaise-login-react-server";
+import { Auth } from "blaise-login-react/blaise-login-react-server";
 
 export default function NewFileHandler(googleStorage: GoogleStorage, config: Config, auth: Auth): Router {
     const router = express.Router();

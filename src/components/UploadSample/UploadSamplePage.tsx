@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import { Formik, Form } from "formik";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import App from "../../App";
 import SelectFile from "./Sections/SelectFile";
 import InstrumentName from "./Sections/InstrumentName";
@@ -29,7 +29,7 @@ function UploadSamplePage(): ReactElement {
     const [activeStep, setActiveStep] = useState<Step>(Step.InstrumentName);
     const [error, setError] = useState<Error | AxiosError>();
 
-    const history = useHistory();
+    const navigate = useNavigate();
 
     function _renderStepContent(step: number) {
         switch (step) {
@@ -66,17 +66,16 @@ function UploadSamplePage(): ReactElement {
             setActiveStep(overwrite === "Yes" ? Step.SelectFile : Step.DownloadFile);
             break;
         case Step.SelectFile:
-            try{
+            try {
                 await generateUacCodesForSampleFile(instrumentName, file);
                 setActiveStep(Step.DownloadFile);
-            }
-            catch(error){
+            } catch (error) {
                 setError(error as Error);
                 setActiveStep(Step.UploadFailed);
             }
             break;
         case Step.DownloadFile:
-            history.push("/");
+            navigate("/");
             break;
         default:
             setActiveStep(Step.InstrumentName);
@@ -86,12 +85,9 @@ function UploadSamplePage(): ReactElement {
     return (
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
-                <Switch>
-                    <Route path="/app">
-                        <App />
-                    </Route>
-                    <Route path="/">
-
+                <Routes>
+                    <Route path="/app" element={<App />} />
+                    <Route path="/" element={
                         <ul className="ons-list ons-list--bare ons-list--inline ons-u-mt-m">
                             <li className="ons-list__item">
                                 <Link to="/app" id="generate-uac-link">
@@ -99,8 +95,8 @@ function UploadSamplePage(): ReactElement {
                                 </Link>
                             </li>
                         </ul>
-                    </Route>
-                </Switch>
+                    } />
+                </Routes>
 
                 <Formik
                     validateOnBlur={false}

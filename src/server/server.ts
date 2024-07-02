@@ -10,8 +10,8 @@ import { Config } from "./config";
 import { GoogleStorage } from "./storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
 import BlaiseApiClient from "blaise-api-node-client";
-import { newLoginHandler, Auth } from "blaise-login-react-server";
-import createLogger from "./pino";
+import { newLoginHandler, Auth } from "blaise-login-react/blaise-login-react-server";
+import createLogger from "./pino";  
 import PinoHttp from "pino-http";
 
 class RequestLogger {
@@ -38,6 +38,7 @@ class RequestLogger {
 export function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStorage, config: Config, blaiseApiClient: BlaiseApiClient): Express {
     const server = express();
     const buildFolder = "../build";
+
     const auth = new Auth(config);
     const loginHandler = newLoginHandler(auth, blaiseApiClient);
     const logger = createLogger();

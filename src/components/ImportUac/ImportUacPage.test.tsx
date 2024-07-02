@@ -3,13 +3,13 @@
  */
 
 import React from "react";
-import { Router } from "react-router";
-import { render, waitFor, fireEvent, cleanup, screen, act } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { render, waitFor, fireEvent, cleanup, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { createMemoryHistory } from "history";
 import ImportUacPage from "./ImportUacPage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
+import { act } from "react";
 
 const mock = new MockAdapter(axios, { onNoMatch: "throwException" });
 
@@ -20,12 +20,7 @@ describe("Import UAC Page", () => {
     });
 
     it("import uac page matches Snapshot", async () => {
-        const history = createMemoryHistory();
-        const wrapper = render(
-            <Router history={history}>
-                <ImportUacPage />
-            </Router>
-        );
+        const wrapper = render(<ImportUacPage />, { wrapper: MemoryRouter });
 
         await act(async () => await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
@@ -33,12 +28,7 @@ describe("Import UAC Page", () => {
     });
 
     it("should render correctly", async () => {
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <ImportUacPage />
-            </Router>
-        );
+        const { queryByText } = render(<ImportUacPage />, { wrapper: MemoryRouter });
 
         expect(queryByText(/Import UACs from file/i)).toBeInTheDocument();
     });
@@ -121,12 +111,7 @@ describe("Import UAC Page", () => {
 });
 
 async function NavigateToSelectFile() {
-    const history = createMemoryHistory();
-    render(
-        <Router history={history}>
-            <ImportUacPage />
-        </Router>
-    );
+    render(<ImportUacPage />, { wrapper: MemoryRouter });
 
     await waitFor(() => {
         expect(screen.queryAllByText("Select a uac file")).toHaveLength(1);

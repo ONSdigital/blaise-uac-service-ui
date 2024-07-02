@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { AuthManager } from "blaise-login-react-client";
+import { AuthManager } from "blaise-login-react/blaise-login-react-client";
 import { Datas } from "react-csv-downloader/dist/esm/lib/csv";
 
 function axiosConfig(): AxiosRequestConfig {
