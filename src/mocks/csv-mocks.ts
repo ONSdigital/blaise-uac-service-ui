@@ -66,7 +66,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "7565",
             uac3: "3827"
         },
-        full_uac: "000975653827"
+        full_uac: "000975653827",
+        disabled: "false"
     },
     "100000002": {
         instrument_name: "dst2106a",
@@ -76,7 +77,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "6545",
             uac3: "4564"
         },
-        full_uac: "345365454564"
+        full_uac: "345365454564",
+        disabled: "false"
     },
     "100000003": {
         instrument_name: "dst2106a",
@@ -86,7 +88,8 @@ export const matchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "7578",
             uac3: "5367"
         },
-        full_uac: "978975785367"
+        full_uac: "978975785367",
+        disabled: "false"
     }
 };
 
@@ -100,7 +103,8 @@ export const matchedInstrumentUac16Details: InstrumentUacDetailsByCaseId = {
             uac3: "3827",
             uac4: "7512"
         },
-        full_uac: "0009756538277512"
+        full_uac: "0009756538277512",
+        disabled: "false"
     },
     "100000002": {
         instrument_name: "dst2106a",
@@ -111,7 +115,8 @@ export const matchedInstrumentUac16Details: InstrumentUacDetailsByCaseId = {
             uac3: "4564",
             uac4: "3213"
         },
-        full_uac: "3453654545643213"
+        full_uac: "3453654545643213",
+        disabled: "false"
     },
     "100000003": {
         instrument_name: "dst2106a",
@@ -122,7 +127,8 @@ export const matchedInstrumentUac16Details: InstrumentUacDetailsByCaseId = {
             uac3: "5367",
             uac4: "8765"
         },
-        full_uac: "9789757853678765"
+        full_uac: "9789757853678765",
+        disabled: "false"
     }
 };
 
@@ -135,7 +141,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "7565",
             uac3: "3827"
         },
-        full_uac: "000975653827"
+        full_uac: "000975653827",
+        disabled: "false"
     },
     "100000998": {
         instrument_name: "dst2106a",
@@ -145,7 +152,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "6545",
             uac3: "4564"
         },
-        full_uac: "345365454564"
+        full_uac: "345365454564",
+        disabled: "false"
     },
     "100000999": {
         instrument_name: "dst2106a",
@@ -155,7 +163,8 @@ export const unMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = {
             uac2: "7578",
             uac3: "5367"
         },
-        full_uac: "978975785367"
+        full_uac: "978975785367",
+        disabled: "false"
     }
 };
 
@@ -168,7 +177,8 @@ export const partialMatchedInstrumentUacDetails: InstrumentUacDetailsByCaseId = 
             uac2: "6545",
             uac3: "4564"
         },
-        full_uac: "345365454564"
+        full_uac: "345365454564",
+        disabled: "false"
     }
 };
 

@@ -3,15 +3,18 @@
  */
 
 import React from "react";
-import { render, waitFor, act } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import App from "./App";
-import { createMemoryHistory } from "history";
-import { Router } from "react-router";
+import { MemoryRouter as Router } from "react-router";
+import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { instrumentNames } from "./mocks/api-mocks";
-import { AuthManager } from "blaise-login-react-client";
+import { AuthManager } from "blaise-login-react/blaise-login-react-client";
+import { act } from "react";
+import { User } from "blaise-api-node-client";
+import { Authenticate } from "blaise-login-react/blaise-login-react-client";
 
-jest.mock("blaise-login-react-client");
+jest.mock("blaise-login-react/blaise-login-react-client");
 AuthManager.prototype.loggedIn = jest.fn().mockImplementation(() => {
     return Promise.resolve(true);
 });
@@ -23,6 +26,19 @@ const mockIsProduction = jest.fn();
 jest.mock("./client/env", () => ({
     isProduction: () => mockIsProduction()
 }));
+
+jest.mock("blaise-login-react/blaise-login-react-client");
+const { MockAuthenticate } = jest.requireActual("blaise-login-react/blaise-login-react-client");
+Authenticate.prototype.render = MockAuthenticate.prototype.render;
+
+const userMockObject: User = {
+    name: "Jake Bullet",
+    role: "Manager",
+    serverParks: ["gusty"],
+    defaultServerPark: "gusty"
+};
+
+const user = userMockObject;
 
 const getListOfInstrumentsWhichHaveExistingSampleFilesMock = getListOfInstrumentsWhichHaveExistingSampleFiles as jest.Mock<Promise<string[]>>;
 
@@ -38,44 +54,33 @@ describe("React homepage", () => {
     });
 
     it("App page matches snapshot", async () => {
-        const history = createMemoryHistory();
-        const wrapper = render(
-            <Router history={history}>
-                <App />
-            </Router>
-        );
-
-        await act(async () => await waitFor(() => {
+        const wrapper = render(<App />, { wrapper: Router });
+        await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
-        }));
+        });
     });
 
     it("should render correctly", async () => {
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <App />
-            </Router>
-        );
+        MockAuthenticate.OverrideReturnValues(user, true);
+        let queryByText:any;
 
-        await act(async () => await waitFor(() => {
+        await act(async () => {
+            const renderResult = render(<App />, { wrapper: MemoryRouter });
+            queryByText = renderResult.queryByText;
+        });
+
+        await waitFor(() => {
             expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).toBeInTheDocument();
             expect(queryByText(/Previously uploaded questionnaire samples/i)).toBeInTheDocument();
             instrumentNames.forEach((instrumentName) => {
                 expect(queryByText(instrumentName)).toBeInTheDocument();
             });
-        }));
+        });
     });
 
     it("view instrument page matches Snapshot in production", async () => {
         mockIsProduction.mockReturnValue(true);
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <App />
-            </Router>
-        );
-
+        const { queryByText } = render(<App />, { wrapper: Router });
         await waitFor(() => {
             expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).not.toBeInTheDocument();
         });

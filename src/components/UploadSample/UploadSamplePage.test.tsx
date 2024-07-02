@@ -3,10 +3,9 @@
  */
 
 import React from "react";
-import { Router } from "react-router";
+import { MemoryRouter } from "react-router-dom";
 import { render, waitFor, fireEvent, cleanup, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { createMemoryHistory } from "history";
 import UploadSamplePage from "./UploadSamplePage";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
@@ -26,12 +25,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("select file page matches Snapshot", async () => {
-        const history = createMemoryHistory();
-        const wrapper = render(
-            <Router history={history}>
-                <UploadSamplePage />
-            </Router>
-        );
+        const wrapper = render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
         await act(async () => await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
@@ -39,12 +33,7 @@ describe("Upload Sample Page", () => {
     });
 
     it("should render correctly", async () => {
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <UploadSamplePage />
-            </Router>
-        );
+        const { queryByText } = render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
         expect(queryByText(/Which questionnaire do you wish to generate UACs for?/i)).toBeInTheDocument();
     });
@@ -66,12 +55,8 @@ describe("Upload Sample Page", () => {
 
     invalidInstrumentNameTestCases.forEach(test => {
         it(`Enter instrument name - should display an error message if you enter an invalid instrument name - ${test.instrumentName}`, async () => {
-            const history = createMemoryHistory();
-            render(
-                <Router history={history}>
-                    <UploadSamplePage />
-                </Router>
-            );
+            
+            render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
             const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);
             fireEvent.change(inputInstrumentName, { target: { value: test.instrumentName } });
@@ -189,7 +174,9 @@ describe("Upload Sample Page", () => {
 
     it("Select sample file and continue - protect against multiple uploads", async () => {
         // arrange
-        let completeRequest = (response: any[]) => {};
+        let completeRequest = (response: any[]) => {
+            console.log(response);
+        };
         mock.onPost(
             `/api/v1/instrument/${instrumentName}/uac/sample`
         ).reply(() => new Promise((resolve) => {completeRequest = resolve;}));
@@ -236,12 +223,7 @@ describe("Upload Sample Page", () => {
 });
 
 async function EnterInstrumentNameAndContinue() {
-    const history = createMemoryHistory();
-    render(
-        <Router history={history}>
-            <UploadSamplePage />
-        </Router>
-    );
+    render(<UploadSamplePage />, { wrapper: MemoryRouter });
 
     //Enter instrument name
     const inputInstrumentName = screen.getByLabelText(/questionnaire name/i);

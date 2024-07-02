@@ -10,11 +10,130 @@ Object {
           class="ons-u-mt-m"
         >
           <div
-            class="ons-panel ons-panel--info ons-panel--no-title ons-panel--spacious ons-u-mt-m"
+            class="ons-u-mt-s"
           >
-            <div
-              class="ons-panel__body "
-            />
+            <table
+              class="ons-table"
+              id="instrument-table"
+            >
+              <thead
+                class="ons-table__head"
+              >
+                <tr
+                  class="ons-table__row"
+                >
+                  <th
+                    class="ons-table__header"
+                    scope="col"
+                  >
+                    Questionnaire name
+                  </th>
+                  <th
+                    class="ons-table__header"
+                    scope="col"
+                  >
+                    CSV file
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="ons-table__body"
+              >
+                <tr
+                  class="ons-table__row "
+                  data-testid="instrument-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    OPN2101A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn  ons-btn--small"
+                        data-testid="button"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          Download
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  class="ons-table__row "
+                  data-testid="instrument-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    DST1345A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn  ons-btn--small"
+                        data-testid="button"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          Download
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  class="ons-table__row "
+                  data-testid="instrument-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    DST5643A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn  ons-btn--small"
+                        data-testid="button"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          Download
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -26,11 +145,130 @@ Object {
         class="ons-u-mt-m"
       >
         <div
-          class="ons-panel ons-panel--info ons-panel--no-title ons-panel--spacious ons-u-mt-m"
+          class="ons-u-mt-s"
         >
-          <div
-            class="ons-panel__body "
-          />
+          <table
+            class="ons-table"
+            id="instrument-table"
+          >
+            <thead
+              class="ons-table__head"
+            >
+              <tr
+                class="ons-table__row"
+              >
+                <th
+                  class="ons-table__header"
+                  scope="col"
+                >
+                  Questionnaire name
+                </th>
+                <th
+                  class="ons-table__header"
+                  scope="col"
+                >
+                  CSV file
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              class="ons-table__body"
+            >
+              <tr
+                class="ons-table__row "
+                data-testid="instrument-table-row"
+              >
+                <td
+                  class="ons-table__cell"
+                  style="padding: 1rem;"
+                >
+                  OPN2101A
+                </td>
+                <td
+                  class="ons-table__cell"
+                >
+                  <div
+                    role="button"
+                    tabindex="0"
+                  >
+                    <button
+                      class="ons-btn  ons-btn--small"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <span
+                        class="ons-btn__inner"
+                      >
+                        Download
+                      </span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                class="ons-table__row "
+                data-testid="instrument-table-row"
+              >
+                <td
+                  class="ons-table__cell"
+                  style="padding: 1rem;"
+                >
+                  DST1345A
+                </td>
+                <td
+                  class="ons-table__cell"
+                >
+                  <div
+                    role="button"
+                    tabindex="0"
+                  >
+                    <button
+                      class="ons-btn  ons-btn--small"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <span
+                        class="ons-btn__inner"
+                      >
+                        Download
+                      </span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr
+                class="ons-table__row "
+                data-testid="instrument-table-row"
+              >
+                <td
+                  class="ons-table__cell"
+                  style="padding: 1rem;"
+                >
+                  DST5643A
+                </td>
+                <td
+                  class="ons-table__cell"
+                >
+                  <div
+                    role="button"
+                    tabindex="0"
+                  >
+                    <button
+                      class="ons-btn  ons-btn--small"
+                      data-testid="button"
+                      type="button"
+                    >
+                      <span
+                        class="ons-btn__inner"
+                      >
+                        Download
+                      </span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
