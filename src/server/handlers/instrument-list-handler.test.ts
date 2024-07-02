@@ -5,9 +5,9 @@ import BlaiseApiClient from "blaise-api-node-client";
 import { GetConfigFromEnv } from "../config";
 
 //mock login
-import { Auth } from "blaise-login-react-server";
-jest.mock("blaise-login-react-server", () => {
-    const loginReact = jest.requireActual("blaise-login-react-server");
+import { Auth } from "blaise-login-react/blaise-login-react-server";
+jest.mock("blaise-login-react/blaise-login-react-server", () => {
+    const loginReact = jest.requireActual("blaise-login-react/blaise-login-react-server");
     return {
         ...loginReact
     };

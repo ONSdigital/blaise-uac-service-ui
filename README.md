@@ -13,7 +13,7 @@ The application is being deployed to Google App Engine.
 Prerequisites:
 
 Prerequisites:
-- [Node.js version 14](https://nodejs.org/)
+- [Node.js version 20](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com/)
 - [Cloud SDK](https://cloud.google.com/sdk/)
 

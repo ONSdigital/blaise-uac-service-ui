@@ -1,7 +1,7 @@
 
 import crypto from "crypto";
 import dotenv from "dotenv";
-import { AuthConfig } from "blaise-login-react-server";
+import { AuthConfig } from "blaise-login-react/blaise-login-react-server";
 export interface Config extends AuthConfig {
     ProjectID: string,
     BucketName: string,

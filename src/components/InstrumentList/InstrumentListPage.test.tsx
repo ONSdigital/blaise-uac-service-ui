@@ -3,12 +3,12 @@
  */
 
 import React from "react";
-import { render, waitFor, act, cleanup } from "@testing-library/react";
+import { render, waitFor, cleanup } from "@testing-library/react";
 import InstrumentListPage from "./InstrumentListPage";
-import { createMemoryHistory } from "history";
-import { Router } from "react-router";
+import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import { instrumentNames } from "./../../mocks/api-mocks";
+import { act } from "react";
 
 jest.mock("../../client/file-functions");
 import { getListOfInstrumentsWhichHaveExistingSampleFiles } from "../../client/file-functions";
@@ -21,59 +21,62 @@ describe("Instrument list page", () => {
     });
 
     it("instrument list page matches Snapshot", async () => {
-        const history = createMemoryHistory();
-        const wrapper = render(
-            <Router history={history}>
-                <InstrumentListPage />
-            </Router>
-        );
+        
+        let wrapper:any;
+        
+        await act(async () => {
+            wrapper = render(<InstrumentListPage />, { wrapper: MemoryRouter });
+        });
 
-        await act(async () => await waitFor(() => {
+        await waitFor(() => {
             expect(wrapper).toMatchSnapshot();
-        }));
+        });
     });
 
     it("should render correctly", async () => {
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <InstrumentListPage />
-            </Router>
-        );
+        
+        let queryByText:any;
 
-        await act(async () => await waitFor(() => {
+        await act(async () => {
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
+            queryByText = renderResult.queryByText;
+        });
+
+        await waitFor(() => {
             instrumentNames.forEach((instrumentName) => {
                 expect(queryByText(instrumentName)).toBeInTheDocument();
             });
-        }));
+        });
     });
 
     it("should display an appropriate message if no samples are uploaded", async () => {
         getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.resolve([]));
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <InstrumentListPage/>
-            </Router>
-        );
+        
+        let queryByText:any;
 
-        await act(async () => await waitFor(() => {
+        await act(async () => {
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
+            queryByText = renderResult.queryByText;
+        });
+
+        await waitFor(() => {
             expect(queryByText(/No questionnaire samples found./i)).toBeInTheDocument();
-        }));
+        });
     });
 
     it("should display an appropriate error message if service does not respond correctly", async () => {
         getListOfInstrumentsWhichHaveExistingSampleFilesMock.mockImplementation(() => Promise.reject());
-        const history = createMemoryHistory();
-        const { queryByText } = render(
-            <Router history={history}>
-                <InstrumentListPage/>
-            </Router>
-        );
+        
+        let queryByText:any;
 
-        await act(async () => await waitFor(() => {
+        await act(async () => {
+            const renderResult = render(<InstrumentListPage />, { wrapper: MemoryRouter });
+            queryByText = renderResult.queryByText;
+        });
+
+        await waitFor(() => {
             expect(queryByText(/Unable to retrieve list of questionnaire samples./i)).toBeInTheDocument();
-        }));
+        });
     });
 
     afterEach(() => {
