@@ -11,8 +11,10 @@ import { GoogleStorage } from "./storage/google-storage-functions";
 import BusApiClient from "blaise-uac-service-node-client";
 import BlaiseApiClient from "blaise-api-node-client";
 import { newLoginHandler, Auth } from "blaise-login-react/blaise-login-react-server";
-import createLogger from "./pino";  
+import createLogger from "./pino";
 import PinoHttp from "pino-http";
+import NewUacHandler from "./handlers/uac-handler";
+import NewBlaiseHandler from "./handlers/blaise-handler";
 
 class RequestLogger {
     logger: PinoHttp.HttpLogger
@@ -59,6 +61,8 @@ export function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStora
     server.use("/", NewFileHandler(googleStorage, config, auth));
     server.use("/", NewInstrumentListHandler(googleStorage, config, auth));
     server.use("/", NewImportUacHandler(busApiClient, auth));
+    server.use("/", NewUacHandler(busApiClient, auth));
+    server.use("/", NewBlaiseHandler(blaiseApiClient, config.ServerPark, auth));
     server.use("/", HealthCheckHandler());
 
     server.use("/", loginHandler);
