@@ -61,11 +61,10 @@ export function NewServer(busApiClient: BusApiClient, googleStorage: GoogleStora
     server.use("/", NewFileHandler(googleStorage, config, auth));
     server.use("/", NewInstrumentListHandler(googleStorage, config, auth));
     server.use("/", NewImportUacHandler(busApiClient, auth));
+    server.use("/", HealthCheckHandler());
+    server.use("/", loginHandler);
     server.use("/", NewUacHandler(busApiClient, auth));
     server.use("/", NewBlaiseHandler(blaiseApiClient, config.ServerPark, auth));
-    server.use("/", HealthCheckHandler());
-
-    server.use("/", loginHandler);
 
     //define entry point
     server.get("*", function (req: Request, res: Response) {
