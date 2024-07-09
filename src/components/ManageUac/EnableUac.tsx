@@ -6,23 +6,15 @@ import ONSTable, { TableColumns } from "../InstrumentList/Sections/ONSTable";
 import { Link } from "react-router-dom";
 import { Questionnaire } from "blaise-api-node-client";
 
-interface UacChunks {
-    uac1: string,
-    uac2: string,
-    uac3: string,
-    uac4?: string,
-}
 interface UacInfo {
-    instrument_name?: string,
-    case_id?: string,
-    disabled?: string,
-    uac_chunks?: UacChunks,
-    full_uac?: string,
+    case_id: string,
+    uac: string,
 }
 
-interface DisabledUACList {
+interface QuestionnaireWithDisabledUacs {
     questionnaireName: string;
-    listOfDisabledUacs: UacInfo;
+    disabledUacs: UacInfo[];
+
 }
 function EnableUac(): ReactElement {
 
@@ -30,26 +22,40 @@ function EnableUac(): ReactElement {
     const [instruments, setInstruments] = useState<string[]>([]);
     const [listLoading, setListLoading] = useState<boolean>(true);
     const [errored, setErrored] = useState<boolean>(false);
-    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<DisabledUACList[]>([]);
+    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[]>([]);
 
-    function isObjectEmpty(obj: any): boolean {
-        return obj && Object.entries(obj).length === 0 && obj.constructor === Object;
-    }
+    async function createNewList(instruments: string[]) {
 
-    async function createNewList() {
-
-        const arr: DisabledUACList[] = [];
+        const arr: QuestionnaireWithDisabledUacs[] = [];
         instruments.map(async (item) => {
-            console.log("instruments loaded");
+            console.log("filtering instruments started");
             try {
                 const disabledUacs = await axios.get(`/api/v1/getDiabledUacs/${item}`, axiosConfig());
+                console.log(disabledUacs.data);
+                const apiResponse = disabledUacs.data;
+                const disabledUacList: UacInfo[] = [];
+                for (const key in apiResponse) {
+                    console.log(key);
+                    if (Object.prototype.hasOwnProperty.call(apiResponse, key)) {
+                        const item = apiResponse[key];
+                        const { case_id, full_uac } = item;
 
-                const obj: DisabledUACList = {
-                    questionnaireName: item,
-                    listOfDisabledUacs: disabledUacs.data
-                };
-                arr.push(obj);
-
+                        console.log(`Case ID: ${case_id}`);
+                        console.log(`Full UAC: ${full_uac}`);
+                        const obj: UacInfo = {
+                            case_id: case_id,
+                            uac: full_uac
+                        };
+                        disabledUacList.push(obj);
+                    }
+                }
+                if (disabledUacList.length > 0) {
+                    const questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs = {
+                        questionnaireName: item,
+                        disabledUacs: disabledUacList
+                    };
+                    arr.push(questionnaireWithDisabledUacs);
+                }
             }
             catch (error: unknown) {
                 console.log("Response getting disabled uacs failed.");
@@ -57,50 +63,50 @@ function EnableUac(): ReactElement {
                 setMessage("There was an error loading information for disabled UACs.");
                 return [];
             }
+
+            setListOfQuestionnairesWithDisabledUacs(arr);
+            console.log("Final List preped: " + JSON.stringify(listOfQuestionnairesWithDisabledUacs));
+            setListLoading(false);
         });
-        setListOfQuestionnairesWithDisabledUacs(arr);
-        console.log("List of New Items 1: " + JSON.stringify(listOfQuestionnairesWithDisabledUacs));
-        // const filteredList = listOfQuestionnairesWithDisabledUacs.filter(obj => isObjectEmpty(obj.listOfDisabledUacs));
-        // setListOfQuestionnairesWithDisabledUacs(filteredList);
-        // console.log("List of New Items 2:" + JSON.stringify(filteredList));
+        console.log(message);
+        return arr;
 
     }
 
     useEffect(() => {
-        let mounted = true;
+        const mounted = true;
         getInstrumentList().then(() => {
-            if (mounted && instruments) {
-                setListLoading(false);
-                createNewList();
+            if (mounted) {
+                //setListLoading(false);
             }
         });
-
-        return function cleanup() {
-            mounted = false;
-            setInstruments([]);
-            setMessage("");
-        };
     }, []);
 
-    function instrumentTableRow(item: DisabledUACList, index: number) {
+    useEffect(() => {
+        if (instruments) {
+            createNewList(instruments);
+        }
+    }, [listLoading, instruments]);
 
+    function instrumentTableRow(item: QuestionnaireWithDisabledUacs, index: number) {
+        const { questionnaireName } = item;
         return (
             <React.Fragment key={`row${index}`}>
-                {/* {errored &&
+                {errored &&
                     <tr className="ons-table__row  ons-summary__item--error">
                         <th colSpan={6} className="ons-summary__row-title u-fs-r">{message}
                         </th>
                     </tr>
-                } */}
-                {item.listOfDisabledUacs !== null && <tr className={`ons-table__row ${(errored ? "ons-summary__item--error" : "")}`} key={index}
+                }
+                <tr className={`ons-table__row ${(errored ? "ons-summary__item--error" : "")}`} key={index}
                     data-testid={"instrument-table-row"}>
                     <td className="ons-table__cell" style={{ padding: "1rem" }}>
-                        {item.questionnaireName}
+                        {questionnaireName}
                     </td>
                     <td className="ons-table__cell">
                         <Link className="ons-breadcrumb__link" to={""} >Disabled UACs</Link>
                     </td>
-                </tr>}
+                </tr>
             </React.Fragment >
         );
     }
@@ -139,7 +145,7 @@ function EnableUac(): ReactElement {
                 title: "Questionnaire name"
             },
             {
-                title: "Re-Enable UAC"
+                title: "Disabled UACs"
             },
         ];
     if (listLoading) {
@@ -151,7 +157,7 @@ function EnableUac(): ReactElement {
                     {
                         <ONSTable columns={tableColumns} tableID={"instrument-table"}>
                             {
-                                listOfQuestionnairesWithDisabledUacs.map((item: DisabledUACList, index: number) => {
+                                listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
                                     return instrumentTableRow(item, index);
                                 })
                             }
