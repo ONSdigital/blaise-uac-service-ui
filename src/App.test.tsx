@@ -88,16 +88,16 @@ describe("React homepage", () => {
 
     it("should show Links to manage UACs i-e, Disable UAC and Enable UAC", async () => {
         MockAuthenticate.OverrideReturnValues(user, true);
-        let queryByText: any;
+        let getByText: any;
 
         await act(async () => {
             const renderResult = render(<App />, { wrapper: MemoryRouter });
-            queryByText = renderResult.queryByText;
+            getByText = renderResult.getByText;
         });
 
         await waitFor(() => {
-            expect(queryByText(/Disable UAC./i)).toBeDefined();
-            expect(queryByText(/Enable UAC/i)).toBeDefined();
+            expect(getByText("Disable UAC")).toBeDefined();
+            expect(getByText("Enable UAC")).toBeDefined();
         });
     });
 });
