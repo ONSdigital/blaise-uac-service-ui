@@ -1,12 +1,22 @@
 import React, { ReactElement } from "react";
 import Breadcrumbs from "../breadcrumbs";
 import DisableUac from "./DisableUac";
-import EnableUac from "./EnableUac";
-import { useParams } from "react-router-dom";
+import QuestionnaireListWithDisabledUacs from "./QuestionnaireListWithDisabledUacs";
+import { useLocation, useParams } from "react-router-dom";
+import ReEnableUacSummary from "./ReEnableUacSummary";
+
+interface State {
+    questionnaireName: string;
+    uac: string;
+    case_id: string;
+    responseStatus: string;
+}
 
 function ManageUacPage(): ReactElement {
 
     const { action } = useParams();
+    const location = useLocation().state as State;
+    const { questionnaireName, uac, case_id, responseStatus } = location || { questionnaireName: "", uac: 0, case_id: "" };
 
     let submitButtonLabel = "";
     if (action == "disable")
@@ -23,8 +33,10 @@ function ManageUacPage(): ReactElement {
                         { link: "/", title: "Home" }, { link: `/manageUac/${action}`, title: submitButtonLabel }
                     ]
                 } />
+                {questionnaireName && uac && case_id && responseStatus && < ReEnableUacSummary questionnaireName={questionnaireName} uac={uac} case_id={case_id} responseStatus={responseStatus} />}
+
                 {action == "disable" && <DisableUac />}
-                {action == "enable" && <EnableUac />}
+                {action == "enable" && <QuestionnaireListWithDisabledUacs />}
 
             </main >
         </>

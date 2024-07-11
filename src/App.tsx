@@ -9,6 +9,9 @@ import { isProduction } from "./client/env";
 import { User } from "blaise-api-node-client";
 import { Authenticate } from "blaise-login-react/blaise-login-react-client";
 import ManageUacPage from "./components/ManageUac/ManageUacPage";
+import EnableUacTable from "./components/ManageUac/EnableUacTable";
+import ReEnableUacConfirmation from "./components/ManageUac/ReEnableUacConfirmation";
+import DisableUacConfirmation from "./components/ManageUac/DisableUacConfirmation";
 
 const divStyle = {
     minHeight: "calc(67vh)"
@@ -24,6 +27,9 @@ function App(): ReactElement {
                         <Route path="/upload" element={<UploadSamplePage />} />
                         <Route path="/import" element={<ImportUacPage />} />
                         <Route path="/manageUac/:action" element={<ManageUacPage />} />
+                        <Route path="/listDisabledUacs" element={<EnableUacTable />} />
+                        <Route path="/reEnableUacConfirmation" element={<ReEnableUacConfirmation />} />
+                        <Route path="/disableUacConfirmation/:uac" element={<DisableUacConfirmation />} />
                         <Route path="/app" element={<AppContent loggedIn={loggedIn} user={user} />} />
                         <Route path="/" element={
                             <>

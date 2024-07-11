@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import axios from "axios";
 import axiosConfig from "../../client/axiosConfig";
-import { ONSLoadingPanel } from "blaise-design-system-react-components";
+import { ONSButton, ONSLoadingPanel } from "blaise-design-system-react-components";
 import ONSTable, { TableColumns } from "../InstrumentList/Sections/ONSTable";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Questionnaire } from "blaise-api-node-client";
 
 interface UacInfo {
@@ -14,10 +14,11 @@ interface UacInfo {
 interface QuestionnaireWithDisabledUacs {
     questionnaireName: string;
     disabledUacs: UacInfo[];
-
 }
-function EnableUac(): ReactElement {
 
+function QuestionnaireListWithDisabledUacs(): ReactElement {
+
+    const navigate = useNavigate();
     const [message, setMessage] = useState<string>("");
     const [instruments, setInstruments] = useState<string[]>([]);
     const [listLoading, setListLoading] = useState<boolean>(true);
@@ -25,23 +26,20 @@ function EnableUac(): ReactElement {
     const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[]>([]);
 
     async function createNewList(instruments: string[]) {
-
+        console.log("Filtering questionnaires that have got disabled uacs");
         const arr: QuestionnaireWithDisabledUacs[] = [];
         instruments.map(async (item) => {
-            console.log("filtering instruments started");
             try {
                 const disabledUacs = await axios.get(`/api/v1/getDiabledUacs/${item}`, axiosConfig());
-                console.log(disabledUacs.data);
+
                 const apiResponse = disabledUacs.data;
                 const disabledUacList: UacInfo[] = [];
+
                 for (const key in apiResponse) {
-                    console.log(key);
                     if (Object.prototype.hasOwnProperty.call(apiResponse, key)) {
                         const item = apiResponse[key];
                         const { case_id, full_uac } = item;
 
-                        console.log(`Case ID: ${case_id}`);
-                        console.log(`Full UAC: ${full_uac}`);
                         const obj: UacInfo = {
                             case_id: case_id,
                             uac: full_uac
@@ -55,6 +53,8 @@ function EnableUac(): ReactElement {
                         disabledUacs: disabledUacList
                     };
                     arr.push(questionnaireWithDisabledUacs);
+                    setListOfQuestionnairesWithDisabledUacs(arr);
+                    setListLoading(false);
                 }
             }
             catch (error: unknown) {
@@ -64,20 +64,16 @@ function EnableUac(): ReactElement {
                 return [];
             }
 
-            setListOfQuestionnairesWithDisabledUacs(arr);
-            console.log("Final List preped: " + JSON.stringify(listOfQuestionnairesWithDisabledUacs));
-            setListLoading(false);
         });
-        console.log(message);
-        return arr;
+        console.log("Final List preped: " + JSON.stringify(listOfQuestionnairesWithDisabledUacs));
 
     }
 
     useEffect(() => {
         const mounted = true;
         getInstrumentList().then(() => {
-            if (mounted) {
-                //setListLoading(false);
+            if (mounted && instruments) {
+                console.info("Loaded all the installed questionnaires");
             }
         });
     }, []);
@@ -90,6 +86,7 @@ function EnableUac(): ReactElement {
 
     function instrumentTableRow(item: QuestionnaireWithDisabledUacs, index: number) {
         const { questionnaireName } = item;
+
         return (
             <React.Fragment key={`row${index}`}>
                 {errored &&
@@ -104,7 +101,10 @@ function EnableUac(): ReactElement {
                         {questionnaireName}
                     </td>
                     <td className="ons-table__cell">
-                        <Link className="ons-breadcrumb__link" to={""} >Disabled UACs</Link>
+                        <ONSButton
+                            label="View Disabled Cases"
+                            small={true}
+                            onClick={() => navigate("/listDisabledUacs", { state: { questionnaireWithDisabledUacs: item } })} primary={true} />
                     </td>
                 </tr>
             </React.Fragment >
@@ -171,4 +171,4 @@ function EnableUac(): ReactElement {
     }
 }
 
-export default EnableUac;
+export default QuestionnaireListWithDisabledUacs;

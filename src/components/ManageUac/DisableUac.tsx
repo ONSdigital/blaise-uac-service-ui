@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from "react";
-import { ONSButton, ONSPanel, ONSTextInput } from "blaise-design-system-react-components";
-import axios from "axios";
-import axiosConfig from "../../client/axiosConfig";
+import { ONSButton, ONSTextInput } from "blaise-design-system-react-components";
+import { useNavigate } from "react-router-dom";
 
 function DisableUac(): ReactElement {
 
@@ -9,22 +8,7 @@ function DisableUac(): ReactElement {
     const [error, setError] = useState<string>("");
     const [submitDisable, setSubmitDisable] = useState(true);
 
-    const [apiResponse, setApiResponse] = useState<string>("");
-
-    async function disableUac() {
-        let res;
-        // let errorMessage;
-        try {
-            res = await axios.get(`/api/v1/disableUac/${uac}`, axiosConfig());
-            console.log(JSON.stringify(res));
-        } catch (error) {
-            console.log(JSON.stringify(error));
-        }
-        if (res?.data == "Success")
-            setApiResponse("Success");
-        else
-            setApiResponse("Error");
-    }
+    const navigate = useNavigate();
 
     const handleChangeInUAC = (event: React.ChangeEvent<HTMLInputElement>) => {
         const uacVal = event.target.value;
@@ -53,25 +37,6 @@ function DisableUac(): ReactElement {
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
 
-                {apiResponse !== "" &&
-                    (apiResponse === "Success" ?
-                        <ONSPanel status="success" bigIcon={true}>
-                            <h1>
-                                Successfully Disabled the UAC {uac}
-                            </h1>
-                        </ONSPanel>
-                        :
-                        <ONSPanel status="error">
-                            <h1>
-                                Some error occured on disabling the UAC {uac}
-                            </h1>
-                            <p>
-                                When reporting this issue to the Service Desk, please provide the questionnaire name, uac and the time of failure.
-                            </p>
-                        </ONSPanel>
-                    )
-                }
-
                 {error && <span style={{ color: "red" }} className="error">{error}</span>}
                 <ONSTextInput
                     autoFocus={true}
@@ -85,7 +50,7 @@ function DisableUac(): ReactElement {
                 <ONSButton
                     label="Disable UAC"
                     disabled={submitDisable}
-                    onClick={disableUac}
+                    onClick={() => navigate(`/disableUacConfirmation/${uac}`)}
                     primary
                 />
 
