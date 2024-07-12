@@ -116,7 +116,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
 
         let questionnaires: Questionnaire[];
         try {
-            const response = await axios.get("/api/questionnaires", axiosConfig());
+            const response = await axios.get("/api/v1/questionnaires", axiosConfig());
             console.log(response.data);
             questionnaires = response.data;
             const arr: string[] = [];

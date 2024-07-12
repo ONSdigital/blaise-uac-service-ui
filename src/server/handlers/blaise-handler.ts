@@ -7,7 +7,7 @@ export default function NewBlaiseHandler(blaiseApiClient: BlaiseApiClient, serve
 
     const blaiseHandler = new BlaiseHandler(blaiseApiClient, serverPark);
 
-    router.get("/api/questionnaires", auth.Middleware, blaiseHandler.GetQuestionnaires);
+    router.get("/api/v1/questionnaires", auth.Middleware, blaiseHandler.GetQuestionnaires);
 
     return router;
 }
