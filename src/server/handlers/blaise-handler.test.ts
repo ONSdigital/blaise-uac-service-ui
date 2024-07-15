@@ -24,7 +24,6 @@ const mockGetQuestionnaires = jest.fn();
 BlaiseApiClient.prototype.getQuestionnaires = mockGetQuestionnaires;
 const BlaiseApiClientMock = new BlaiseApiClient(config.BlaiseApiUrl);
 
-
 describe("BlaiseAPI Get all questionnaires from API", () => {
     const request = supertest(NewServer(busApiClient, googleStorage, config, BlaiseApiClientMock));
 

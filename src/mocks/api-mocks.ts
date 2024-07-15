@@ -1,4 +1,5 @@
 import { Questionnaire } from "blaise-api-node-client";
+import { InstrumentUacDetails } from "blaise-uac-service-node-client";
 
 export const instrumentNames: string[] = [
     "OPN2101A",
@@ -39,3 +40,27 @@ export const questionnaireList: Questionnaire[] = [{
     blaiseVersion: "5.9.9.2735"
 
 }];
+
+export const disabledUacCodesForQuestionnaireMock: InstrumentUacDetails = {
+    "803920": {
+        "instrument_name": "lms2209_em1",
+        "case_id": "803920",
+        "uac_chunks": { "uac1": "1002", "uac2": "2293", "uac3": "8976" },
+        "full_uac": "100222938976",
+        "disabled": "true"
+    },
+    "804138": {
+        "instrument_name": "lms2209_em1",
+        "case_id": "804138",
+        "uac_chunks": { "uac1": "1002", "uac2": "6087", "uac3": "6564" },
+        "full_uac": "100260876564",
+        "disabled": "true"
+    },
+    "907195": {
+        "instrument_name": "lms2209_em1",
+        "case_id": "907195",
+        "uac_chunks": { "uac1": "1004", "uac2": "6119", "uac3": "7282" },
+        "full_uac": "100461197282",
+        "disabled": "true"
+    }
+};

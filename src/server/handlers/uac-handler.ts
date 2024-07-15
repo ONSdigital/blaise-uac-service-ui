@@ -31,11 +31,11 @@ export class UacHandler {
             await this.busApiClient.disableUac(uac);
 
             console.log(`Successfully disabled UAC: ${uac}`);
-            return res.status(201).json("Success");
+            return res.status(200).json("Success");
         } catch (error: any) {
-            console.log(`Disabling UAC: ${uac} failed...`);
+            console.log(`Disabling UAC: ${uac} failed`);
             console.error(error);
-            return res.status(500).json({ error: error });
+            return res.status(500).json(`Disabling UAC: ${uac} failed`);
         }
     }
 
@@ -45,13 +45,12 @@ export class UacHandler {
         try {
             console.log(`Enabling UAC: ${uac}`);
             await this.busApiClient.enableUac(uac);
-
             console.log(`Successfully enabled UAC: ${uac}`);
-            return res.status(201).json("Success");
+            return res.status(200).json("Success");
         } catch (error: any) {
-            console.log(`Enabling UAC: ${uac} failed...`);
+            console.log(`Enabling UAC: ${uac} failed`);
             console.error(error);
-            return res.status(500).json({ error: error });
+            return res.status(500).json(`Enabling UAC: ${uac} failed`);
         }
     }
 
@@ -64,9 +63,9 @@ export class UacHandler {
             console.log(`Successfully fetched disabled UACs: ${questionnaire}`);
             return res.status(200).json(response);
         } catch (error: any) {
-            console.log(`Fetching Disabled UACs for questionnaire: ${questionnaire} failed...`);
+            console.log(`Fetching Disabled UACs for questionnaire: ${questionnaire} failed`);
             console.error(error);
-            return res.status(500).json({ error: error });
+            return res.status(500).json(`Fetching Disabled UACs for questionnaire: ${questionnaire} failed...`);
         }
     }
 
