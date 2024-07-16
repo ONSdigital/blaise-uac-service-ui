@@ -11,7 +11,7 @@ interface UacInfo {
     uac: string,
 }
 
-interface QuestionnaireWithDisabledUacs {
+export interface QuestionnaireWithDisabledUacs {
     questionnaireName: string;
     disabledUacs: UacInfo[];
 }
@@ -154,8 +154,9 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         return (
             <>
                 <div className="ons-u-mt-s">
+
                     {
-                        <ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                        listOfQuestionnairesWithDisabledUacs.length && <ONSTable columns={tableColumns} tableID={"instrument-table"}>
                             {
                                 listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
                                     return instrumentTableRow(item, index);

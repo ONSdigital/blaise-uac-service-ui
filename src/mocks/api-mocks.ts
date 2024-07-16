@@ -1,5 +1,6 @@
 import { Questionnaire } from "blaise-api-node-client";
 import { InstrumentUacDetails } from "blaise-uac-service-node-client";
+import { QuestionnaireWithDisabledUacs } from "../components/ManageUac/QuestionnaireListWithDisabledUacs";
 
 export const instrumentNames: string[] = [
     "OPN2101A",
@@ -64,3 +65,5 @@ export const disabledUacCodesForQuestionnaireMock: InstrumentUacDetails = {
         "disabled": "true"
     }
 };
+
+export const listOfQuestionnairesWithDisabledUacs: QuestionnaireWithDisabledUacs[] = [{ "questionnaireName": "LMS2209_EM1", "disabledUacs": [{ "case_id": "803920", "uac": "100222938976" }] }];
