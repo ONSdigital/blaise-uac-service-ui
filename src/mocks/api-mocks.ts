@@ -42,6 +42,29 @@ export const questionnaireList: Questionnaire[] = [{
 
 }];
 
+export const questionnaireListForEnableUacsMock: Questionnaire[] = [{
+    name: "LMS2209_EM1",
+    serverParkName: "gusty",
+    installDate: "2021-01-15T14:41:29.4399898+00:00",
+    status: "Active",
+    dataRecordCount: 0,
+    hasData: false,
+    active: false,
+    fieldPeriod: "January 2021",
+    blaiseVersion: "5.9.9.2735"
+}, {
+    name: "LMS2207_HO1",
+    serverParkName: "gusty",
+    installDate: "2021-01-15T15:18:40.1503617+00:00",
+    status: "Active",
+    dataRecordCount: 10,
+    hasData: true,
+    active: true,
+    fieldPeriod: "July 2020",
+    blaiseVersion: "5.9.9.2735"
+
+}];
+
 export const disabledUacCodesForQuestionnaireMock: InstrumentUacDetails = {
     "803920": {
         "instrument_name": "lms2209_em1",
@@ -66,4 +89,22 @@ export const disabledUacCodesForQuestionnaireMock: InstrumentUacDetails = {
     }
 };
 
-export const listOfQuestionnairesWithDisabledUacs: QuestionnaireWithDisabledUacs[] = [{ "questionnaireName": "LMS2209_EM1", "disabledUacs": [{ "case_id": "803920", "uac": "100222938976" }] }];
+export const questionnairesWithDisabledUacsMock: QuestionnaireWithDisabledUacs =
+{
+    "questionnaireName": "LMS2209_EM1",
+    "disabledUacs": [
+        {
+            "case_id": "803920",
+            "uac": "100222938976"
+        },
+        {
+            "case_id": "804138",
+            "uac": "100260876564"
+        },
+        {
+            "case_id": "907195",
+            "uac": "100461197282"
+        },
+
+    ]
+};
