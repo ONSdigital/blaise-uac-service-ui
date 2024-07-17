@@ -48,9 +48,10 @@ function ReEnableUacConfirmation(): ReactElement {
                 {
                     (
                         <>
-                            <h2 className="u-mb-l">
-                                Are you sure, you want to Re-Enable <span style={{ color: "blue" }}>{uac}</span> with <br />  case Id <span style={{ color: "blue" }}>{case_id}</span> from Questionnaire <span style={{ color: "blue" }}>{questionnaireName}</span> ?
-                            </h2>
+                            <h1 className="u-mb-l">
+                                Are you sure, you want to Re-Enable <em className="highlight">{uac}</em> with case Id <em className="highlight">{case_id}</em> from Questionnaire <em className="highlight">{questionnaireName}</em> ?
+                            </h1>
+                            <br />
                             <ONSButton
                                 label="Continue"
                                 onClick={reEnableUacConfirmation}

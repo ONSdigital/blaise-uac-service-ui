@@ -43,9 +43,10 @@ function DisableUacConfirmation(): ReactElement {
             {showButton &&
                 (
                     <>
-                        <h2 className="u-mb-l">
-                            Are you sure, you want to Disable <span style={{ color: "blue" }}>{uac}</span>?
-                        </h2>
+                        <h1 className="u-mb-l">
+                            Are you sure, you want to Disable <span><em className="highlight">{uac}</em></span>?
+                        </h1>
+                        <br />
                         <ONSButton
                             label="Continue"
                             primary
@@ -54,7 +55,9 @@ function DisableUacConfirmation(): ReactElement {
                         />
                         <ONSButton
                             label="Cancel"
-                            onClick={() => navigate(-1)} primary={false} />
+                            onClick={() => navigate(-1)} primary={false}
+                        />
+
                     </>
                 )
             }

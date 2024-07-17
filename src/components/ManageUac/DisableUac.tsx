@@ -46,7 +46,7 @@ function DisableUac(): ReactElement {
                     value={uac}
                     onChange={handleChangeInUAC}
                 />
-
+                <br />
                 <ONSButton
                     label="Disable UAC"
                     disabled={submitDisable}
