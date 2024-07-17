@@ -53,7 +53,6 @@ describe("Disable Confirmation component correctly displays messages when user t
         mock.reset();
     });
 
-
     it("correctly displays Success Message when User clicks Continue button and api returns Success", async () => {
 
         const uac = "123456789123";

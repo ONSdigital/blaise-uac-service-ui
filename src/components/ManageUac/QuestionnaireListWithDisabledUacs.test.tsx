@@ -13,7 +13,6 @@ import { questionnaireListForEnableUacsMock } from "../../mocks/api-mocks";
 import axios from "axios";
 import QuestionnaireListWithDisabledUacs from "./QuestionnaireListWithDisabledUacs";
 
-
 // mock login
 jest.mock("blaise-login-react/blaise-login-react-client");
 const { MockAuthenticate } = jest.requireActual("blaise-login-react/blaise-login-react-client");
