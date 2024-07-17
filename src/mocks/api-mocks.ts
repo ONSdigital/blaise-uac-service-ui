@@ -89,7 +89,7 @@ export const disabledUacCodesForQuestionnaireMock: InstrumentUacDetails = {
     }
 };
 
-export const questionnairesWithDisabledUacsMock: QuestionnaireWithDisabledUacs =
+export const questionnaireWithDisabledUacsMock: QuestionnaireWithDisabledUacs =
 {
     "questionnaireName": "LMS2209_EM1",
     "disabledUacs": [
@@ -105,6 +105,18 @@ export const questionnairesWithDisabledUacsMock: QuestionnaireWithDisabledUacs =
             "case_id": "907195",
             "uac": "100461197282"
         },
+
+    ]
+};
+
+export const questionnaireWithOneDisabledUacMock: QuestionnaireWithDisabledUacs =
+{
+    "questionnaireName": "LMS2209_EM1",
+    "disabledUacs": [
+        {
+            "case_id": "803920",
+            "uac": "100222938976"
+        }
 
     ]
 };

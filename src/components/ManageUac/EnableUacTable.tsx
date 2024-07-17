@@ -58,6 +58,7 @@ function EnableUacTable(): ReactElement {
                     ]
                 } />
 
+                <h2>Disabled UACs for <span><em className="highlight">{questionnaireName}</em></span></h2>
                 {questionnaireName != "" && <ONSTable columns={["CaseID", "UAC", "Re-Enable"]} tableID="uac-table">
                     <>{uacs}</>
                 </ONSTable>

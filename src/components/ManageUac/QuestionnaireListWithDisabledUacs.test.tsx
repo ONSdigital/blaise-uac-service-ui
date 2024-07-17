@@ -4,53 +4,31 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React, { act } from "react";
 import { Authenticate } from "blaise-login-react/blaise-login-react-client";
-import { BrowserRouter, MemoryRouter, useLocation, useNavigate, useParams } from "react-router-dom";
-import ManageUacPage from "./ManageUacPage";
+import { MemoryRouter, useNavigate } from "react-router-dom";
 import { disabledUacCodesForQuestionnaireMock, questionnaireWithDisabledUacsMock } from "../../mocks/api-mocks";
 import flushPromises from "../../utils";
 import "@testing-library/jest-dom/extend-expect";
+import MockAdapter from "axios-mock-adapter";
+import { questionnaireListForEnableUacsMock } from "../../mocks/api-mocks";
+import axios from "axios";
+import QuestionnaireListWithDisabledUacs from "./QuestionnaireListWithDisabledUacs";
+
 
 // mock login
 jest.mock("blaise-login-react/blaise-login-react-client");
 const { MockAuthenticate } = jest.requireActual("blaise-login-react/blaise-login-react-client");
 Authenticate.prototype.render = MockAuthenticate.prototype.render;
 MockAuthenticate.OverrideReturnValues(null, true);
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import { questionnaireListForEnableUacsMock } from "../../mocks/api-mocks";
+
 const mock = new MockAdapter(axios);
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
-    useParams: jest.fn(),
-    useLocation: jest.fn(),
     useNavigate: jest.fn(),
 }));
 let navigate: jest.Mock;
 
-describe("Manage UAC Page correctly displays the disable UAC component when user clicks on Disable UAC Link", () => {
-
-    const mockedUseParams = useParams as jest.Mock;
-    const mockedUseLocation = useLocation as jest.Mock;
-
-    it("renders Disable Component when user clicks on the Disable UAC Link on home page", () => {
-        mockedUseParams.mockReturnValue({ action: "disable" });
-        mockedUseLocation.mockReturnValue({ questionnaireName: "", uac: 0, case_id: "", responseStatus: "" });
-        render(
-            <BrowserRouter>
-                <ManageUacPage />
-            </BrowserRouter>
-        );
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
-        expect(disableUACButton).toBeDefined();
-
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
-        expect(uacInput).toBeDefined();
-    });
-
-});
-
-describe("Manage UAC Page correctly displays the enable UAC component when user clicks on Enable UAC Link", () => {
+describe("List of Questionnaires with disabled UACs", () => {
     afterEach(() => {
         mock.reset();
     });
@@ -61,14 +39,11 @@ describe("Manage UAC Page correctly displays the enable UAC component when user 
         mock.onGet("/api/v1/getDiabledUacs/" + questionnaireListForEnableUacsMock[1].name).reply(200, {});
     });
 
-    const mockedUseParams = useParams as jest.Mock;
+    it("renders QuestionnaireListWithDisabledUacs Component when user clicks on the Enable UAC Link on home page", async () => {
 
-    it("renders Enable Component when user clicks on the Enable UAC Link on home page", async () => {
-
-        mockedUseParams.mockReturnValue({ action: "enable" });
         render(
             <MemoryRouter>
-                <ManageUacPage />
+                <QuestionnaireListWithDisabledUacs />
             </MemoryRouter>
         );
         await act(async () => {
@@ -78,14 +53,13 @@ describe("Manage UAC Page correctly displays the enable UAC component when user 
         expect(viewDisabledCasesButton).toBeDefined();
     });
 
-    it("renders Enable Component when user clicks on the Enable UAC Link on home page", async () => {
+    it("navigates to EnableUacTable component when user clicks on View Disabled Cases button", async () => {
 
         navigate = jest.fn();
-        mockedUseParams.mockReturnValue({ action: "enable" });
         (useNavigate as jest.Mock).mockReturnValue(navigate);
         render(
             <MemoryRouter>
-                <ManageUacPage />
+                <QuestionnaireListWithDisabledUacs />
             </MemoryRouter>
         );
         await act(async () => {
