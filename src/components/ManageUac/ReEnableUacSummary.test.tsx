@@ -1,11 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import React, { act } from "react";
-import { Authenticate } from "blaise-login-react/blaise-login-react-client";
-import { createMemoryRouter, RouterProvider, useNavigate } from "react-router-dom";
-import flushPromises from "../../utils";
+import { render } from "@testing-library/react";
+import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import ReEnableUacSummary from "./ReEnableUacSummary";
 
