@@ -24,12 +24,15 @@ function ReEnableUacConfirmation(): ReactElement {
 
         let res;
         try {
-            await axios.get(`/api/v1/enableUac/${uac}`, axiosConfig());
-            res = "success";
+            res = await axios.get(`/api/v1/enableUac/${uac}`, axiosConfig());
         } catch (error) {
-            console.error(JSON.stringify((error as any).response.data.message));
-            res = "failed";
+            console.error(JSON.stringify(error));
         }
+
+        if (res?.data == "Success")
+            res = "success";
+        else
+            res = "error";
         isLoading(false);
         navigate("/manageUac/enable", { state: { questionnaireName: questionnaireName, uac: uac, case_id: case_id, responseStatus: res } });
     }

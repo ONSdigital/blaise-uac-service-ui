@@ -84,7 +84,7 @@ describe("Disable Confirmation component correctly displays messages when user t
         const uac = "123456789123";
         mockedUseParams.mockReturnValue({ uac: uac });
 
-        mock.onGet(`/api/v1/disableUac/${uac}`).reply(200, `Disabling UAC: ${uac} failed`);
+        mock.onGet(`/api/v1/disableUac/${uac}`).reply(500, `Disabling UAC: ${uac} failed`);
 
         const { getByText, getByRole } = render(
             <MemoryRouter>
@@ -105,10 +105,7 @@ describe("Disable Confirmation component correctly displays messages when user t
         expect(getByText(expectedErrorMessageText)).toBeInTheDocument();
     });
 
-    it("correctly navigates back if user click Cancel ", async () => {
-
-        const uac = "123456789123";
-        mockedUseParams.mockReturnValue({ uac: uac });
+    it("correctly navigates back if user clicks Cancel ", async () => {
 
         navigate = jest.fn();
         (useNavigate as jest.Mock).mockReturnValue(navigate);
