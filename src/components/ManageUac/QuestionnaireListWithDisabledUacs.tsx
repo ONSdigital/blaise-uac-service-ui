@@ -20,15 +20,13 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
             console.info("Loaded all the installed questionnaires");
             if (questionnaireNames.length > 0) {
                 const finalArray = await getFilteredList(questionnaireNames);
-                if (finalArray.length > 0) {
+                if (finalArray.length > 0)
                     setListOfQuestionnairesWithDisabledUacs(finalArray);
-                }
-                else {
+                else
                     setMessage("There are no disabled codes.");
-                }
-                setListLoading(false);
             }
-
+            setListLoading(false);
+            return;
         }).catch((error: unknown) => {
             console.log(`Failed to get questionnaires ${error}`);
             setErrored(true);
@@ -82,6 +80,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
             console.log("Response from get all questionnaires failed");
             setErrored(true);
             setMessage("There was an error loading information for disabled UACs.");
+            setListLoading(false);
             return [];
         }
     }
@@ -130,6 +129,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
                     disabledUacs: disabledUacList
                 };
                 return questionnaireWithDisabledUacs;
+
             }
             else
                 return {} as QuestionnaireWithDisabledUacs;
@@ -158,8 +158,9 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
     if (listLoading) {
         return <ONSLoadingPanel />;
     }
-    if (listOfQuestionnairesWithDisabledUacs.length != 0) {
+    else {
         return (
+            listOfQuestionnairesWithDisabledUacs &&
             < ONSTable columns={tableColumns} tableID={"instrument-table"}>
                 {
                     listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
@@ -168,12 +169,10 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
                 }
             </ONSTable>);
     }
-    else {
-        return (
-            <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
+    return (
+        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
 
-        );
-    }
+    );
 
 }
 
