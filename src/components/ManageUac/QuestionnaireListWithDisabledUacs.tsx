@@ -11,103 +11,33 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
 
     const navigate = useNavigate();
     const [message, setMessage] = useState<string>("");
-    const [instruments, setInstruments] = useState<string[]>([]);
     const [listLoading, setListLoading] = useState<boolean>(true);
     const [errored, setErrored] = useState<boolean>(false);
-    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[] | null>(null);
+    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[]>([]);
 
-    async function createNewList(instruments: string[]) {
-
-        let arr: QuestionnaireWithDisabledUacs[] = [];
-
-        let results;
-        try {
-            const promises = instruments.map(async (instrumentName) => {
-                const response = await axios.get(`/api/v1/getDiabledUacs/${instrumentName}`, axiosConfig());
-                if (!response.data) {
-                    throw new Error(`Getting disabled uacs failed for instrument ${instrumentName}`);
+    useEffect(() => {
+        getInstrumentList().then(async (questionnaireNames) => {
+            console.info("Loaded all the installed questionnaires");
+            if (questionnaireNames.length > 0) {
+                const finalArray = await getFilteredList(questionnaireNames);
+                if (finalArray.length > 0) {
+                    setListOfQuestionnairesWithDisabledUacs(finalArray);
                 }
-                return response.data;
-            });
-
-            results = await Promise.all(promises);
-            console.log("Results: " + JSON.stringify(results));
-
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            setMessage("Some error occured while fetching disabled uacs. ");
-            setListLoading(false);
-            return;
-        }
-
-        arr = results?.map(result => {
-            const disabledUacList: UacInfo[] = [];
-            let instrumentName = "";
-            for (const key in result) {
-                if (Object.prototype.hasOwnProperty.call(result, key)) {
-                    const item = result[key];
-                    const { case_id, full_uac, instrument_name } = item;
-                    instrumentName = instrument_name;
-                    const obj: UacInfo = {
-                        case_id: case_id,
-                        uac: full_uac
-                    };
-                    disabledUacList.push(obj);
+                else {
+                    setMessage("There are no disabled codes.");
                 }
+                setListLoading(false);
             }
-            if (disabledUacList.length > 0) {
-                const questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs = {
-                    questionnaireName: instrumentName,
-                    disabledUacs: disabledUacList
-                };
-                return questionnaireWithDisabledUacs;
-            }
-            else
-                return {} as QuestionnaireWithDisabledUacs;
-        });
 
-        const newArr = [];
-        for (let i = 0; i < arr.length; i++) {
-            if ((Object.keys(arr[i]).length !== 0)) {
-                newArr.push(arr[i]);
-            }
-        }
-        console.log("Final List preped: " + JSON.stringify(newArr));
-        if (newArr.length > 0) {
-            setListOfQuestionnairesWithDisabledUacs(newArr);
-            setListLoading(false);
-        }
-        else {
-            setListOfQuestionnairesWithDisabledUacs(null);
+        }).catch((error: unknown) => {
+            console.log(`Failed to get questionnaires ${error}`);
+            setErrored(true);
             setMessage("There are no disabled uacs");
             setListLoading(false);
-        }
-
-    }
-
-    useEffect(() => {
-        let mounted = true;
-        getInstrumentList().then(() => {
-            if (mounted && instruments) {
-                console.info("Loaded all the installed questionnaires");
-            }
+            return;
         });
 
-        return function cleanup() {
-            mounted = false;
-            setInstruments([]);
-            setMessage("");
-            setListLoading(true);
-            setListOfQuestionnairesWithDisabledUacs(null);
-        };
     }, []);
-
-    useEffect(() => {
-        if (instruments) {
-            createNewList(instruments);
-        }
-
-    }, [listLoading, instruments]);
 
     function instrumentTableRow(item: QuestionnaireWithDisabledUacs, index: number) {
         const { questionnaireName } = item;
@@ -147,17 +77,72 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
             questionnaires.map(async (item) => {
                 arr.push(item.name);
             });
-            setInstruments(arr);
+            return arr;
         } catch (error: unknown) {
             console.log("Response from get all questionnaires failed");
             setErrored(true);
             setMessage("There was an error loading information for disabled UACs.");
             return [];
         }
+    }
 
-        if (questionnaires.length === 0) {
-            setMessage("No installed questionnaires found.");
+    async function getFilteredList(questionnaireNames: string[]) {
+        setListLoading(true);
+        let arr: QuestionnaireWithDisabledUacs[] = [];
+        let results;
+        try {
+            const promises = questionnaireNames.map(async (instrumentName) => {
+                const response = await axios.get(`/api/v1/getDiabledUacs/${instrumentName}`, axiosConfig());
+                if (!response.data) {
+                    throw new Error(`Getting disabled uacs failed for instrument ${instrumentName}`);
+                }
+                return response.data;
+            });
+
+            results = await Promise.all(promises);
+            console.log("Results: " + JSON.stringify(results));
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setErrored(true);
+            setMessage("Some error occured while fetching disabled uacs. ");
+            return [];
         }
+
+        arr = results?.map(result => {
+            const disabledUacList: UacInfo[] = [];
+            let instrumentName = "";
+            for (const key in result) {
+                if (Object.prototype.hasOwnProperty.call(result, key)) {
+                    const item = result[key];
+                    const { case_id, full_uac, instrument_name } = item;
+                    instrumentName = instrument_name;
+                    const obj: UacInfo = {
+                        case_id: case_id,
+                        uac: full_uac
+                    };
+                    disabledUacList.push(obj);
+                }
+            }
+            if (disabledUacList.length > 0) {
+                const questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs = {
+                    questionnaireName: instrumentName,
+                    disabledUacs: disabledUacList
+                };
+                return questionnaireWithDisabledUacs;
+            }
+            else
+                return {} as QuestionnaireWithDisabledUacs;
+        });
+
+        const newArr: QuestionnaireWithDisabledUacs[] = [];
+        for (let i = 0; i < arr.length; i++) {
+            if ((Object.keys(arr[i]).length !== 0)) {
+                newArr.push(arr[i]);
+            }
+        }
+        console.log("Final List preped: " + JSON.stringify(newArr));
+        return newArr;
 
     }
 
@@ -173,26 +158,22 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
     if (listLoading) {
         return <ONSLoadingPanel />;
     }
-    else
+    if (listOfQuestionnairesWithDisabledUacs.length != 0) {
         return (
-            <>
-                <div className="ons-u-mt-s">
-                    {listOfQuestionnairesWithDisabledUacs !== null ?
-                        < ONSTable columns={tableColumns} tableID={"instrument-table"}>
-                            {
-                                listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
-                                    return instrumentTableRow(item, index);
-                                })
-                            }
-                        </ONSTable>
-                        :
-                        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
-                    }
-
-                </div >
-            </>
+            < ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                {
+                    listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
+                        return instrumentTableRow(item, index);
+                    })
+                }
+            </ONSTable>);
+    }
+    else {
+        return (
+            <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
 
         );
+    }
 
 }
 
