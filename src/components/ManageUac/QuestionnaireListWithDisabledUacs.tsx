@@ -158,21 +158,26 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
     if (listLoading) {
         return <ONSLoadingPanel />;
     }
-    else {
+    else
         return (
-            listOfQuestionnairesWithDisabledUacs &&
-            < ONSTable columns={tableColumns} tableID={"instrument-table"}>
-                {
-                    listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
-                        return instrumentTableRow(item, index);
-                    })
-                }
-            </ONSTable>);
-    }
-    return (
-        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
+            <>
+                <div className="ons-u-mt-s">
+                    {listOfQuestionnairesWithDisabledUacs.length > 0 ?
+                        < ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                            {
+                                listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
+                                    return instrumentTableRow(item, index);
+                                })
+                            }
+                        </ONSTable>
+                        :
+                        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
+                    }
 
-    );
+                </div >
+            </>
+
+        );
 
 }
 
