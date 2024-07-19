@@ -1,6 +1,6 @@
 import { Questionnaire } from "blaise-api-node-client";
 import { InstrumentUacDetails } from "blaise-uac-service-node-client";
-import { QuestionnaireWithDisabledUacs } from "../components/ManageUac/QuestionnaireListWithDisabledUacs";
+import { QuestionnaireWithDisabledUacs } from "../models/model";
 
 export const instrumentNames: string[] = [
     "OPN2101A",

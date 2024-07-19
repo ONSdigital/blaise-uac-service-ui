@@ -1,20 +1,11 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import axios from "axios";
 import axiosConfig from "../../client/axiosConfig";
-import { ONSButton, ONSLoadingPanel } from "blaise-design-system-react-components";
+import { ONSButton, ONSLoadingPanel, ONSPanel } from "blaise-design-system-react-components";
 import ONSTable, { TableColumns } from "../InstrumentList/Sections/ONSTable";
 import { useNavigate } from "react-router-dom";
 import { Questionnaire } from "blaise-api-node-client";
-
-interface UacInfo {
-    case_id: string,
-    uac: string,
-}
-
-export interface QuestionnaireWithDisabledUacs {
-    questionnaireName: string;
-    disabledUacs: UacInfo[];
-}
+import { QuestionnaireWithDisabledUacs, UacInfo } from "../../models/model";
 
 function QuestionnaireListWithDisabledUacs(): ReactElement {
 
@@ -23,65 +14,99 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
     const [instruments, setInstruments] = useState<string[]>([]);
     const [listLoading, setListLoading] = useState<boolean>(true);
     const [errored, setErrored] = useState<boolean>(false);
-    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[]>([]);
+    const [listOfQuestionnairesWithDisabledUacs, setListOfQuestionnairesWithDisabledUacs] = useState<QuestionnaireWithDisabledUacs[] | null>(null);
 
     async function createNewList(instruments: string[]) {
-        console.log("Filtering questionnaires that have got disabled uacs");
-        const arr: QuestionnaireWithDisabledUacs[] = [];
-        instruments.map(async (item) => {
-            try {
-                const disabledUacs = await axios.get(`/api/v1/getDiabledUacs/${item}`, axiosConfig());
 
-                const apiResponse = disabledUacs.data;
-                const disabledUacList: UacInfo[] = [];
+        let arr: QuestionnaireWithDisabledUacs[] = [];
 
-                for (const key in apiResponse) {
-                    if (Object.prototype.hasOwnProperty.call(apiResponse, key)) {
-                        const item = apiResponse[key];
-                        const { case_id, full_uac } = item;
-
-                        const obj: UacInfo = {
-                            case_id: case_id,
-                            uac: full_uac
-                        };
-                        disabledUacList.push(obj);
-                    }
+        let results;
+        try {
+            const promises = instruments.map(async (instrumentName) => {
+                const response = await axios.get(`/api/v1/getDiabledUacs/${instrumentName}`, axiosConfig());
+                if (!response.data) {
+                    throw new Error(`Getting disabled uacs failed for instrument ${instrumentName}`);
                 }
-                if (disabledUacList.length > 0) {
-                    const questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs = {
-                        questionnaireName: item,
-                        disabledUacs: disabledUacList
+                return response.data;
+            });
+
+            results = await Promise.all(promises);
+            console.log("Results: " + JSON.stringify(results));
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setMessage("Some error occured while fetching disabled uacs. ");
+            setListLoading(false);
+            return;
+        }
+
+        arr = results?.map(result => {
+            const disabledUacList: UacInfo[] = [];
+            let instrumentName = "";
+            for (const key in result) {
+                if (Object.prototype.hasOwnProperty.call(result, key)) {
+                    const item = result[key];
+                    const { case_id, full_uac, instrument_name } = item;
+                    instrumentName = instrument_name;
+                    const obj: UacInfo = {
+                        case_id: case_id,
+                        uac: full_uac
                     };
-                    arr.push(questionnaireWithDisabledUacs);
-                    setListOfQuestionnairesWithDisabledUacs(arr);
-                    setListLoading(false);
+                    disabledUacList.push(obj);
                 }
             }
-            catch (error: unknown) {
-                console.log("Response getting disabled uacs failed.");
-                setErrored(true);
-                setMessage("There was an error loading information for disabled UACs.");
-                return [];
+            if (disabledUacList.length > 0) {
+                const questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs = {
+                    questionnaireName: instrumentName,
+                    disabledUacs: disabledUacList
+                };
+                return questionnaireWithDisabledUacs;
             }
-
+            else
+                return {} as QuestionnaireWithDisabledUacs;
         });
-        console.log("Final List preped: " + JSON.stringify(listOfQuestionnairesWithDisabledUacs));
+
+        const newArr = [];
+        for (let i = 0; i < arr.length; i++) {
+            if ((Object.keys(arr[i]).length !== 0)) {
+                newArr.push(arr[i]);
+            }
+        }
+        console.log("Final List preped: " + JSON.stringify(newArr));
+        if (newArr.length > 0) {
+            setListOfQuestionnairesWithDisabledUacs(newArr);
+            setListLoading(false);
+        }
+        else {
+            setListOfQuestionnairesWithDisabledUacs(null);
+            setMessage("There are no disabled uacs");
+            setListLoading(false);
+        }
 
     }
 
     useEffect(() => {
-        const mounted = true;
+        let mounted = true;
         getInstrumentList().then(() => {
             if (mounted && instruments) {
                 console.info("Loaded all the installed questionnaires");
             }
         });
+
+        return function cleanup() {
+            mounted = false;
+            setInstruments([]);
+            setMessage("");
+            setListLoading(true);
+            setListOfQuestionnairesWithDisabledUacs(null);
+        };
     }, []);
 
     useEffect(() => {
         if (instruments) {
             createNewList(instruments);
         }
+
     }, [listLoading, instruments]);
 
     function instrumentTableRow(item: QuestionnaireWithDisabledUacs, index: number) {
@@ -117,15 +142,12 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         let questionnaires: Questionnaire[];
         try {
             const response = await axios.get("/api/v1/questionnaires", axiosConfig());
-            console.log(response.data);
             questionnaires = response.data;
             const arr: string[] = [];
             questionnaires.map(async (item) => {
                 arr.push(item.name);
             });
             setInstruments(arr);
-
-            console.log(`Response from get all questionnaires successful, data list length ${questionnaires.length}`);
         } catch (error: unknown) {
             console.log("Response from get all questionnaires failed");
             setErrored(true);
@@ -150,26 +172,28 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         ];
     if (listLoading) {
         return <ONSLoadingPanel />;
-    } else {
+    }
+    else
         return (
             <>
                 <div className="ons-u-mt-s">
-
-                    {
-                        listOfQuestionnairesWithDisabledUacs.length && <ONSTable columns={tableColumns} tableID={"instrument-table"}>
+                    {listOfQuestionnairesWithDisabledUacs !== null ?
+                        < ONSTable columns={tableColumns} tableID={"instrument-table"}>
                             {
                                 listOfQuestionnairesWithDisabledUacs.map((item: QuestionnaireWithDisabledUacs, index: number) => {
                                     return instrumentTableRow(item, index);
                                 })
                             }
                         </ONSTable>
+                        :
+                        <ONSPanel spacious={true} status={message.includes("Unable") ? "error" : "info"}>{message}</ONSPanel>
                     }
 
-                </div>
+                </div >
             </>
 
         );
-    }
+
 }
 
 export default QuestionnaireListWithDisabledUacs;
