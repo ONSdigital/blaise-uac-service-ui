@@ -39,7 +39,7 @@ describe("Disable Confirmation component loads correctly and receives the passed
                 <DisableUacConfirmation />
             </BrowserRouter >);
 
-        const expectedText = "Are you sure you want to disable ?";
+        const expectedText = "Are you sure you want to disable UAC ?";
         expect(getByText(expectedText)).toBeInTheDocument();
 
     });

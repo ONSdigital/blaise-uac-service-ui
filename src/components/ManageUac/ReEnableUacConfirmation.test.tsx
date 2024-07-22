@@ -56,7 +56,7 @@ describe("ReEnable Confirmation component", () => {
             await flushPromises();
         });
 
-        const expectedWarningMessageText = "Are you sure you want to enable ?";
+        const expectedWarningMessageText = "Are you sure you want to enable UAC ?";
         expect(getByText(expectedWarningMessageText)).toBeInTheDocument();
         expect(getByText("LMS2209_EM1")).toBeInTheDocument();
     });

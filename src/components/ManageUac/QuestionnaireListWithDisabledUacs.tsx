@@ -114,7 +114,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
                 if (Object.prototype.hasOwnProperty.call(result, key)) {
                     const item = result[key];
                     const { case_id, full_uac, instrument_name } = item;
-                    instrumentName = instrument_name;
+                    instrumentName = instrument_name.toUpperCase();
                     const obj: UacInfo = {
                         case_id: case_id,
                         uac: full_uac

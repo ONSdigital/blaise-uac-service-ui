@@ -44,7 +44,7 @@ function DisableUacConfirmation(): ReactElement {
                 (
                     <>
                         <h1 className="u-mb-l">
-                            Are you sure you want to disable <span><em className="highlight">{uac}</em></span>?
+                            Are you sure you want to disable UAC <span><em className="highlight">{uac}</em></span>?
                         </h1>
                         <br />
                         <ONSButton
