@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from "react";
-import { ONSButton, ONSTextInput } from "blaise-design-system-react-components";
+import { ONSButton, ONSPanel, ONSTextInput } from "blaise-design-system-react-components";
 import { useNavigate } from "react-router-dom";
 
 function DisableUac(): ReactElement {
@@ -24,6 +24,7 @@ function DisableUac(): ReactElement {
         }
 
         if ((/\D/.test(uacVal))) {
+            setUac(uacVal);
             setError("The UAC input can only contain digits");
             setSubmitDisable(true);
         }
@@ -37,7 +38,7 @@ function DisableUac(): ReactElement {
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
 
-                {error && <span style={{ color: "red" }} className="error">{error}</span>}
+                {error && <ONSPanel spacious={true} status={"error"}>{error}</ONSPanel>}
                 <ONSTextInput
                     autoFocus={true}
                     label="Enter UAC"
