@@ -19,7 +19,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         getInstrumentList().then(async (questionnaireNames) => {
             console.info("Loaded all the installed questionnaires");
             if (questionnaireNames.length > 0) {
-                const finalArray = await getFilteredList(questionnaireNames);
+                const finalArray = await getFilteredListOfQuestionnairesWithDisabledCodes(questionnaireNames);
                 if (finalArray.length > 0)
                     setListOfQuestionnairesWithDisabledUacs(finalArray);
                 else
@@ -30,7 +30,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         }).catch((error: unknown) => {
             console.log(`Failed to get questionnaires ${error}`);
             setErrored(true);
-            setMessage("There are no disabled uacs");
+            setMessage("Some error occured while fetching installed questionnaires");
             setListLoading(false);
             return;
         });
@@ -85,7 +85,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         }
     }
 
-    async function getFilteredList(questionnaireNames: string[]) {
+    async function getFilteredListOfQuestionnairesWithDisabledCodes(questionnaireNames: string[]) {
         setListLoading(true);
         let arr: QuestionnaireWithDisabledUacs[] = [];
         let results;
@@ -99,7 +99,6 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
             });
 
             results = await Promise.all(promises);
-            console.log("Results: " + JSON.stringify(results));
 
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -141,7 +140,6 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
                 newArr.push(arr[i]);
             }
         }
-        console.log("Final List preped: " + JSON.stringify(newArr));
         return newArr;
 
     }
