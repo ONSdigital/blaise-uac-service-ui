@@ -44,7 +44,7 @@ function DisableUacConfirmation(): ReactElement {
                 (
                     <>
                         <h1 className="u-mb-l">
-                            Are you sure, you want to Disable <span><em className="highlight">{uac}</em></span>?
+                            Are you sure you want to disable <span><em className="highlight">{uac}</em></span>?
                         </h1>
                         <br />
                         <ONSButton
@@ -67,7 +67,7 @@ function DisableUacConfirmation(): ReactElement {
                     (apiResponse === "Success" ?
                         <ONSPanel status="success" bigIcon={true}>
                             <h1>
-                                Successfully Disabled the UAC {uac}
+                                Successfully disabled the UAC {uac}
                             </h1>
                         </ONSPanel>
                         :

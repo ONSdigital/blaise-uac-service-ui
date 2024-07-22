@@ -39,7 +39,7 @@ describe("Disable Confirmation component loads correctly and receives the passed
                 <DisableUacConfirmation />
             </BrowserRouter >);
 
-        const expectedText = "Are you sure, you want to Disable ?";
+        const expectedText = "Are you sure you want to disable ?";
         expect(getByText(expectedText)).toBeInTheDocument();
 
     });
@@ -75,7 +75,7 @@ describe("Disable Confirmation component correctly displays messages when user t
         await act(async () => {
             await flushPromises();
         });
-        const expectedSuccessMessageText = `Successfully Disabled the UAC ${uac}`;
+        const expectedSuccessMessageText = `Successfully disabled the UAC ${uac}`;
         expect(getByText(expectedSuccessMessageText)).toBeInTheDocument();
     });
 

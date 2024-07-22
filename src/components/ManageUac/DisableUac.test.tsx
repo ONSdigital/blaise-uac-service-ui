@@ -38,7 +38,7 @@ describe("Disable UAC page works as expected", async () => {
 
         expect(getByText("Disable UAC")).toBeDefined();
         expect(getByText("Enter UAC")).toBeDefined();
-        expect(screen.getByPlaceholderText("Enter 12 char UAC")).toBeDefined();
+        expect(screen.getByPlaceholderText("Enter 12 digit UAC")).toBeDefined();
 
     });
 
@@ -58,7 +58,7 @@ describe("Disable UAC page works as expected", async () => {
         const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "123456789123" } });
 
         // Assert that the button is enabled after input
@@ -74,7 +74,7 @@ describe("Disable UAC page works as expected", async () => {
         const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "12345678912" } });
 
         // Assert that the button is enabled after input
@@ -90,7 +90,7 @@ describe("Disable UAC page works as expected", async () => {
         const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "12345678912a" } });
 
         // Assert that the button is enabled after input
@@ -105,7 +105,7 @@ describe("Disable UAC page works as expected", async () => {
         });
 
         const invalid_uac = "1234567891234";
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: invalid_uac } });
 
         expect(getByText("The UAC input needs to be 12 digits long")).toBeDefined();
@@ -122,7 +122,7 @@ describe("Disable UAC page works as expected", async () => {
         });
 
         const invalid_uac = "12345abc";
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: invalid_uac } });
 
         expect(getByText("The UAC input can only contain digits")).toBeDefined();
@@ -141,7 +141,7 @@ describe("Disable UAC page works as expected", async () => {
         });
 
         const uac = "123456789123";
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: uac } });
 
         const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });

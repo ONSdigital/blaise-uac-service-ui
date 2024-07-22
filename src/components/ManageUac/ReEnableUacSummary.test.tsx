@@ -19,7 +19,7 @@ describe("ReEnable UAC Summary", () => {
 
         const { getByText } = render(<ReEnableUacSummary {...props} />);
 
-        expect(getByText(`Successfully Re-Enabled uac ${props.uac} with Case Id ${props.case_id} for Questionnaire ${props.questionnaireName}`)).toBeInTheDocument();
+        expect(getByText(`Successfully Re-Enabled UAC ${props.uac} with Case Id ${props.case_id} for questionnaire ${props.questionnaireName}`)).toBeInTheDocument();
         expect(getByText(/with Case Id/i)).toBeInTheDocument();
     });
 
@@ -33,7 +33,7 @@ describe("ReEnable UAC Summary", () => {
         };
 
         const { getByText } = render(<ReEnableUacSummary {...props} />);
-        expect(getByText(`Re-Enabling uac ${props.uac} with Case Id ${props.case_id} for Questionnaire ${props.questionnaireName} failed`)).toBeInTheDocument();
+        expect(getByText(`Re-Enabling UAC ${props.uac} with Case Id ${props.case_id} for questionnaire ${props.questionnaireName} failed`)).toBeInTheDocument();
 
     });
 });

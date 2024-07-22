@@ -42,7 +42,7 @@ function DisableUac(): ReactElement {
                     autoFocus={true}
                     label="Enter UAC"
                     onClick={function noRefCheck() { }}
-                    placeholder="Enter 12 char UAC"
+                    placeholder="Enter 12 digit UAC"
                     value={uac}
                     onChange={handleChangeInUAC}
                 />

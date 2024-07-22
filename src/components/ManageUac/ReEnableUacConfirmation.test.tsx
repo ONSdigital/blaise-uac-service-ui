@@ -56,7 +56,7 @@ describe("Re-Enable Confirmation component", () => {
             await flushPromises();
         });
 
-        const expectedWarningMessageText = "Are you sure, you want to Re-Enable ?";
+        const expectedWarningMessageText = "Are you sure you want to Re-Enable ?";
         expect(getByText(expectedWarningMessageText)).toBeInTheDocument();
         expect(getByText("LMS2209_EM1")).toBeInTheDocument();
     });

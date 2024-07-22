@@ -44,7 +44,7 @@ describe("Manage UAC Page correctly displays the disable UAC component when user
         const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDefined();
 
-        const uacInput = screen.getByPlaceholderText("Enter 12 char UAC");
+        const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         expect(uacInput).toBeDefined();
     });
 
