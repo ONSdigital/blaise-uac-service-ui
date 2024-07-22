@@ -30,7 +30,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         }).catch((error: unknown) => {
             console.log(`Failed to get questionnaires ${error}`);
             setErrored(true);
-            setMessage("Some error occured while fetching installed questionnaires");
+            setMessage("Unable to retrieve list of installed questionnaires");
             setListLoading(false);
             return;
         });
@@ -79,7 +79,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         } catch (error: unknown) {
             console.log("Response from get all questionnaires failed");
             setErrored(true);
-            setMessage("There was an error loading information for disabled UACs.");
+            setMessage("Unable to retrieve list of installed questionnaires");
             setListLoading(false);
             return [];
         }
@@ -93,7 +93,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
             const promises = questionnaireNames.map(async (instrumentName) => {
                 const response = await axios.get(`/api/v1/getDiabledUacs/${instrumentName}`, axiosConfig());
                 if (!response.data) {
-                    throw new Error(`Getting disabled uacs failed for instrument ${instrumentName}`);
+                    throw new Error(`Unable to get disabled UACs for questionnaire ${instrumentName}`);
                 }
                 return response.data;
             });
@@ -103,7 +103,7 @@ function QuestionnaireListWithDisabledUacs(): ReactElement {
         } catch (error) {
             console.error("Error fetching data:", error);
             setErrored(true);
-            setMessage("Some error occured while fetching disabled uacs. ");
+            setMessage("Unable to get disabled UACs");
             return [];
         }
 
