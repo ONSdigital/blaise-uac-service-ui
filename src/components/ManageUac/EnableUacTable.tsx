@@ -42,7 +42,7 @@ function EnableUacTable(): ReactElement {
                     state={{ questionnaireName: questionnaireName, uac: obj.uac, case_id: obj.case_id }}
                     className="ons-breadcrumb__link"
                     aria-label={`ReEnableUAC ${obj.uac}`}>
-                    Re-Enable UAC
+                    Enable UAC
                 </Link>
             </td>
         </tr >
@@ -59,7 +59,7 @@ function EnableUacTable(): ReactElement {
                 } />
 
                 <h2>Disabled UACs for <span><em className="highlight">{questionnaireName}</em></span></h2>
-                {questionnaireName != "" && <ONSTable columns={["CaseID", "UAC", "Re-Enable"]} tableID="uac-table">
+                {questionnaireName != "" && <ONSTable columns={["CaseID", "UAC", "Enable"]} tableID="uac-table">
                     <>{uacs}</>
                 </ONSTable>
                 }

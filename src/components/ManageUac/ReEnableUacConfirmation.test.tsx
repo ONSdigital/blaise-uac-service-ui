@@ -27,7 +27,7 @@ jest.mock("react-router-dom", () => ({
 
 const confirmationComponentState = { questionnaireName: "LMS2209_EM1", uac: "100461197282", case_id: "907195" };
 
-describe("Re-Enable Confirmation component", () => {
+describe("ReEnable Confirmation component", () => {
 
     const routes = [
         {
@@ -43,7 +43,7 @@ describe("Re-Enable Confirmation component", () => {
         },
     ];
 
-    it("renders Re-Enable Confirmation Component and receives the passed state", async () => {
+    it("renders ReEnable Confirmation Component and receives the passed state", async () => {
 
         const router = createMemoryRouter(routes, {
             initialEntries,
@@ -56,14 +56,14 @@ describe("Re-Enable Confirmation component", () => {
             await flushPromises();
         });
 
-        const expectedWarningMessageText = "Are you sure you want to Re-Enable ?";
+        const expectedWarningMessageText = "Are you sure you want to enable ?";
         expect(getByText(expectedWarningMessageText)).toBeInTheDocument();
         expect(getByText("LMS2209_EM1")).toBeInTheDocument();
     });
 
 });
 
-describe("Re-Enable Confirmation Component correctly displays messages when user takes action and navigates correctly", () => {
+describe("ReEnable Confirmation Component correctly displays messages when user takes action and navigates correctly", () => {
     const navigate: jest.Mock = jest.fn();
 
     beforeEach(() => {
@@ -96,7 +96,7 @@ describe("Re-Enable Confirmation Component correctly displays messages when user
         initialIndex: 0,
     });
 
-    it("renders Re-Enable Confirmation Component and navigates to manageUac Page Component (Enable view) passing new state with success api response status ", async () => {
+    it("renders ReEnable Confirmation Component and navigates to manageUac Page Component (Enable view) passing new state with success api response status ", async () => {
         (useNavigate as jest.Mock).mockReturnValue(navigate);
 
         mock.onGet(`/api/v1/enableUac/${confirmationComponentState.uac}`).reply(200, "Success");
@@ -116,7 +116,7 @@ describe("Re-Enable Confirmation Component correctly displays messages when user
 
     });
 
-    it("renders Re-Enable Confirmation Component and navigates to manageUac Page Component (Enable view) passing new state with failed api response status ", async () => {
+    it("renders ReEnable Confirmation Component and navigates to manageUac Page Component (Enable view) passing new state with failed api response status ", async () => {
 
         (useNavigate as jest.Mock).mockReturnValue(navigate);
 
@@ -137,7 +137,7 @@ describe("Re-Enable Confirmation Component correctly displays messages when user
 
     });
 
-    it("renders Re-Enable Confirmation Component and navigates back if user Clicks Cancel", async () => {
+    it("renders ReEnable Confirmation Component and navigates back if user Clicks Cancel", async () => {
 
         const { getByRole } = render(<RouterProvider router={router} />);
 

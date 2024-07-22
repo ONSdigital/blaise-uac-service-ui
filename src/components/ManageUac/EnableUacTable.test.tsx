@@ -44,11 +44,11 @@ describe("Disable UAC page works as expected", () => {
         expect(getByText("Disabled UACs for")).toBeInTheDocument();
         expect(getByText("CaseID")).toBeDefined();
         expect(getByText("UAC")).toBeDefined();
-        expect(getByText("Re-Enable")).toBeDefined();
+        expect(getByText("Enable")).toBeDefined();
 
     });
 
-    it("navigates to the ReEnable UAC Confirmation component when user clicks on the Re-Enable UAC Link", async () => {
+    it("navigates to the ReEnable UAC Confirmation component when user clicks on the Enable UAC Link", async () => {
 
         const initialEntries = [
             { pathname: "/listDisabledUacs", state: { questionnaireWithDisabledUacs: questionnaireWithOneDisabledUacMock } }
@@ -76,16 +76,16 @@ describe("Disable UAC page works as expected", () => {
         expect(cells).toHaveLength(3);
         expect(cells[0].textContent).toStrictEqual(questionnaireWithOneDisabledUacMock.disabledUacs[0].case_id);
         expect(cells[1].textContent).toStrictEqual(questionnaireWithOneDisabledUacMock.disabledUacs[0].uac);
-        expect(cells[2].textContent).toStrictEqual("Re-Enable UAC");
+        expect(cells[2].textContent).toStrictEqual("Enable UAC");
 
-        const link = getByText("Re-Enable UAC");
+        const link = getByText("Enable UAC");
         act(() => {
             fireEvent.click(link);
         });
         await act(async () => {
             await flushPromises();
         });
-        expect(getByText("Are you sure you want to Re-Enable ?")).toBeDefined();
+        expect(getByText("Are you sure you want to enable ?")).toBeDefined();
         expect(getByText(questionnaireWithOneDisabledUacMock.disabledUacs[0].case_id)).toBeDefined();
         expect(getByText(questionnaireWithOneDisabledUacMock.disabledUacs[0].uac)).toBeDefined();
 
