@@ -4,7 +4,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import React, { act } from "react";
 import { Authenticate } from "blaise-login-react/blaise-login-react-client";
-import { useNavigate } from "react-router-dom";
+import { createMemoryRouter, RouterProvider, useNavigate } from "react-router-dom";
 import "@testing-library/jest-dom";
 import flushPromises from "../../utils";
 
@@ -30,11 +30,39 @@ describe("Disable UAC page works as expected", async () => {
     beforeEach(() => {
         navigate = jest.fn();
     });
+
     MockAuthenticate.OverrideReturnValues(null, true);
 
-    it("displays the correct content on landing in Disable UAC view", () => {
+    const disabledComponentInitialState = {
+        disabledUac: "",
+        responseCode: 0
+    };
+    const routes = [
+        {
+            path: "/manageUac/disabled",
+            element: <DisableUac />,
+        },
+    ];
 
-        const { getByText } = render(<DisableUac />);
+    const initialEntries = [
+        {
+            pathname: "/manageUac/disabled",
+            state: disabledComponentInitialState,
+        },
+    ];
+
+    it("displays the correct content on landing in Disable UAC view", async () => {
+
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByText } = render(<RouterProvider router={router} />);
+
+        await act(async () => {
+            await flushPromises();
+        });
 
         expect(getByText("Disable UAC")).toBeDefined();
         expect(getByText("Enter UAC")).toBeDefined();
@@ -42,64 +70,96 @@ describe("Disable UAC page works as expected", async () => {
 
     });
 
-    it("Disable UAC button is disabled by default", () => {
+    it("disable UAC button is disabled by default", async () => {
 
-        render(<DisableUac />);
-        const button = screen.getByRole("button", { name: "Disable UAC" });
-        expect(button).toBeDisabled();
-    });
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
 
-    it("Disable UAC button is enabled if text field is 12 digits long", async () => {
+        const { getByRole } = render(<RouterProvider router={router} />);
 
-        render(<DisableUac />);
         await act(async () => {
             await flushPromises();
         });
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+
+        const button = getByRole("button", { name: "Disable UAC" });
+        expect(button).toBeDisabled();
+    });
+
+    it("disable UAC button is enabled if text field is 12 digits long", async () => {
+
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByRole } = render(<RouterProvider router={router} />);
+
+        await act(async () => {
+            await flushPromises();
+        });
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
         const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "123456789123" } });
 
-        // Assert that the button is enabled after input
         expect(disableUACButton).toBeEnabled();
     });
 
-    it("Disable UAC button remains disabled if text field is not 12 digits long", async () => {
+    it("disable UAC button remains disabled if text field is not 12 digits long", async () => {
 
-        render(<DisableUac />);
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByRole } = render(<RouterProvider router={router} />);
+
         await act(async () => {
             await flushPromises();
         });
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
         const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "12345678912" } });
 
-        // Assert that the button is enabled after input
         expect(disableUACButton).toBeDisabled();
     });
 
-    it("Disable UAC button remains disabled if text field contains alphabets", async () => {
+    it("disable UAC button remains disabled if text field contains alphabets", async () => {
 
-        render(<DisableUac />);
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByRole } = render(<RouterProvider router={router} />);
+
         await act(async () => {
             await flushPromises();
         });
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
 
         const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: "12345678912a" } });
 
-        // Assert that the button is enabled after input
         expect(disableUACButton).toBeDisabled();
     });
 
     it("correctly shows the message to the user if length of uac exceeds and keeps the button disabled", async () => {
 
-        const { getByText } = render(<DisableUac />);
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByText, getByRole } = render(<RouterProvider router={router} />);
+
         await act(async () => {
             await flushPromises();
         });
@@ -110,13 +170,19 @@ describe("Disable UAC page works as expected", async () => {
 
         expect(getByText("The UAC input needs to be 12 digits long")).toBeDefined();
 
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
     });
 
     it("correctly shows the message to the user if user enters alphabet and keeps the button disabled", async () => {
 
-        const { getByText } = render(<DisableUac />);
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByText, getByRole } = render(<RouterProvider router={router} />);
+
         await act(async () => {
             await flushPromises();
         });
@@ -127,15 +193,21 @@ describe("Disable UAC page works as expected", async () => {
 
         expect(getByText("The UAC input can only contain digits")).toBeDefined();
 
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         expect(disableUACButton).toBeDisabled();
     });
 
-    it("Navigates correctly to the right url i-e, Confirmation screen on clicking disable UAC button", async () => {
+    it("navigates correctly to the right url i-e, Confirmation screen on clicking disable UAC button", async () => {
 
         (useNavigate as jest.Mock).mockReturnValue(navigate);
 
-        render(<DisableUac />);
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByRole } = render(<RouterProvider router={router} />);
+
         await act(async () => {
             await flushPromises();
         });
@@ -144,9 +216,90 @@ describe("Disable UAC page works as expected", async () => {
         const uacInput = screen.getByPlaceholderText("Enter 12 digit UAC");
         fireEvent.change(uacInput, { target: { value: uac } });
 
-        const disableUACButton = screen.getByRole("button", { name: "Disable UAC" });
+        const disableUACButton = getByRole("button", { name: "Disable UAC" });
         fireEvent.click(disableUACButton);
 
         expect(navigate).toHaveBeenCalledWith(`/disableUacConfirmation/${uac}`);
     });
+
+});
+
+describe("Disable UAC page correctly displays Response from API call to disable UAC", async () => {
+
+    beforeEach(() => {
+        navigate = jest.fn();
+    });
+
+    MockAuthenticate.OverrideReturnValues(null, true);
+
+    const disabledComponentStateWithSuccessDisableReponse = {
+        disabledUac: "100461197284",
+        responseCode: 200
+    };
+
+    const disabledComponentStateWithErrorDisableReponse = {
+        disabledUac: "100461197282",
+        responseCode: 500
+    };
+
+    it("displays the Success Panel for disabling the UAC on landing in Disable UAC view if returned from DisableConfirmationComponent", async () => {
+
+        const routes = [
+            {
+                path: "/manageUac/disabled",
+                element: <DisableUac />,
+            },
+        ];
+
+        const initialEntries = [
+            {
+                pathname: "/manageUac/disabled",
+                state: disabledComponentStateWithSuccessDisableReponse,
+            },
+        ];
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByText } = render(<RouterProvider router={router} />);
+
+        await act(async () => {
+            await flushPromises();
+        });
+
+        expect(getByText(`Successfully disabled the UAC ${disabledComponentStateWithSuccessDisableReponse.disabledUac}`)).toBeDefined();
+
+    });
+
+    it("displays the Error Panel for disabling the UAC on landing in Disable UAC view if returned from DisableConfirmationComponent", async () => {
+
+        const routes = [
+            {
+                path: "/manageUac/disabled",
+                element: <DisableUac />,
+            },
+        ];
+
+        const initialEntries = [
+            {
+                pathname: "/manageUac/disabled",
+                state: disabledComponentStateWithErrorDisableReponse,
+            },
+        ];
+        const router = createMemoryRouter(routes, {
+            initialEntries,
+            initialIndex: 0,
+        });
+
+        const { getByText } = render(<RouterProvider router={router} />);
+
+        await act(async () => {
+            await flushPromises();
+        });
+
+        expect(getByText(`Some error occured on disabling the UAC ${disabledComponentStateWithErrorDisableReponse.disabledUac}`)).toBeDefined();
+
+    });
+
 });

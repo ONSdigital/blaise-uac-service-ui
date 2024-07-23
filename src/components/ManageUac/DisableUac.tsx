@@ -1,8 +1,16 @@
 import React, { ReactElement, useState } from "react";
 import { ONSButton, ONSPanel, ONSTextInput } from "blaise-design-system-react-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
+interface Location {
+    disabledUac: string;
+    responseCode: number;
+}
 
 function DisableUac(): ReactElement {
+
+    const location = useLocation().state as Location;
+    const { disabledUac, responseCode } = location || { disabledUac: "", responseCode: 0 };
 
     const [uac, setUac] = useState("");
     const [error, setError] = useState<string>("");
@@ -11,6 +19,7 @@ function DisableUac(): ReactElement {
     const navigate = useNavigate();
 
     const handleChangeInUAC = (event: React.ChangeEvent<HTMLInputElement>) => {
+
         const uacVal = event.target.value;
 
         if (uacVal.length < 12 || uacVal.length > 12) {
@@ -37,7 +46,24 @@ function DisableUac(): ReactElement {
     return (
         <>
             <main id="main-content" className="ons-page__main ons-u-mt-no">
+                {
+                    responseCode == 200 &&
+                    <ONSPanel status="success" bigIcon={true}>
+                        <h1>
+                            Successfully disabled the UAC {disabledUac}
+                        </h1>
+                    </ONSPanel>
+                }
+                {responseCode == 500 && <ONSPanel status="error">
+                    <h1>
+                        Some error occured on disabling the UAC {disabledUac}
+                    </h1>
+                    <p>
+                        When reporting this issue to the Service Desk, please provide the questionnaire name, uac and the time of failure.
+                    </p>
+                </ONSPanel>
 
+                }
                 {error && <ONSPanel spacious={true} status={"error"}>{error}</ONSPanel>}
                 <ONSTextInput
                     autoFocus={true}

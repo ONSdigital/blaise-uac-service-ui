@@ -49,18 +49,22 @@ describe("Disable Confirmation component loads correctly and receives the passed
 describe("Disable Confirmation component correctly displays messages when user takes action", () => {
 
     const mockedUseParams = useParams as jest.Mock;
+
+    navigate = jest.fn();
+    (useNavigate as jest.Mock).mockReturnValue(navigate);
+
     afterEach(() => {
         mock.reset();
     });
 
-    it("correctly displays Success Message when User clicks Continue button and api returns Success", async () => {
+    it("correctly navigates to DisableUac Component when User clicks Continue button and api returns Success", async () => {
 
         const uac = "123456789123";
         mockedUseParams.mockReturnValue({ uac: uac });
 
         mock.onGet(`/api/v1/disableUac/${uac}`).reply(200, "Success");
 
-        const { getByText, getByRole } = render(
+        const { getByRole } = render(
             <MemoryRouter>
                 <DisableUacConfirmation />
             </MemoryRouter>
@@ -75,18 +79,23 @@ describe("Disable Confirmation component correctly displays messages when user t
         await act(async () => {
             await flushPromises();
         });
-        const expectedSuccessMessageText = `Successfully disabled the UAC ${uac}`;
-        expect(getByText(expectedSuccessMessageText)).toBeInTheDocument();
+
+        expect(navigate).toHaveBeenCalledWith("/manageUac/disable", {
+            state: {
+                disabledUac: uac,
+                responseCode: 200
+            },
+        });
     });
 
-    it("correctly displays Error Message when User clicks Continue button and api returns Error ", async () => {
+    it("correctly navigates to DisableUac Component when User clicks Continue button and api returns Error ", async () => {
 
         const uac = "123456789123";
         mockedUseParams.mockReturnValue({ uac: uac });
 
         mock.onGet(`/api/v1/disableUac/${uac}`).reply(500, `Disabling UAC: ${uac} failed`);
 
-        const { getByText, getByRole } = render(
+        const { getByRole } = render(
             <MemoryRouter>
                 <DisableUacConfirmation />
             </MemoryRouter>
@@ -101,8 +110,12 @@ describe("Disable Confirmation component correctly displays messages when user t
         await act(async () => {
             await flushPromises();
         });
-        const expectedErrorMessageText = `Some error occured on disabling the UAC ${uac}`;
-        expect(getByText(expectedErrorMessageText)).toBeInTheDocument();
+        expect(navigate).toHaveBeenCalledWith("/manageUac/disable", {
+            state: {
+                disabledUac: uac,
+                responseCode: 500
+            },
+        });
     });
 
     it("correctly navigates back if user clicks Cancel ", async () => {
