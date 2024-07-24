@@ -17,6 +17,7 @@ describe("Config setup", () => {
         expect(config.Roles).toStrictEqual(["MockRole1", "MockRole2", "MockRole3"]);
         expect(config.SessionTimeout).toBe("SessionTimeout-mock");
         expect(config.SessionSecret).toBe("SessionSecret-mock");
+        expect(config.ServerPark).toBe("ServerPark-mock");
     });
 
     it("should return variables with default string if variables are not defined", () => {
@@ -28,7 +29,8 @@ describe("Config setup", () => {
             BLAISE_API_URL: undefined,
             ROLES: undefined,
             SESSION_TIMEOUT: undefined,
-            SESSION_SECRET: undefined
+            SESSION_SECRET: undefined,
+            SERVER_PARK: undefined,
 
         });
 
@@ -42,5 +44,6 @@ describe("Config setup", () => {
         expect(config.Roles).toStrictEqual(["DST", "BDSS", "Researcher"]);
         expect(config.SessionTimeout).toBe("12h");
         expect(config.SessionSecret).toHaveLength(40);
+        expect(config.ServerPark).toBe("ENV_VAR_NOT_SET");
     });
 });

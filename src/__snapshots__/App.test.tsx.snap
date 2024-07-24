@@ -165,6 +165,26 @@ Object {
                   Upload used UACs
                 </a>
               </li>
+              <li
+                class="ons-list__item"
+              >
+                <a
+                  href="/manageUac/disable"
+                  id="manage-uacs-link"
+                >
+                  Disable UAC
+                </a>
+              </li>
+              <li
+                class="ons-list__item"
+              >
+                <a
+                  href="/manageUac/enable"
+                  id="manage-uacs-link"
+                >
+                  Enable UAC
+                </a>
+              </li>
             </ul>
             <h2
               class="ons-u-mt-m"
@@ -492,6 +512,26 @@ Object {
                 id="import-uacs-link"
               >
                 Upload used UACs
+              </a>
+            </li>
+            <li
+              class="ons-list__item"
+            >
+              <a
+                href="/manageUac/disable"
+                id="manage-uacs-link"
+              >
+                Disable UAC
+              </a>
+            </li>
+            <li
+              class="ons-list__item"
+            >
+              <a
+                href="/manageUac/enable"
+                id="manage-uacs-link"
+              >
+                Enable UAC
               </a>
             </li>
           </ul>

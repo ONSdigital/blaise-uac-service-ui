@@ -8,6 +8,10 @@ import InstrumentListPage from "./components/InstrumentList/InstrumentListPage";
 import { isProduction } from "./client/env";
 import { User } from "blaise-api-node-client";
 import { Authenticate } from "blaise-login-react/blaise-login-react-client";
+import ManageUacPage from "./components/ManageUac/ManageUacPage";
+import EnableUacTable from "./components/ManageUac/EnableUacTable";
+import ReEnableUacConfirmation from "./components/ManageUac/ReEnableUacConfirmation";
+import DisableUacConfirmation from "./components/ManageUac/DisableUacConfirmation";
 
 const divStyle = {
     minHeight: "calc(67vh)"
@@ -22,6 +26,10 @@ function App(): ReactElement {
                     <Routes>
                         <Route path="/upload" element={<UploadSamplePage />} />
                         <Route path="/import" element={<ImportUacPage />} />
+                        <Route path="/manageUac/:action" element={<ManageUacPage />} />
+                        <Route path="/listDisabledUacs" element={<EnableUacTable />} />
+                        <Route path="/reEnableUacConfirmation" element={<ReEnableUacConfirmation />} />
+                        <Route path="/disableUacConfirmation/:uac" element={<DisableUacConfirmation />} />
                         <Route path="/app" element={<AppContent loggedIn={loggedIn} user={user} />} />
                         <Route path="/" element={
                             <>
@@ -34,6 +42,16 @@ function App(): ReactElement {
                                     <li className="ons-list__item">
                                         <Link to="/import" id="import-uacs-link">
                                             Upload used UACs
+                                        </Link>
+                                    </li>
+                                    <li className="ons-list__item">
+                                        <Link to="/manageUac/disable" id="manage-uacs-link">
+                                            Disable UAC
+                                        </Link>
+                                    </li>
+                                    <li className="ons-list__item">
+                                        <Link to="/manageUac/enable" id="manage-uacs-link">
+                                            Enable UAC
                                         </Link>
                                     </li>
                                 </ul>

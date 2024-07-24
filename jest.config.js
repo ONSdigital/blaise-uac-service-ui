@@ -13,4 +13,5 @@ process.env = Object.assign(process.env, {
     ROLES: ["MockRole1", "MockRole2", "MockRole3"],
     SESSION_TIMEOUT: "SessionTimeout-mock",
     SESSION_SECRET: "SessionSecret-mock",
+    SERVER_PARK: "ServerPark-mock",
 });
