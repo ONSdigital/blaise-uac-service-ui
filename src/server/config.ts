@@ -5,6 +5,7 @@ import { AuthConfig } from "blaise-login-react/blaise-login-react-server";
 export interface Config extends AuthConfig {
     ProjectID: string,
     BucketName: string,
+    ServerPark: string,
     BusApiUrl: string,
     BusClientId: string,
     BlaiseApiUrl: string
@@ -15,7 +16,7 @@ export function GetConfigFromEnv(): Config {
         dotenv.config({ path: __dirname + "/../.env" });
     }
 
-    let { PROJECT_ID, BUCKET_NAME, BUS_API_URL, BUS_CLIENT_ID, BLAISE_API_URL, SESSION_TIMEOUT } = process.env;
+    let { PROJECT_ID, BUCKET_NAME, SERVER_PARK, BUS_API_URL, BUS_CLIENT_ID, BLAISE_API_URL, SESSION_TIMEOUT } = process.env;
     const { ROLES, SESSION_SECRET } = process.env;
 
     if (PROJECT_ID === undefined) {
@@ -26,6 +27,11 @@ export function GetConfigFromEnv(): Config {
     if (BUCKET_NAME === undefined) {
         console.error("BUCKET_NAME environment variable has not been set");
         BUCKET_NAME = "ENV_VAR_NOT_SET";
+    }
+
+    if (SERVER_PARK === undefined) {
+        console.error("SERVER_PARK environment variable has not been set");
+        SERVER_PARK = "ENV_VAR_NOT_SET";
     }
 
     if (BUS_API_URL === undefined) {
@@ -51,6 +57,7 @@ export function GetConfigFromEnv(): Config {
     return {
         ProjectID: PROJECT_ID,
         BucketName: BUCKET_NAME,
+        ServerPark: SERVER_PARK,
         BusApiUrl: BUS_API_URL,
         BusClientId: BUS_CLIENT_ID,
         BlaiseApiUrl: BLAISE_API_URL,

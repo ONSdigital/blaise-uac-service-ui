@@ -62,7 +62,7 @@ describe("React homepage", () => {
 
     it("should render correctly", async () => {
         MockAuthenticate.OverrideReturnValues(user, true);
-        let queryByText:any;
+        let queryByText: any;
 
         await act(async () => {
             const renderResult = render(<App />, { wrapper: MemoryRouter });
@@ -83,6 +83,21 @@ describe("React homepage", () => {
         const { queryByText } = render(<App />, { wrapper: Router });
         await waitFor(() => {
             expect(queryByText(/This environment is not a production environment. Do not upload any live data to this service./i)).not.toBeInTheDocument();
+        });
+    });
+
+    it("should show Links to manage UACs i-e, Disable UAC and Enable UAC", async () => {
+        MockAuthenticate.OverrideReturnValues(user, true);
+        let getByText: any;
+
+        await act(async () => {
+            const renderResult = render(<App />, { wrapper: MemoryRouter });
+            getByText = renderResult.getByText;
+        });
+
+        await waitFor(() => {
+            expect(getByText("Disable UAC")).toBeDefined();
+            expect(getByText("Enable UAC")).toBeDefined();
         });
     });
 });
