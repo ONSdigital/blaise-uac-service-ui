@@ -69,7 +69,7 @@ export function GetConfigFromEnv(): Config {
 
 function loadRoles(roles: string | undefined): string[] {
     if (!roles || roles === "" || roles === "_ROLES") {
-        return ["DST", "BDSS", "Researcher", "Survey Researcher"];
+        return ["DST", "BDSS", "Researcher"];
     }
     return roles.split(",");
 }
