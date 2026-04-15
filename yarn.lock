@@ -4101,9 +4101,9 @@ bl@^4.0.3, bl@^4.1.0:
   version "0.0.0"
   resolved "git+https://github.com/ONSdigital/blaise-login-react#bcd5173cf31a61088ed050e2a1b0c274ef2c920f"
 
-"blaise-uac-service-node-client@https://github.com/ONSdigital/blaise-uac-service-node-client#dependabot/npm_and_yarn/npm_and_yarn-85af2c71bb":
+"blaise-uac-service-node-client@https://github.com/ONSdigital/blaise-uac-service-node-client#main":
   version "1.0.0"
-  resolved "https://github.com/ONSdigital/blaise-uac-service-node-client#b2924cd82b32d9c06969bfa9c2f63ba7bb2abc7a"
+  resolved "https://github.com/ONSdigital/blaise-uac-service-node-client#86a37c12a5b697cfee87baaec9216e128dd3b687"
   dependencies:
     "@babel/preset-env" "^7.14.7"
     "@types/jsonwebtoken" "^8.5.5"
