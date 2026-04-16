@@ -4101,7 +4101,7 @@ bl@^4.0.3, bl@^4.1.0:
   version "0.0.0"
   resolved "git+https://github.com/ONSdigital/blaise-login-react#bcd5173cf31a61088ed050e2a1b0c274ef2c920f"
 
-"blaise-uac-service-node-client@https://github.com/ONSdigital/blaise-uac-service-node-client#main":
+"blaise-uac-service-node-client@https://github.com/ONSdigital/blaise-uac-service-node-client#3.0.0":
   version "1.0.0"
   resolved "https://github.com/ONSdigital/blaise-uac-service-node-client#86a37c12a5b697cfee87baaec9216e128dd3b687"
   dependencies:
