@@ -37,6 +37,16 @@ vi.mock("blaise-login-react-server", async (importOriginal) => {
 describe("All expected routes are registered", () => {
   const expectedEndpoints = [
     {
+      methods: ["GET"],
+      middlewares: ["renderClientIndex"],
+      path: "/",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["renderClientIndex"],
+      path: "/index.html",
+    },
+    {
       methods: ["POST"],
       middlewares: ["middleware", "multerMiddleware", "generateUacsForSampleFile"],
       path: "/api/v1/questionnaire/:questionnaireName/uac/sample",
@@ -85,7 +95,7 @@ describe("All expected routes are registered", () => {
       middlewares: ["middleware", "getQuestionnaires"],
       path: "/api/v1/questionnaires",
     },
-    { methods: ["GET"], middlewares: ["anonymous"], path: "/{*path}" },
+    { methods: ["GET"], middlewares: ["renderClientIndex"], path: "/{*path}" },
   ];
 
   it("should contain all expected routes", async () => {

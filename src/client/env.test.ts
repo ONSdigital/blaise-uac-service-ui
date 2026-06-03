@@ -139,7 +139,7 @@ describe("getSharedAuthOptions", () => {
 
   afterEach(() => {
     vi.resetModules();
-    vi.unmock("blaise-login-react-client");
+    vi.doUnmock("blaise-login-react-client");
     vi.unstubAllEnvs();
     removeAppConfig();
     setDefaultAppConfig();
