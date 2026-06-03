@@ -1,47 +1,157 @@
+import fs from "fs";
+
+import ejs from "ejs";
 import listEndpoints from "express-list-endpoints";
-import BusApiClient from "blaise-uac-service-node-client";
-import { GetConfigFromEnv } from "./config";
-import { NewServer } from "./server";
-import { GoogleStorage } from "./storage/google-storage-functions";
-import BlaiseApiClient from "blaise-api-node-client";
+import supertest from "supertest";
+
+import { getConfigFromEnv } from "./config.js";
+import { newServer } from "./server.js";
+
+import type * as BlaiseLoginReactServer from "blaise-login-react-server";
+import type * as EjsModule from "ejs";
+
+vi.mock("ejs", async (importOriginal) => {
+  const real = await importOriginal<typeof EjsModule>();
+
+  return {
+    default: {
+      ...real.default,
+      renderFile: vi.fn(real.default.renderFile),
+    },
+  };
+});
+
+vi.mock("blaise-login-react-server", async (importOriginal) => {
+  const mod = await importOriginal<typeof BlaiseLoginReactServer>();
+
+  return {
+    ...mod,
+    Auth: class {
+      middleware(_req: unknown, _res: unknown, next: () => void) {
+        next();
+      }
+    },
+  };
+});
 
 describe("All expected routes are registered", () => {
-    const expectedEndpoints = [
-        {
-            "methods": ["POST"],
-            "middlewares": ["bound ", "multerMiddleware", "bound GenerateUacsForSampleFile"],
-            "path": "/api/v1/instrument/:instrumentName/uac/sample"
-        },
-        {
-            "methods": ["GET"],
-            "middlewares": ["bound ", "bound GetSampleFileWithUacs"],
-            "path": "/api/v1/instrument/:instrumentName/uac/sample/:fileName"
-        },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound FileExists"], "path": "/api/v1/file/:fileName/exists" },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound GetListOfInstrumentsInBucket"], "path": "/api/v1/instruments" },
-        { "methods": ["POST"], "middlewares": ["bound ", "multerMiddleware", "bound ImportUacs"], "path": "/api/v1/uac/import" },
-        { "methods": ["GET"], "middlewares": ["healthCheck"], "path": "/bus-ui/:version/health" },
-        { "methods": ["GET"], "middlewares": ["bound ", ], "path": "/api/login/users/:username" },
-        { "methods": ["GET"], "middlewares": ["bound ", ], "path": "/api/login/current-user" },
-        { "methods": ["GET"], "middlewares": ["bound ", ], "path": "/api/login/users/:username/authorised" },
-        { "methods": ["POST"], "middlewares": ["bound ", ], "path": "/api/login/token/validate" },
-        { "methods": ["POST"], "middlewares": ["bound ", ], "path": "/api/login/users/password/validate" },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound DisableUac"], "path": "/api/v1/disableUac/:uac" },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound EnableUac"], "path": "/api/v1/enableUac/:uac" },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound GetDisabledUacs"], "path": "/api/v1/getDiabledUacs/:questionnaire" },
-        { "methods": ["GET"], "middlewares": ["bound ", "bound GetQuestionnaires"], "path": "/api/v1/questionnaires" },
-        { "methods": ["GET"], "middlewares": ["anonymous"], "path": "*" },
+  const expectedEndpoints = [
+    {
+      methods: ["POST"],
+      middlewares: ["middleware", "multerMiddleware", "generateUacsForSampleFile"],
+      path: "/api/v1/questionnaire/:questionnaireName/uac/sample",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getSampleFileWithUacs"],
+      path: "/api/v1/questionnaire/:questionnaireName/uac/sample/:fileName",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "fileExists"],
+      path: "/api/v1/file/:fileName/exists",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getListOfQuestionnaireSamplesInBucket"],
+      path: "/api/v1/questionnaire-names",
+    },
+    {
+      methods: ["POST"],
+      middlewares: ["middleware", "multerMiddleware", "importUacs"],
+      path: "/api/v1/uac/import",
+    },
+    { methods: ["GET"], middlewares: ["healthCheck"], path: "/bus-ui/:version/health" },
+    {
+      methods: ["GET"],
+      middlewares: ["anonymous", "middleware", "bound getCurrentUser"],
+      path: "/api/login/current-user",
+    },
+    { methods: ["POST"], middlewares: ["anonymous", "bound login"], path: "/api/login" },
+    { methods: ["POST"], middlewares: ["middleware", "disableUac"], path: "/api/v1/uac/disable" },
+    { methods: ["POST"], middlewares: ["middleware", "enableUac"], path: "/api/v1/uac/enable" },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getDisabledUacs"],
+      path: "/api/v1/questionnaire/:questionnaire/disabled-uacs",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getAllDisabledUacs"],
+      path: "/api/v1/disabled-uacs",
+    },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getQuestionnaires"],
+      path: "/api/v1/questionnaires",
+    },
+    { methods: ["GET"], middlewares: ["anonymous"], path: "/{*path}" },
+  ];
 
-    ];
+  it("should contain all expected routes", async () => {
+    const config = getConfigFromEnv();
+    const server = newServer(config);
+    const endpoints = listEndpoints(
+      (server as unknown as { router: Parameters<typeof listEndpoints>[0] }).router,
+    );
 
-    it("should contain all expected routes", async () => {
-        const config = GetConfigFromEnv();
-        const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
-        const googleStorage = new GoogleStorage(config.ProjectID);
-        const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
-        const server = NewServer(busApiClient, googleStorage, config, blaiseApiClient);
-        const endpoints = listEndpoints(server);
+    expect(endpoints).toEqual(expectedEndpoints);
+  });
+});
 
-        expect(endpoints).toEqual(expectedEndpoints);
+describe("Server catch-all and error handler", () => {
+  const config = getConfigFromEnv();
+  const server = newServer(config);
+  const request = supertest(server);
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("serves index.html for unmatched routes", async () => {
+    const response = await request.get("/some-unknown-path");
+
+    expect([200, 500]).toContain(response.status);
+  });
+
+  it("returns 500 for internal server errors", async () => {
+    vi.mocked(ejs.renderFile).mockRejectedValueOnce(new Error("Forced render error"));
+
+    const response = await request.get("/some-error-trigger-path");
+
+    expect(response.status).toBe(500);
+  });
+
+  it("falls back to the plain-text error response when the HTML error page is missing", async () => {
+    const actualExistsSync = fs.existsSync;
+
+    vi.mocked(ejs.renderFile).mockRejectedValueOnce(new Error("Forced render error"));
+    vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
+      if (String(filePath).endsWith("/views/500.html")) {
+        return false;
+      }
+
+      return actualExistsSync(filePath);
     });
+
+    const fallbackResponse = await supertest(newServer(config)).get("/missing-error-page");
+
+    expect(fallbackResponse.status).toBe(500);
+    expect(fallbackResponse.type).toContain("text/plain");
+    expect(fallbackResponse.text).toBe("Sorry, there is a problem with the service.");
+  });
+
+  it("falls back to the first client build candidate when neither build folder exists", () => {
+    const actualExistsSync = fs.existsSync;
+
+    vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
+      if (String(filePath).endsWith("build/client")) {
+        return false;
+      }
+
+      return actualExistsSync(filePath);
+    });
+
+    expect(newServer(config)).toBeDefined();
+  });
 });

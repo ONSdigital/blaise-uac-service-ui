@@ -1,12 +1,13 @@
-import { AxiosRequestConfig } from "axios";
-import { AuthManager } from "blaise-login-react/blaise-login-react-client";
+import { AuthManager } from "blaise-login-react-client";
+
+import { getSharedAuthOptions } from "./env";
+
+import type { AxiosRequestConfig } from "axios";
+
+const authManager = new AuthManager(getSharedAuthOptions());
 
 export default function axiosConfig(): AxiosRequestConfig {
-    const authManager = new AuthManager();
-    return {
-        headers: {
-            "Content-Type": "application/json",
-            ...authManager.authHeader()
-        }
-    };
+  return {
+    headers: authManager.authHeader(),
+  };
 }
