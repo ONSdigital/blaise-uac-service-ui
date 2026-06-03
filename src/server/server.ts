@@ -43,11 +43,27 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   const loginHandler = newLoginHandler(auth, blaiseApiClient);
 
   const clientBuildFolder = resolveClientBuildFolder();
+  const renderClientIndex = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const html = await ejs.renderFile(path.join(clientBuildFolder, "index.html"), {
+        appConfigJson: JSON.stringify({
+          projectId: config.projectId,
+          urlDomain: config.urlDomain,
+        }).replace(/</g, "\\u003c"),
+      });
+
+      res.send(html);
+    } catch (err) {
+      next(err);
+    }
+  };
 
   server.use(logger);
 
   server.use("/assets", express.static(path.join(clientBuildFolder, "assets")));
-  server.use(express.static(clientBuildFolder));
+  server.get("/", renderClientIndex);
+  server.get("/index.html", renderClientIndex);
+  server.use(express.static(clientBuildFolder, { index: false }));
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
@@ -62,20 +78,7 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   server.use("/", createUacHandler(busClient, auth, blaiseApiClient, config.serverPark));
   server.use("/", createBlaiseHandler(blaiseApiClient, config.serverPark, auth));
 
-  server.get("/{*path}", async function (req: Request, res: Response, next: NextFunction) {
-    try {
-      const html = await ejs.renderFile(path.join(clientBuildFolder, "index.html"), {
-        appConfigJson: JSON.stringify({
-          projectId: config.projectId,
-          urlDomain: config.urlDomain,
-        }).replace(/</g, "\\u003c"),
-      });
-
-      res.send(html);
-    } catch (err) {
-      next(err);
-    }
-  });
+  server.get("/{*path}", renderClientIndex);
 
   server.use(function (err: Error, req: Request, res: Response, _next: NextFunction) {
     req.log.error(err, err.message);
