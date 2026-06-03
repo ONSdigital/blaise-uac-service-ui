@@ -11,8 +11,10 @@ globalWithActEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
 configure({ asyncUtilTimeout: 5000 });
 
 const appConfigElementId = "app-config";
+
 if (!document.getElementById(appConfigElementId)) {
   const configElement = document.createElement("script");
+
   configElement.id = appConfigElementId;
   configElement.type = "application/json";
   configElement.textContent = JSON.stringify({

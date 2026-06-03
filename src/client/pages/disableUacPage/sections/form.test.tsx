@@ -210,12 +210,12 @@ describe("Disable UAC page correctly displays Response from API call to disable 
     navigate = vi.fn();
   });
 
-  const disabledComponentStateWithSuccessDisableReponse: DisableUacResultState = {
+  const disabledComponentStateWithSuccessDisableResponse: DisableUacResultState = {
     disabledUac: "100461197284",
     responseCode: 200,
   };
 
-  const disabledComponentStateWithErrorDisableReponse: DisableUacResultState = {
+  const disabledComponentStateWithErrorDisableResponse: DisableUacResultState = {
     disabledUac: "100461197282",
     responseCode: 500,
   };
@@ -223,7 +223,7 @@ describe("Disable UAC page correctly displays Response from API call to disable 
   it("displays the Success Panel for disabling the UAC on landing in Disable UAC view if returned from DisableConfirmationComponent", async () => {
     const { getByText } = render(
       <MemoryRouter>
-        <Form resultState={disabledComponentStateWithSuccessDisableReponse} />
+        <Form resultState={disabledComponentStateWithSuccessDisableResponse} />
       </MemoryRouter>,
     );
 
@@ -233,7 +233,7 @@ describe("Disable UAC page correctly displays Response from API call to disable 
 
     expect(
       getByText(
-        `UAC ${disabledComponentStateWithSuccessDisableReponse.disabledUac} has been disabled`,
+        `UAC ${disabledComponentStateWithSuccessDisableResponse.disabledUac} has been disabled`,
       ),
     ).toBeDefined();
   });
@@ -241,7 +241,7 @@ describe("Disable UAC page correctly displays Response from API call to disable 
   it("displays the Error Panel for disabling the UAC on landing in Disable UAC view if returned from DisableConfirmationComponent", async () => {
     const { getByText } = render(
       <MemoryRouter>
-        <Form resultState={disabledComponentStateWithErrorDisableReponse} />
+        <Form resultState={disabledComponentStateWithErrorDisableResponse} />
       </MemoryRouter>,
     );
 
@@ -251,7 +251,7 @@ describe("Disable UAC page correctly displays Response from API call to disable 
 
     expect(
       getByText(
-        `Failed to disable UAC ${disabledComponentStateWithErrorDisableReponse.disabledUac}`,
+        `Failed to disable UAC ${disabledComponentStateWithErrorDisableResponse.disabledUac}`,
       ),
     ).toBeDefined();
   });

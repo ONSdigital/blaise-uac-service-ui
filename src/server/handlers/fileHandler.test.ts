@@ -66,7 +66,7 @@ describe("file-exists-handler tests", () => {
   });
 
   it("It should return a 400 response for an invalid filename", async () => {
-    const response: Response = await request.get("/api/v1/file/notafile.txt/exists");
+    const response: Response = await request.get("/api/v1/file/troodon.txt/exists");
 
     expect(response.status).toEqual(400);
     expect(fileExistsInBucketMock).not.toHaveBeenCalled();

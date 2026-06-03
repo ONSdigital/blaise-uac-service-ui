@@ -5,9 +5,9 @@ import {
   disableUac,
   enableUac,
   generateUacsForSampleFile,
+  getFileName,
   getListOfQuestionnairesWithExistingSampleFiles,
   getSampleFileWithUacs,
-  getFileName,
   importUacsFromFile,
   sampleFileAlreadyExists,
 } from "./fileFunctions";

@@ -286,7 +286,7 @@ describe("get uacs for sample file tests", () => {
     const req = mockReqWithLog();
 
     req.params.questionnaireName = questionnaireName;
-    req.params.fileName = "notafile.txt";
+    req.params.fileName = "troodon.txt";
     const questionnaireUacHandler = new QuestionnaireUacHandler(
       busClientMock,
       googleStorageMock,

@@ -8,6 +8,7 @@ function removeAppConfig(): void {
 
 function setAppConfig(config: unknown): void {
   const configElement = document.createElement("script");
+
   configElement.id = appConfigElementId;
   configElement.type = "application/json";
   configElement.textContent = JSON.stringify(config);
@@ -16,6 +17,7 @@ function setAppConfig(config: unknown): void {
 
 function setRawAppConfig(rawConfig: string): void {
   const configElement = document.createElement("script");
+
   configElement.id = appConfigElementId;
   configElement.type = "application/json";
   configElement.textContent = rawConfig;
@@ -57,6 +59,7 @@ describe("isProduction", () => {
     "check whether a hostname is production",
     async ({ hostname, expected }) => {
       const { isProduction } = await import("./env");
+
       expect(isProduction(hostname)).toEqual(expected as boolean);
     },
   );
