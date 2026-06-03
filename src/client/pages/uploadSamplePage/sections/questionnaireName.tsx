@@ -40,17 +40,12 @@ function QuestionnaireName(props: SelectFilePageProps): ReactElement {
             {({ field: formikField, meta }: FieldProps) => (
               <div className="ons-field">
                 {meta.error && (
-                  <div
-                    className="ons-panel ons-panel--error ons-panel--no-title"
+                  <Panel
+                    status="error"
                     id="questionnaire-name-error"
                   >
-                    <span className="ons-panel__assistive-text ons-u-vh">Error: </span>
-                    <div className="ons-panel__body">
-                      <p className="ons-panel__error">
-                        <strong>{meta.error}</strong>
-                      </p>
-                    </div>
-                  </div>
+                    <p>{meta.error}</p>
+                  </Panel>
                 )}
                 <TextInput
                   id="questionnaire-name-input"

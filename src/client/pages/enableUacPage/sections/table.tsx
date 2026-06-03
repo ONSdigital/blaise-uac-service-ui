@@ -1,6 +1,6 @@
-import { Table } from "blaise-design-system-react-components";
+import { Button, Table } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import type { QuestionnaireWithDisabledUacs } from "../../../questionnaire.types";
 
@@ -10,6 +10,7 @@ interface Props {
 
 function TableSection({ questionnaireWithDisabledUacs }: Props): ReactElement {
   const questionnaireName = questionnaireWithDisabledUacs.questionnaireName;
+  const navigate = useNavigate();
 
   const uacs = questionnaireWithDisabledUacs.disabledUacs.map((obj) => (
     <tr
@@ -20,14 +21,21 @@ function TableSection({ questionnaireWithDisabledUacs }: Props): ReactElement {
       <td className="ons-table__cell">{obj.case_id}</td>
       <td className="ons-table__cell">{obj.uac}</td>
       <td className="ons-table__cell">
-        <Link
-          to="/enable-uac"
-          state={{ step: "confirmation", questionnaireName, uac: obj.uac, case_id: obj.case_id }}
-          className="ons-breadcrumb__link"
-          aria-label={`Enable UAC ${obj.uac}`}
-        >
-          Enable UAC
-        </Link>
+        <Button
+          label="Enable UAC"
+          small={true}
+          primary={true}
+          onClick={() =>
+            navigate("/enable-uac", {
+              state: {
+                step: "confirmation",
+                questionnaireName,
+                uac: obj.uac,
+                case_id: obj.case_id,
+              },
+            })
+          }
+        />
       </td>
     </tr>
   ));

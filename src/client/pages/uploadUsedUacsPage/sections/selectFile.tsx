@@ -39,17 +39,12 @@ function SelectFile({
           </Panel>
           <div className="ons-field">
             {validationError && (
-              <div
-                className="ons-panel ons-panel--error ons-panel--no-title"
+              <Panel
+                status="error"
                 id="uac-selector-error"
               >
-                <span className="ons-panel__assistive-text ons-u-vh">Error: </span>
-                <div className="ons-panel__body">
-                  <p className="ons-panel__error">
-                    <strong>{validationError}</strong>
-                  </p>
-                </div>
-              </div>
+                <p>{validationError}</p>
+              </Panel>
             )}
             <Upload
               label="Select a UAC file"

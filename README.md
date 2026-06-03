@@ -26,7 +26,7 @@ yarn install
 
 ### Authenticate with Google Cloud (keyless)
 
-Use service account impersonation to auth with BIMS and BUS.
+Use service account impersonation to auth with BUS.
 
 ```shell
 gcloud auth login
@@ -48,21 +48,16 @@ Expected output includes `Listening on port [8080]`.
 
 Create a `.env` file in the repository root. You can find IAP client IDs from an existing deployment:
 
-- App Engine -> Versions -> `dqs-ui` -> View Config
+- App Engine -> Versions -> `bus-ui` -> View Config
 
 Example `.env` file:
 
 ```ini
-BIMS_API_URL=https://dev-sandbox123-bims.social-surveys.gcp.onsdigital.uk
-BIMS_CLIENT_ID=blah.apps.googleusercontent.com
 BLAISE_API_URL=localhost:8080
 BUCKET_NAME=ons-blaise-v2-dev-sandbox123-bus
 BUS_API_URL=https://dev-sandbox123-bus.social-surveys.gcp.onsdigital.uk
 BUS_CLIENT_ID=blah.apps.googleusercontent.com
-CREATE_DONOR_CASES_CLOUD_FUNCTION_URL=https://europe-west2-ons-blaise-v2-dev-sandbox123.cloudfunctions.net/create-donor-cases
-GET_USERS_BY_ROLE_CLOUD_FUNCTION_URL=https://europe-west2-ons-blaise-v2-dev-sandbox123.cloudfunctions.net/get-users-by-role
 PROJECT_ID=ons-blaise-v2-dev-sandbox123
-REISSUE_NEW_DONOR_CASE_CLOUD_FUNCTION_URL=https://europe-west2-ons-blaise-v2-dev-sandbox123.cloudfunctions.net/reissue-new-donor-case
 SERVER_PARK=gusty
 URL_DOMAIN=localhost
 SESSION_SECRET=blah

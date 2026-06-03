@@ -48,17 +48,12 @@ function SelectFile(props: SelectFilePageProps): ReactElement {
             {({ field: formikField, meta }: FieldProps) => (
               <>
                 {meta.error && (
-                  <div
-                    className="ons-panel ons-panel--error ons-panel--no-title"
+                  <Panel
+                    status="error"
                     id="sample-selector-error"
                   >
-                    <span className="ons-panel__assistive-text ons-u-vh">Error: </span>
-                    <div className="ons-panel__body">
-                      <p className="ons-panel__error">
-                        <strong>{meta.error}</strong>
-                      </p>
-                    </div>
-                  </div>
+                    <p>{meta.error}</p>
+                  </Panel>
                 )}
                 <Upload
                   label="Select a sample file"
