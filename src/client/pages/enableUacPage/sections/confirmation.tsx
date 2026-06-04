@@ -4,7 +4,7 @@ import { type ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { enableUac } from "../../../fileFunctions";
-import { DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
+import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
 import handleAuthRedirect from "../../shared/handleAuthRedirect";
 
 interface Props {
@@ -19,6 +19,8 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
   const enableUacMutation = useMutation({
     mutationFn: () => enableUac(uac),
     onSuccess: (success) => {
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
+
       if (success) {
         void queryClient.invalidateQueries({ queryKey: DISABLED_UACS_QUERY_KEY });
       }
@@ -37,6 +39,7 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
         return;
       }
 
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       navigate("/enable-uac", {
         state: { questionnaireName, uac, case_id, responseStatus: "error" },
       });

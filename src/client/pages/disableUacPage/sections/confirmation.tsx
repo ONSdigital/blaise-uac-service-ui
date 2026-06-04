@@ -4,7 +4,7 @@ import { type ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { disableUac } from "../../../fileFunctions";
-import { DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
+import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
 import handleAuthRedirect from "../../shared/handleAuthRedirect";
 
 interface Props {
@@ -17,6 +17,8 @@ function Confirmation({ uac }: Props): ReactElement {
   const disableUacMutation = useMutation({
     mutationFn: () => disableUac(uac),
     onSuccess: (success) => {
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
+
       if (success) {
         void queryClient.invalidateQueries({ queryKey: DISABLED_UACS_QUERY_KEY });
         navigate("/disable-uac", { state: { disabledUac: uac, responseCode: 200 } });
@@ -31,6 +33,7 @@ function Confirmation({ uac }: Props): ReactElement {
         return;
       }
 
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       navigate("/disable-uac", { state: { disabledUac: uac, responseCode: 500 } });
     },
   });

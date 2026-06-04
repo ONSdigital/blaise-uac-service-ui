@@ -85,7 +85,10 @@ export class QuestionnaireUacHandler {
       if (this.auth && this.auditLogger) {
         const username = getUsername(req, this.auth);
 
-        this.auditLogger.info(req.log, `${username} uploaded sample file ${file.originalname}`);
+        this.auditLogger.info(
+          req.log,
+          `${username} uploaded sample file ${file.originalname} for questionnaire ${normalisedQuestionnaireName}`,
+        );
       }
 
       return res.status(201).json("Success");
@@ -110,7 +113,7 @@ export class QuestionnaireUacHandler {
 
         this.auditLogger.error(
           req.log,
-          `${username} failed to upload sample file ${file.originalname}`,
+          `${username} failed to upload sample file ${file.originalname} for questionnaire ${normalisedQuestionnaireName}`,
         );
       }
 

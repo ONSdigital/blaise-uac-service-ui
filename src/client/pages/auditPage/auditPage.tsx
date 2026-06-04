@@ -9,6 +9,7 @@ import {
 import { type ReactElement } from "react";
 
 import { getAuditLogs } from "../../api/auditLogs";
+import { AUDIT_LOGS_QUERY_KEY } from "../../queryKeys";
 import { type AuditLog } from "../../utils/auditLog.types";
 
 function twoDigits(value: number): string {
@@ -39,7 +40,7 @@ function AuditPage(): ReactElement {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["auditLogs"],
+    queryKey: AUDIT_LOGS_QUERY_KEY,
     queryFn: getAuditLogs,
   });
 

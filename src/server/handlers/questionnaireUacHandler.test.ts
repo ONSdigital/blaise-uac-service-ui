@@ -427,7 +427,7 @@ describe("sample upload audit logging", () => {
 
     expect(auditLogger.info).toHaveBeenCalledWith(
       req.log,
-      "rich uploaded sample file originalNameTest",
+      "rich uploaded sample file originalNameTest for questionnaire DST1234A",
     );
     expect(auditLogger.error).not.toHaveBeenCalled();
   });
@@ -460,7 +460,7 @@ describe("sample upload audit logging", () => {
 
     expect(auditLogger.error).toHaveBeenCalledWith(
       req.log,
-      "rich failed to upload sample file originalNameTest",
+      "rich failed to upload sample file originalNameTest for questionnaire DST1234A",
     );
 
     mockClear();

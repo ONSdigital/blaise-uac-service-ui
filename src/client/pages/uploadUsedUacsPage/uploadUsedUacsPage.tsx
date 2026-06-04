@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "blaise-design-system-react-components";
 import { type ReactElement, useState } from "react";
 
 import { importUacsFromFile } from "../../fileFunctions";
+import { AUDIT_LOGS_QUERY_KEY } from "../../queryKeys";
 import handleAuthRedirect from "../shared/handleAuthRedirect";
 
 import SelectFile from "./sections/selectFile";
@@ -18,6 +19,7 @@ enum Step {
 }
 
 function UploadUsedUacs(): ReactElement {
+  const queryClient = useQueryClient();
   const [file, setFile] = useState<File>();
   const [error, setError] = useState<Error | AxiosError>();
   const [uacsImported, setUacsImported] = useState<number>();
@@ -26,6 +28,7 @@ function UploadUsedUacs(): ReactElement {
   const importUacsMutation = useMutation({
     mutationFn: (file: File) => importUacsFromFile(file),
     onSuccess: (count) => {
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       setUacsImported(count);
       setActiveStep(Step.UploadSuccessful);
     },
@@ -34,6 +37,7 @@ function UploadUsedUacs(): ReactElement {
         return;
       }
 
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       setError(err instanceof Error ? err : new Error(String(err)));
       setActiveStep(Step.UploadFailed);
     },

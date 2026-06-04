@@ -6,7 +6,7 @@ import { type ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { generateUacsForSampleFile, sampleFileAlreadyExists } from "../../fileFunctions";
-import { QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../queryKeys";
+import { AUDIT_LOGS_QUERY_KEY, QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../queryKeys";
 import handleAuthRedirect from "../shared/handleAuthRedirect";
 
 import ConfirmName from "./sections/confirmName";
@@ -45,6 +45,7 @@ function UploadSample(): ReactElement {
     }) => generateUacsForSampleFile(questionnaireName, file, overwrite),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: QUESTIONNAIRE_NAMES_QUERY_KEY });
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       setActiveStep(Step.DownloadFile);
     },
     onError: (error) => {
@@ -52,6 +53,7 @@ function UploadSample(): ReactElement {
         return;
       }
 
+      void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       setError(error instanceof Error ? error : new Error(String(error)));
       setActiveStep(Step.UploadFailed);
     },
