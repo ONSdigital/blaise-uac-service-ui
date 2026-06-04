@@ -281,7 +281,7 @@ describe("Upload Sample Page", () => {
       expect(screen.queryAllByText(`UACs generated for ${questionnaireName}`)).toHaveLength(1);
       expect(
         screen.queryAllByText(
-          "You can download the sample file with generated UACs appended from here or the home screen",
+          "You can download the sample file with generated UACs appended from here or the home screen.",
         ),
       ).toHaveLength(1);
     });

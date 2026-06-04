@@ -42,7 +42,7 @@ describe("DownloadUacFile", () => {
     expect(screen.getByText(`UACs generated for ${questionnaireName}`)).toBeInTheDocument();
     expect(
       screen.getByText(
-        "You can download the sample file with generated UACs appended from here or the home screen",
+        "You can download the sample file with generated UACs appended from here or the home screen.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Download" })).toBeInTheDocument();

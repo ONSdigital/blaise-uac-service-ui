@@ -25,7 +25,7 @@ function DownloadUacFile(props: DownloadUacPageProps): ReactElement {
       >
         <h1>UACs generated for {questionnaireName}</h1>
         <p>
-          You can download the sample file with generated UACs appended from here or the home screen
+          You can download the sample file with generated UACs appended from here or the home screen.
         </p>
         <CsvDownloader
           datas={downloadCsvFile}
