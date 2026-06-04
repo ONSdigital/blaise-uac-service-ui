@@ -37,11 +37,16 @@ function AuditPage(): ReactElement {
   const {
     data: auditLogs = [],
     isLoading,
+    isFetching,
     error,
     refetch,
   } = useQuery({
     queryKey: AUDIT_LOGS_QUERY_KEY,
     queryFn: getAuditLogs,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   let listError = "";
@@ -67,8 +72,8 @@ function AuditPage(): ReactElement {
         small={true}
       />
 
-      {isLoading && <LoadingPanel />}
-      {!isLoading && listError !== "" && (
+      {(isLoading || isFetching) && <LoadingPanel />}
+      {!isFetching && listError !== "" && (
         <Panel
           status={listError.includes("Unable") ? "error" : "info"}
           spacious={true}
@@ -76,7 +81,7 @@ function AuditPage(): ReactElement {
           {listError}
         </Panel>
       )}
-      {!isLoading && listError === "" && (
+      {!isFetching && listError === "" && (
         <ErrorBoundary errorMessageText={"Failed to get UAC history"}>
           <Table
             columns={["Date and time", "Information"]}

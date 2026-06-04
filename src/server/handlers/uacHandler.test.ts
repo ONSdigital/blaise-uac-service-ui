@@ -512,7 +512,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich enabled uac 123456789123",
+      "rich enabled UAC 123456789123",
     );
 
     (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -524,7 +524,7 @@ describe("uac audit logging", () => {
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      "rich failed to enable uac 123456789123",
+      "rich failed to enable UAC 123456789123",
     );
   });
 });

@@ -14,6 +14,11 @@ class AuditHandler {
   constructor(private readonly auditLogger: AuditLogger) {}
 
   getAuditInfo = async (req: Request, res: Response): Promise<Response> => {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+    res.set("Surrogate-Control", "no-store");
+
     try {
       const logs = await this.auditLogger.getLogs();
 

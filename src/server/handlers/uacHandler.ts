@@ -130,7 +130,7 @@ class UacHandler {
     try {
       await this.busClient.enableUac(uac);
       req.log.info("Successfully enabled UAC");
-      this.auditLogger?.info(req.log, `${username} enabled uac ${uac}`);
+      this.auditLogger?.info(req.log, `${username} enabled UAC ${uac}`);
 
       return res.status(200).json("Success");
     } catch (error: unknown) {
@@ -139,12 +139,12 @@ class UacHandler {
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
         req.log.info("Successfully enabled UAC");
-        this.auditLogger?.info(req.log, `${username} enabled uac ${uac}`);
+        this.auditLogger?.info(req.log, `${username} enabled UAC ${uac}`);
 
         return res.status(200).json("Success");
       }
 
-      this.auditLogger?.error(req.log, `${username} failed to enable uac ${uac}`);
+      this.auditLogger?.error(req.log, `${username} failed to enable UAC ${uac}`);
 
       req.log.error(error instanceof Error ? error : new Error(String(error)), "Enable UAC failed");
 
