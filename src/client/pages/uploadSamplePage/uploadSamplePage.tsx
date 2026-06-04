@@ -131,13 +131,11 @@ function UploadSample(): ReactElement {
 
         break;
       case Step.SelectFile:
-        await generateUacsMutation
-          .mutateAsync({
-            questionnaireName,
-            file,
-            overwrite: values["overwrite sample"] === "Yes",
-          })
-          .catch(() => undefined);
+        generateUacsMutation.mutate({
+          questionnaireName,
+          file,
+          overwrite: values["overwrite sample"] === "Yes",
+        });
 
         break;
       case Step.DownloadFile:

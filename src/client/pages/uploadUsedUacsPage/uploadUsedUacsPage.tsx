@@ -57,7 +57,7 @@ function UploadUsedUacs(): ReactElement {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     switch (activeStep) {
       case Step.SelectFile: {
@@ -74,7 +74,7 @@ function UploadUsedUacs(): ReactElement {
         }
 
         setValidationError(undefined);
-        await importUacsMutation.mutateAsync(file).catch(() => undefined);
+        importUacsMutation.mutate(file);
 
         break;
       }
@@ -92,7 +92,7 @@ function UploadUsedUacs(): ReactElement {
       <form
         id={"formID"}
         onSubmit={(e) => {
-          void handleSubmit(e);
+          handleSubmit(e);
         }}
       >
         <div>
