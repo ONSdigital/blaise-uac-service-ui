@@ -58,6 +58,11 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
     }
   };
 
+  const errorPagePath = path.resolve(__dirname, "./views/500.html");
+  const errorPageHtml = fs.existsSync(errorPagePath)
+    ? fs.readFileSync(errorPagePath, "utf-8")
+    : null;
+
   server.use(logger);
 
   server.use("/assets", express.static(path.join(clientBuildFolder, "assets")));
@@ -82,10 +87,8 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
 
   server.use(function (err: Error, req: Request, res: Response, _next: NextFunction) {
     req.log.error(err, err.message);
-    const errorPagePath = path.resolve(__dirname, "./views/500.html");
-
-    if (fs.existsSync(errorPagePath)) {
-      res.status(500).type("text/html").send(fs.readFileSync(errorPagePath, "utf-8"));
+    if (errorPageHtml) {
+      res.status(500).type("text/html").send(errorPageHtml);
 
       return;
     }
