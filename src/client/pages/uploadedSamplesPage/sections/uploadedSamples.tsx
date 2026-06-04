@@ -1,5 +1,4 @@
-import { LoadingPanel, Table } from "blaise-design-system-react-components";
-import { Button } from "blaise-design-system-react-components";
+import { Button, LoadingPanel, Table } from "blaise-design-system-react-components";
 import React, { type ReactElement } from "react";
 import CsvDownloader from "react-csv-downloader";
 
