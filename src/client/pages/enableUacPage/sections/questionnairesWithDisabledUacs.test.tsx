@@ -97,7 +97,7 @@ describe("List of Questionnaires with disabled UACs", () => {
 
     renderComponent();
 
-    await screen.findByText("There are no disabled UACs.");
+    await screen.findByText("There are no disabled UACs for active questionnaires.");
   });
 
   it("shows 'no disabled UACs' message when API returns empty list", async () => {
@@ -106,7 +106,7 @@ describe("List of Questionnaires with disabled UACs", () => {
 
     renderComponent();
 
-    await screen.findByText("There are no disabled UACs.");
+    await screen.findByText("There are no disabled UACs for active questionnaires.");
   });
 
   it("shows error message when API call fails", async () => {

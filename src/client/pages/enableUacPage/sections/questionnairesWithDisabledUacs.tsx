@@ -11,7 +11,7 @@ function QuestionnairesWithDisabledUacs(): ReactElement {
   const { isLoading, isError, disabledUacRows } = useQuestionnairesWithDisabledUacs();
 
   if (isLoading) {
-    return <LoadingPanel message="Getting all disabled UACs..." />;
+    return <LoadingPanel message="Getting disabled UACs for active questionnaires..." />;
   }
 
   return (
@@ -55,7 +55,7 @@ function QuestionnairesWithDisabledUacs(): ReactElement {
           status={isError ? "error" : "info"}
           spacious={true}
         >
-          {isError ? "Unable to retrieve disabled UACs" : "There are no disabled UACs."}
+          {isError ? "Unable to retrieve disabled UACs" : "There are no disabled UACs for active questionnaires."}
         </Panel>
       )}
     </div>
