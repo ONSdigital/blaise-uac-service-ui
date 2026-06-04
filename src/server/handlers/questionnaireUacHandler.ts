@@ -4,6 +4,8 @@ import { type BusClient } from "blaise-uac-service-node-client";
 import express, { type Request, type Response, type Router } from "express";
 import multer from "multer";
 
+import { type AuditLog } from "../auditLogger.js";
+import { getUsername } from "../helpers/getUsername.js";
 import { type GoogleStorage, SampleFileExistsError } from "../storage/googleStorageFunctions.js";
 import { addUacsToFile, getCaseIdsFromFile } from "../utils/csvParser.js";
 import {
@@ -16,6 +18,12 @@ import {
 import type { Config } from "../config.js";
 
 const FILE_SIZE_LIMIT = 100 * 1024 * 1024; // 100MB
+
+type AuditLoggerLike = {
+  info: (logger: Request["log"], message: string) => void;
+  error: (logger: Request["log"], message: string) => void;
+  getLogs?: () => Promise<AuditLog[]>;
+};
 
 function normaliseSampleFileName(fileName: string): string {
   const questionnairePart = fileName.replace(/\.csv$/i, "");
@@ -42,6 +50,8 @@ export class QuestionnaireUacHandler {
     private readonly busClient: BusClient,
     private readonly googleStorage: GoogleStorage,
     private readonly config: Config,
+    private readonly auth?: Auth,
+    private readonly auditLogger?: AuditLoggerLike,
   ) {}
 
   generateUacsForSampleFile = async (req: Request, res: Response): Promise<Response> => {
@@ -72,6 +82,12 @@ export class QuestionnaireUacHandler {
       await this.generateUacs(normalisedQuestionnaireName, file);
       await this.uploadSampleFile(fileName, file, overwrite);
 
+      if (this.auth && this.auditLogger) {
+        const username = getUsername(req, this.auth);
+
+        this.auditLogger.info(req.log, `${username} uploaded sample file ${file.originalname}`);
+      }
+
       return res.status(201).json("Success");
     } catch (error: unknown) {
       if (error instanceof SampleFileExistsError) {
@@ -87,6 +103,15 @@ export class QuestionnaireUacHandler {
         );
 
         return res.status(400).json({ error: error.message });
+      }
+
+      if (this.auth && this.auditLogger) {
+        const username = getUsername(req, this.auth);
+
+        this.auditLogger.error(
+          req.log,
+          `${username} failed to upload sample file ${file.originalname}`,
+        );
       }
 
       req.log.error(
@@ -203,10 +228,11 @@ export default function createQuestionnaireUacHandler(
   googleStorage: GoogleStorage,
   config: Config,
   auth: Auth,
+  auditLogger?: AuditLoggerLike,
 ): Router {
   const router = express.Router();
   const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: FILE_SIZE_LIMIT } });
-  const handler = new QuestionnaireUacHandler(busClient, googleStorage, config);
+  const handler = new QuestionnaireUacHandler(busClient, googleStorage, config, auth, auditLogger);
 
   router.post(
     "/api/v1/questionnaire/:questionnaireName/uac/sample",

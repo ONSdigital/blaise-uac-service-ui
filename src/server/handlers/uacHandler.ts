@@ -3,7 +3,13 @@ import { type Auth } from "blaise-login-react-server";
 import { type BusClient, BusClientError } from "blaise-uac-service-node-client";
 import express, { type Request, type Response, type Router } from "express";
 
+import { getUsername } from "../helpers/getUsername.js";
 import { isValidQuestionnaireName, isValidUac } from "../validation.js";
+
+type AuditLoggerLike = {
+  info: (logger: Request["log"], message: string) => void;
+  error: (logger: Request["log"], message: string) => void;
+};
 
 export function compareDisabledUacRows(
   a: { questionnaire: string; caseId: string },
@@ -20,8 +26,10 @@ export function compareDisabledUacRows(
 class UacHandler {
   constructor(
     private readonly busClient: BusClient,
+    private readonly auth: Auth,
     private readonly blaiseApiClient?: BlaiseApiClient,
     private readonly serverPark?: string,
+    private readonly auditLogger?: AuditLoggerLike,
   ) {}
 
   getAllDisabledUacs = async (req: Request, res: Response): Promise<Response> => {
@@ -80,9 +88,12 @@ class UacHandler {
       return res.status(400).json("Invalid UAC: must be exactly 12 digits");
     }
 
+    const username = getUsername(req, this.auth);
+
     try {
       await this.busClient.disableUac(uac);
       req.log.info("Successfully disabled UAC");
+      this.auditLogger?.info(req.log, `${username} disabled UAC ${uac}`);
 
       return res.status(200).json("Success");
     } catch (error: unknown) {
@@ -91,9 +102,12 @@ class UacHandler {
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
         req.log.info("Successfully disabled UAC");
+        this.auditLogger?.info(req.log, `${username} disabled UAC ${uac}`);
 
         return res.status(200).json("Success");
       }
+
+      this.auditLogger?.error(req.log, `${username} failed to disable UAC ${uac}`);
 
       req.log.error(
         error instanceof Error ? error : new Error(String(error)),
@@ -111,9 +125,12 @@ class UacHandler {
       return res.status(400).json("Invalid UAC: must be exactly 12 digits");
     }
 
+    const username = getUsername(req, this.auth);
+
     try {
       await this.busClient.enableUac(uac);
       req.log.info("Successfully enabled UAC");
+      this.auditLogger?.info(req.log, `${username} enabled uac ${uac}`);
 
       return res.status(200).json("Success");
     } catch (error: unknown) {
@@ -122,9 +139,12 @@ class UacHandler {
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
         req.log.info("Successfully enabled UAC");
+        this.auditLogger?.info(req.log, `${username} enabled uac ${uac}`);
 
         return res.status(200).json("Success");
       }
+
+      this.auditLogger?.error(req.log, `${username} failed to enable uac ${uac}`);
 
       req.log.error(error instanceof Error ? error : new Error(String(error)), "Enable UAC failed");
 
@@ -161,9 +181,10 @@ export default function createUacHandler(
   auth: Auth,
   blaiseApiClient?: BlaiseApiClient,
   serverPark?: string,
+  auditLogger?: AuditLoggerLike,
 ): Router {
   const router = express.Router();
-  const handler = new UacHandler(busClient, blaiseApiClient, serverPark);
+  const handler = new UacHandler(busClient, auth, blaiseApiClient, serverPark, auditLogger);
 
   router.post("/api/v1/uac/disable", auth.middleware, handler.disableUac);
   router.post("/api/v1/uac/enable", auth.middleware, handler.enableUac);

@@ -395,6 +395,93 @@ describe("get uacs for sample file tests", () => {
   });
 });
 
+describe("sample upload audit logging", () => {
+  beforeEach(() => {
+    mockClear();
+    vi.clearAllMocks();
+    vi.resetModules();
+    setMocksForSuccess();
+  });
+
+  it("writes an audit success log when sample upload succeeds", async () => {
+    const req = mockReqWithLog();
+
+    req.params.questionnaireName = questionnaireName;
+    req.file = sampleFile;
+
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    };
+
+    const questionnaireUacHandler = new QuestionnaireUacHandler(
+      busClientMock,
+      googleStorageMock,
+      config,
+      auth as unknown as ConstructorParameters<typeof QuestionnaireUacHandler>[3],
+      auditLogger,
+    );
+
+    await questionnaireUacHandler.generateUacsForSampleFile(req, res);
+
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      req.log,
+      "rich uploaded sample file originalNameTest",
+    );
+    expect(auditLogger.error).not.toHaveBeenCalled();
+  });
+
+  it("writes audit failure logs for server errors and excludes CSV validation errors", async () => {
+    const req = mockReqWithLog();
+
+    req.params.questionnaireName = questionnaireName;
+    req.file = sampleFile;
+
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    };
+
+    const questionnaireUacHandler = new QuestionnaireUacHandler(
+      busClientMock,
+      googleStorageMock,
+      config,
+      auth as unknown as ConstructorParameters<typeof QuestionnaireUacHandler>[3],
+      auditLogger,
+    );
+
+    mockGenerateUacs.mockImplementationOnce(() => {
+      throw new Error("Cannot generate uacs");
+    });
+
+    await questionnaireUacHandler.generateUacsForSampleFile(req, res);
+
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      req.log,
+      "rich failed to upload sample file originalNameTest",
+    );
+
+    mockClear();
+    vi.clearAllMocks();
+    setMocksForSuccess();
+
+    const validationReq = mockReqWithLog();
+
+    validationReq.params.questionnaireName = questionnaireName;
+    validationReq.file = sampleFile;
+
+    getCaseIdsFromFileMock.mockImplementationOnce(() => {
+      throw new CsvValidationError("Missing mandatory column");
+    });
+
+    await questionnaireUacHandler.generateUacsForSampleFile(validationReq, res);
+
+    expect(auditLogger.error).not.toHaveBeenCalled();
+  });
+});
+
 async function callGenerateUacsForSampleFileWithParameters(body: Record<string, string> = {}) {
   const req = mockReqWithLog();
 
@@ -428,6 +515,9 @@ function setMocksForSuccess() {
   getFileFromBucketMock.mockReturnValue(Promise.resolve(fileData));
 
   mockGetUacsByCaseId.mockReturnValue(Promise.resolve(mockMatchedQuestionnaireUacDetails));
+
+  mockGenerateUacs.mockResolvedValue(undefined);
+  mockUploadFileToBucket.mockResolvedValue(undefined);
 
   addUacsToFileMock.mockReturnValue(Promise.resolve(mockValidSampleFileWithUacArrayResponse));
 

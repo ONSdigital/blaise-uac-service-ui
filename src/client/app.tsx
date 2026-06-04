@@ -9,6 +9,7 @@ import { type ReactElement } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 
 import { getSharedAuthOptions, isProduction } from "./env";
+import AuditPage from "./pages/auditPage/auditPage";
 import DisableUac from "./pages/disableUacPage/disableUacPage";
 import EnableUac from "./pages/enableUacPage/enableUacPage";
 import UploadedSamplesPage from "./pages/uploadedSamplesPage/uploadedSamplesPage";
@@ -23,6 +24,7 @@ const navigationLinks = [
   { id: "upload-used-uacs-link", label: "Upload used UACs", endpoint: "/upload-used-uacs" },
   { id: "disable-uac-link", label: "Disable UAC", endpoint: "/disable-uac" },
   { id: "enable-uac-link", label: "Enable UAC", endpoint: "/enable-uac" },
+  { id: "audit-link", label: "View UAC history", endpoint: "/audit" },
 ];
 
 function AppContent({ loggedIn, user }: { loggedIn: boolean; user: User }): ReactElement {
@@ -45,6 +47,10 @@ function AppContent({ loggedIn, user }: { loggedIn: boolean; user: User }): Reac
           <Route
             path="/enable-uac"
             element={<EnableUac />}
+          />
+          <Route
+            path="/audit"
+            element={<AuditPage />}
           />
           <Route
             path="/"

@@ -1,0 +1,81 @@
+import AuditLogger from "./auditLogger.js";
+
+const { getEntriesMock, logMock } = vi.hoisted(() => {
+  const getEntriesMock = vi.fn();
+  const logMock = vi.fn((_name: string) => ({ getEntries: getEntriesMock }));
+
+  return { getEntriesMock, logMock };
+});
+
+vi.mock("@google-cloud/logging", () => ({
+  Logging: class {
+    log(name: string) {
+      return logMock(name);
+    }
+  },
+}));
+
+describe("AuditLogger", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("writes AUDIT_LOG prefixes for info and error", () => {
+    const auditLogger = new AuditLogger("project-1");
+    const logger = { info: vi.fn(), error: vi.fn() };
+
+    auditLogger.info(logger as never, "something happened");
+    auditLogger.error(logger as never, "something failed");
+
+    expect(logger.info).toHaveBeenCalledWith("AUDIT_LOG: something happened");
+    expect(logger.error).toHaveBeenCalledWith("AUDIT_LOG: something failed");
+  });
+
+  it("retrieves and maps logs with bus-ui filter", async () => {
+    getEntriesMock.mockResolvedValueOnce([
+      [
+        {
+          metadata: {
+            insertId: "abc",
+            timestamp: new Date("2026-06-04T12:00:00.000Z"),
+            severity: "ERROR",
+          },
+          data: { message: "AUDIT_LOG: rich failed to upload sample file x.csv" },
+        },
+        {
+          metadata: {},
+          data: {},
+        },
+      ],
+    ]);
+
+    const auditLogger = new AuditLogger("project-2");
+    const logs = await auditLogger.getLogs();
+
+    expect(logMock).toHaveBeenCalledWith("projects/project-2/logs/stdout");
+    expect(getEntriesMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        maxResults: 50,
+      }),
+    );
+
+    const filter = getEntriesMock.mock.calls[0][0].filter as string;
+
+    expect(filter).toContain('resource.type="gae_app"');
+    expect(filter).toContain('resource.labels.module_id="bus-ui"');
+    expect(filter).toContain('jsonPayload.message:"AUDIT_LOG:"');
+
+    expect(logs[0]).toMatchObject({
+      id: "abc",
+      timestamp: expect.stringContaining("2026"),
+      message: "rich failed to upload sample file x.csv",
+      severity: "ERROR",
+    });
+    expect(logs[1]).toStrictEqual({
+      id: "",
+      timestamp: "",
+      message: "",
+      severity: "INFO",
+    });
+  });
+});

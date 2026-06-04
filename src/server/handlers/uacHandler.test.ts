@@ -443,3 +443,88 @@ describe("compareDisabledUacRows", () => {
     ).toBe(0);
   });
 });
+
+describe("uac audit logging", () => {
+  function createAuditTestApp() {
+    const app = express();
+    const busClient = {
+      disableUac: vi.fn(),
+      enableUac: vi.fn(),
+      getDisabledUacs: vi.fn(),
+    } as unknown as BusClient;
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      middleware: (_req: unknown, _res: unknown, next: () => void) => next(),
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    } as unknown as Auth;
+
+    app.use(express.json());
+    app.use((req, _res, next) => {
+      Object.assign(req, { log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } });
+      next();
+    });
+    app.use("/", createUacHandler(busClient, auth, undefined, undefined, auditLogger));
+
+    return { app, busClient, auditLogger };
+  }
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.resetModules();
+  });
+
+  it("logs disable success and failure", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp();
+    const request = supertest(app);
+
+    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
+
+    const success = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
+
+    expect(success.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich disabled UAC 123456789123",
+    );
+
+    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("fail"),
+    );
+
+    const failure = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
+
+    expect(failure.status).toBe(500);
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich failed to disable UAC 123456789123",
+    );
+  });
+
+  it("logs enable success and failure", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp();
+    const request = supertest(app);
+
+    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
+
+    const success = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
+
+    expect(success.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich enabled uac 123456789123",
+    );
+
+    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("fail"),
+    );
+
+    const failure = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
+
+    expect(failure.status).toBe(500);
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich failed to enable uac 123456789123",
+    );
+  });
+});

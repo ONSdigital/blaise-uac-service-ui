@@ -8,6 +8,8 @@ import { BusClient } from "blaise-uac-service-node-client";
 import ejs from "ejs";
 import express, { type Express, type NextFunction, type Request, type Response } from "express";
 
+import AuditLogger from "./auditLogger.js";
+import createAuditHandler from "./handlers/auditHandler.js";
 import createBlaiseHandler from "./handlers/blaiseHandler.js";
 import createFileHandler from "./handlers/fileHandler.js";
 import createHealthCheckHandler from "./handlers/healthCheckHandler.js";
@@ -40,6 +42,7 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   const googleStorage = new GoogleStorage(config.projectId);
   const blaiseApiClient = new BlaiseApiClient(config.blaiseApiUrl);
   const auth = new Auth(config);
+  const auditLogger = new AuditLogger(config.projectId);
   const loginHandler = newLoginHandler(auth, blaiseApiClient);
 
   const clientBuildFolder = resolveClientBuildFolder();
@@ -74,14 +77,21 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   server.use(express.urlencoded({ extended: true }));
 
   //define handlers
-  server.use("/", createQuestionnaireUacHandler(busClient, googleStorage, config, auth));
+  server.use(
+    "/",
+    createQuestionnaireUacHandler(busClient, googleStorage, config, auth, auditLogger),
+  );
   server.use("/", createFileHandler(googleStorage, config, auth));
   server.use("/", createQuestionnaireSamplesHandler(googleStorage, config, auth));
-  server.use("/", createImportUacHandler(busClient, auth));
+  server.use("/", createImportUacHandler(busClient, auth, auditLogger));
   server.use("/", createHealthCheckHandler());
   server.use("/", loginHandler);
-  server.use("/", createUacHandler(busClient, auth, blaiseApiClient, config.serverPark));
+  server.use(
+    "/",
+    createUacHandler(busClient, auth, blaiseApiClient, config.serverPark, auditLogger),
+  );
   server.use("/", createBlaiseHandler(blaiseApiClient, config.serverPark, auth));
+  server.use("/", createAuditHandler(auditLogger, auth));
 
   server.get("/{*path}", renderClientIndex);
 

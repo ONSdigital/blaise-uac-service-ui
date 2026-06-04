@@ -95,6 +95,11 @@ describe("All expected routes are registered", () => {
       middlewares: ["middleware", "getQuestionnaires"],
       path: "/api/v1/questionnaires",
     },
+    {
+      methods: ["GET"],
+      middlewares: ["middleware", "getAuditInfo"],
+      path: "/api/audit",
+    },
     { methods: ["GET"], middlewares: ["renderClientIndex"], path: "/{*path}" },
   ];
 

@@ -126,7 +126,7 @@ describe("React homepage", () => {
     });
   });
 
-  it("should show Links to manage UACs i-e, Disable UAC and Enable UAC", async () => {
+  it("should show Links to manage UACs and history", async () => {
     let getAllByText: ReturnType<typeof render>["getAllByText"];
 
     await act(async () => {
@@ -138,6 +138,7 @@ describe("React homepage", () => {
     await waitFor(() => {
       expect(getAllByText("Disable UAC").length).toBeGreaterThan(0);
       expect(getAllByText("Enable UAC").length).toBeGreaterThan(0);
+      expect(getAllByText("View UAC history").length).toBeGreaterThan(0);
     });
   });
 

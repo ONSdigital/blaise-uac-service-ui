@@ -51,7 +51,10 @@ function QuestionnairesWithDisabledUacs(): ReactElement {
           ))}
         </Table>
       ) : (
-        <Panel status={isError ? "error" : "info"}>
+        <Panel
+          status={isError ? "error" : "info"}
+          spacious={true}
+        >
           {isError ? "Unable to retrieve disabled UACs" : "There are no disabled UACs."}
         </Panel>
       )}

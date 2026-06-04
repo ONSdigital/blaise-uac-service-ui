@@ -382,6 +382,18 @@ exports[`React homepage > App page matches snapshot 1`] = `
                   Enable UAC
                 </a>
               </li>
+              <li
+                class="ons-navigation__item "
+              >
+                <a
+                  class="ons-navigation__link"
+                  data-discover="true"
+                  href="/audit"
+                  id="audit-link"
+                >
+                  View UAC history
+                </a>
+              </li>
             </ul>
           </nav>
         </div>

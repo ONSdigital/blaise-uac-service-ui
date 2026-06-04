@@ -195,6 +195,89 @@ describe("import uac tests", () => {
   });
 });
 
+describe("import uac audit logging", () => {
+  beforeEach(() => {
+    setMocksForSuccess();
+  });
+
+  afterEach(() => {
+    mockClear();
+    vi.clearAllMocks();
+    vi.resetModules();
+  });
+
+  it("writes an audit success log when import completes", async () => {
+    const req = mockReqWithLog();
+
+    req.file = uacFile;
+
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    };
+
+    const importUacHandler = new ImportUacHandler(
+      mockBusClient,
+      auth as unknown as ConstructorParameters<typeof ImportUacHandler>[1],
+      auditLogger,
+    );
+
+    await importUacHandler.importUacs(req, res);
+
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      req.log,
+      "rich uploaded used UACs file originalNameTest",
+    );
+    expect(auditLogger.error).not.toHaveBeenCalled();
+  });
+
+  it("writes an audit failure log for server errors but not CSV validation errors", async () => {
+    const req = mockReqWithLog();
+
+    req.file = uacFile;
+
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    };
+
+    mockImportUacs.mockImplementationOnce(() => {
+      throw new Error("backend failed");
+    });
+
+    const importUacHandler = new ImportUacHandler(
+      mockBusClient,
+      auth as unknown as ConstructorParameters<typeof ImportUacHandler>[1],
+      auditLogger,
+    );
+
+    await importUacHandler.importUacs(req, res);
+
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      req.log,
+      "rich failed to upload used UACs file originalNameTest",
+    );
+
+    mockClear();
+    vi.clearAllMocks();
+    setMocksForSuccess();
+
+    const validationReq = mockReqWithLog();
+
+    validationReq.file = uacFile;
+
+    getUacsFromFileMock.mockImplementationOnce(() => {
+      throw new CsvValidationError("Column UAC is not in the CSV file.");
+    });
+
+    await importUacHandler.importUacs(validationReq, res);
+
+    expect(auditLogger.error).not.toHaveBeenCalled();
+  });
+});
+
 function setMocksForSuccess() {
   mockImportUacs.mockReturnValue(Promise.resolve({ uacs_imported: 2 }));
   getUacsFromFileMock.mockReturnValue(Promise.resolve(["123412341234", "432143214321"]));
