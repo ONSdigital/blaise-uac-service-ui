@@ -10,6 +10,8 @@ export interface AuditLog {
 }
 
 const AUDIT_LOG_LOOKBACK_DAYS = 7;
+const AUDIT_LOG_MESSAGE_PREFIX = "AUDIT_LOG:";
+const AUDIT_LOG_PAYLOAD_FIELD = "auditMessage";
 
 function sanitiseAuditMessage(message: string): string {
   return message.replace(/[\r\n]+/g, " ").trim();
@@ -25,11 +27,17 @@ export default class AuditLogger {
   }
 
   info(logger: Request["log"], message: string): void {
-    logger.info(`AUDIT_LOG: ${sanitiseAuditMessage(message)}`);
+    logger.info(
+      { [AUDIT_LOG_PAYLOAD_FIELD]: sanitiseAuditMessage(message) },
+      AUDIT_LOG_MESSAGE_PREFIX,
+    );
   }
 
   error(logger: Request["log"], message: string): void {
-    logger.error(`AUDIT_LOG: ${sanitiseAuditMessage(message)}`);
+    logger.error(
+      { [AUDIT_LOG_PAYLOAD_FIELD]: sanitiseAuditMessage(message) },
+      AUDIT_LOG_MESSAGE_PREFIX,
+    );
   }
 
   async getLogs(): Promise<AuditLog[]> {
@@ -56,8 +64,10 @@ export default class AuditLogger {
         severity = entry.metadata.severity.toString();
       }
 
-      if (entry.data?.message != null && typeof entry.data.message === "string") {
-        message = entry.data.message.replace(/^AUDIT_LOG: /, "");
+      if (entry.data?.auditMessage != null && typeof entry.data.auditMessage === "string") {
+        message = entry.data.auditMessage;
+      } else if (entry.data?.message != null && typeof entry.data.message === "string") {
+        message = entry.data.message.replace(/^AUDIT_LOG:\s*/, "");
       }
 
       auditLogs.push({

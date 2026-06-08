@@ -27,8 +27,8 @@ describe("AuditLogger", () => {
     auditLogger.info(logger as never, "something happened");
     auditLogger.error(logger as never, "something failed");
 
-    expect(logger.info).toHaveBeenCalledWith("AUDIT_LOG: something happened");
-    expect(logger.error).toHaveBeenCalledWith("AUDIT_LOG: something failed");
+    expect(logger.info).toHaveBeenCalledWith({ auditMessage: "something happened" }, "AUDIT_LOG:");
+    expect(logger.error).toHaveBeenCalledWith({ auditMessage: "something failed" }, "AUDIT_LOG:");
   });
 
   it("sanitises audit messages before logging", () => {
@@ -38,8 +38,14 @@ describe("AuditLogger", () => {
     auditLogger.info(logger as never, "alice uploaded file\nAUDIT_LOG: forged");
     auditLogger.error(logger as never, "bob failed\r\nAUDIT_LOG: forged");
 
-    expect(logger.info).toHaveBeenCalledWith("AUDIT_LOG: alice uploaded file AUDIT_LOG: forged");
-    expect(logger.error).toHaveBeenCalledWith("AUDIT_LOG: bob failed AUDIT_LOG: forged");
+    expect(logger.info).toHaveBeenCalledWith(
+      { auditMessage: "alice uploaded file AUDIT_LOG: forged" },
+      "AUDIT_LOG:",
+    );
+    expect(logger.error).toHaveBeenCalledWith(
+      { auditMessage: "bob failed AUDIT_LOG: forged" },
+      "AUDIT_LOG:",
+    );
   });
 
   it("retrieves and maps logs with bus-ui filter", async () => {
@@ -51,7 +57,10 @@ describe("AuditLogger", () => {
             timestamp: new Date("2026-06-04T12:00:00.000Z"),
             severity: "ERROR",
           },
-          data: { message: "AUDIT_LOG: rich failed to upload sample file x.csv" },
+          data: {
+            message: "AUDIT_LOG:",
+            auditMessage: "rich failed to upload sample file x.csv",
+          },
         },
         {
           metadata: {},
