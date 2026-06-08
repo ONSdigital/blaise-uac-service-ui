@@ -8,13 +8,14 @@ import { Authenticate } from "blaise-login-react-client";
 import { type ReactElement } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 
-import { getSharedAuthOptions, isProduction } from "./env";
 import AuditPage from "./pages/auditPage/auditPage";
 import DisableUac from "./pages/disableUacPage/disableUacPage";
 import EnableUac from "./pages/enableUacPage/enableUacPage";
 import UploadedSamplesPage from "./pages/uploadedSamplesPage/uploadedSamplesPage";
 import UploadSample from "./pages/uploadSamplePage/uploadSamplePage";
 import UploadUsedUacs from "./pages/uploadUsedUacsPage/uploadUsedUacsPage";
+import { getSharedAuthOptions } from "./utils/auth";
+import { isProduction } from "./utils/env";
 
 import type { User } from "blaise-api-node-client";
 

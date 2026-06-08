@@ -2,9 +2,9 @@ import { Button, LoadingPanel, Table } from "blaise-design-system-react-componen
 import React, { type ReactElement } from "react";
 import CsvDownloader from "react-csv-downloader";
 
-import useSampleFileDownload from "../../shared/useSampleFileDownload";
+import useSampleFileDownload from "../../../utils/useSampleFileDownload";
 
-import type { QuestionnaireFile } from "../../../questionnaire.types";
+import type { QuestionnaireFile } from "../../../types/questionnaire.types";
 
 interface Props {
   uploadedSamples: QuestionnaireFile[];

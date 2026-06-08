@@ -2,14 +2,14 @@ import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import { getSampleFileWithUacs } from "../../../fileFunctions";
+import { getSampleFileWithUacs } from "../../../api/fileFunctions";
 
 import UploadedSamples from "./uploadedSamples";
 
-import type { QuestionnaireFile } from "../../../questionnaire.types";
+import type { QuestionnaireFile } from "../../../types/questionnaire.types";
 import type { Mock } from "vitest";
 
-vi.mock("../../../fileFunctions");
+vi.mock("../../../api/fileFunctions");
 
 const getSampleFileWithUacsMock = getSampleFileWithUacs as Mock<() => Promise<unknown>>;
 

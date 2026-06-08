@@ -35,36 +35,6 @@ function setDefaultAppConfig(): void {
   });
 }
 
-const isProductionTestCases = [
-  {
-    hostname: "dev-training-dqs.social-surveys.gcp.onsdigital.uk",
-    expected: false,
-  },
-  {
-    hostname: "localhost",
-    expected: false,
-  },
-  {
-    hostname: "dqs.preprod-blaise.gcp.onsdigital.uk",
-    expected: false,
-  },
-  {
-    hostname: "dqs.blaise.gcp.onsdigital.uk",
-    expected: true,
-  },
-];
-
-describe("isProduction", () => {
-  it.each(isProductionTestCases)(
-    "check whether a hostname is production",
-    async ({ hostname, expected }) => {
-      const { isProduction } = await import("./env");
-
-      expect(isProduction(hostname)).toEqual(expected as boolean);
-    },
-  );
-});
-
 describe("getRuntimeAppConfig", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -80,7 +50,7 @@ describe("getRuntimeAppConfig", () => {
   it("reads runtime config from injected app config", async () => {
     setAppConfig({ projectId: "shared-project", urlDomain: "blaise.gcp.onsdigital.uk" });
 
-    const { getRuntimeAppConfig } = await import("./env");
+    const { getRuntimeAppConfig } = await import("./auth");
 
     expect(getRuntimeAppConfig()).toStrictEqual({
       projectId: "shared-project",
@@ -91,7 +61,7 @@ describe("getRuntimeAppConfig", () => {
   it("returns cached config on subsequent calls", async () => {
     setAppConfig({ projectId: "shared-project", urlDomain: "blaise.gcp.onsdigital.uk" });
 
-    const { getRuntimeAppConfig } = await import("./env");
+    const { getRuntimeAppConfig } = await import("./auth");
 
     const initialConfig = getRuntimeAppConfig();
 
@@ -106,7 +76,7 @@ describe("getRuntimeAppConfig", () => {
     vi.stubEnv("VITE_PROJECT_ID", "vite-project-id");
     vi.stubEnv("VITE_URL_DOMAIN", "vite.blaise.gcp.onsdigital.uk");
 
-    const { getRuntimeAppConfig } = await import("./env");
+    const { getRuntimeAppConfig } = await import("./auth");
 
     expect(getRuntimeAppConfig()).toStrictEqual({
       projectId: "vite-project-id",
@@ -117,7 +87,7 @@ describe("getRuntimeAppConfig", () => {
   it("throws when app config JSON is invalid", async () => {
     setRawAppConfig("not-json");
 
-    const { getRuntimeAppConfig } = await import("./env");
+    const { getRuntimeAppConfig } = await import("./auth");
 
     expect(() => getRuntimeAppConfig()).toThrow("Failed to parse runtime app config JSON.");
   });
@@ -125,7 +95,7 @@ describe("getRuntimeAppConfig", () => {
   it("throws when runtime config is missing", async () => {
     setAppConfig({ projectId: "shared-project" });
 
-    const { getRuntimeAppConfig } = await import("./env");
+    const { getRuntimeAppConfig } = await import("./auth");
 
     expect(() => getRuntimeAppConfig()).toThrow("Missing runtime config for urlDomain");
   });
@@ -152,7 +122,7 @@ describe("getSharedAuthOptions", () => {
       createSessionKey: vi.fn().mockReturnValue("shared-session-key"),
     }));
 
-    const { getSharedAuthOptions } = await import("./env");
+    const { getSharedAuthOptions } = await import("./auth");
 
     expect(getSharedAuthOptions()).toStrictEqual({
       sessionKey: "shared-session-key",

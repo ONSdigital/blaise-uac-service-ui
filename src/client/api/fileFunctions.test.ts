@@ -1,6 +1,10 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 
+import { mockQuestionnaireNames } from "../test-utils/api.mock";
+import { mockValidSampleFileWithUacDatasResponse } from "../test-utils/csv.mock";
+import { mockFile } from "../test-utils/file.mock";
+
 import {
   disableUac,
   enableUac,
@@ -11,9 +15,6 @@ import {
   importUacsFromFile,
   sampleFileAlreadyExists,
 } from "./fileFunctions";
-import { mockQuestionnaireNames } from "./test-utils/api.mock";
-import { mockValidSampleFileWithUacDatasResponse } from "./test-utils/csv.mock";
-import { mockFile } from "./test-utils/file.mock";
 
 const mock = new MockAdapter(axios, { onNoMatch: "throwException" });
 

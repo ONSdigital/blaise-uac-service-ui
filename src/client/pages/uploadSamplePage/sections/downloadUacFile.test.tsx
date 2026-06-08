@@ -1,13 +1,13 @@
 import "@testing-library/jest-dom";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
-import { getSampleFileWithUacs } from "../../../fileFunctions";
+import { getSampleFileWithUacs } from "../../../api/fileFunctions";
 
 import DownloadUacFile from "./downloadUacFile";
 
 import type { Mock } from "vitest";
 
-vi.mock("../../../fileFunctions");
+vi.mock("../../../api/fileFunctions");
 const getSampleFileWithUacsMock = getSampleFileWithUacs as Mock<() => Promise<unknown>>;
 
 vi.mock("react-csv-downloader", () => ({

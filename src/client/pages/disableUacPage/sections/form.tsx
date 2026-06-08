@@ -2,7 +2,7 @@ import { Button, ExternalLink, Panel, TextInput } from "blaise-design-system-rea
 import { type ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { DisableUacResultState } from "../../shared/uacRouteState";
+import type { DisableUacResultState } from "../../../utils/uacRouteState";
 
 interface Props {
   resultState?: DisableUacResultState;

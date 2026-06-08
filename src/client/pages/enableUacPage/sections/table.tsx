@@ -2,7 +2,7 @@ import { Button, Table } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { QuestionnaireWithDisabledUacs } from "../../../questionnaire.types";
+import type { QuestionnaireWithDisabledUacs } from "../../../types/questionnaire.types";
 
 interface Props {
   questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs;

@@ -2,7 +2,7 @@ import { Button, Panel } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
 import CsvDownloader from "react-csv-downloader";
 
-import useSampleFileDownload from "../../shared/useSampleFileDownload";
+import useSampleFileDownload from "../../../utils/useSampleFileDownload";
 
 interface DownloadUacPageProps {
   questionnaireName: string | undefined;

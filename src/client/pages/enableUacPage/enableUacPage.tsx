@@ -1,8 +1,8 @@
 import { type ReactElement } from "react";
 import { useLocation } from "react-router-dom";
 
+import { parseEnableUacPageState } from "../../utils/uacRouteState";
 import UacInvalidRouteState from "../shared/uacInvalidRouteState";
-import { parseEnableUacPageState } from "../shared/uacRouteState";
 
 import Confirmation from "./sections/confirmation";
 import QuestionnairesWithDisabledUacs from "./sections/questionnairesWithDisabledUacs";

@@ -3,15 +3,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
-import { getListOfQuestionnairesWithExistingSampleFiles } from "../../fileFunctions";
+import { getListOfQuestionnairesWithExistingSampleFiles } from "../../api/fileFunctions";
 import { mockQuestionnaireNames } from "../../test-utils/api.mock";
 
 import UploadedSamplesPage from "./uploadedSamplesPage";
 
-import type { QuestionnaireFile } from "../../questionnaire.types";
+import type { QuestionnaireFile } from "../../types/questionnaire.types";
 import type { Mock } from "vitest";
 
-vi.mock("../../fileFunctions");
+vi.mock("../../api/fileFunctions");
 const getListOfQuestionnairesWithExistingSampleFilesMock =
   getListOfQuestionnairesWithExistingSampleFiles as Mock<() => Promise<QuestionnaireFile[]>>;
 

@@ -4,7 +4,7 @@ import { type ReactElement } from "react";
 import csvUploadErrorMessage, {
   getMissingCsvColumn,
   isKnownCsvValidationIssue,
-} from "../../shared/csvUploadErrorMessage";
+} from "../../../utils/csvUploadErrorMessage";
 
 import type { AxiosError } from "axios";
 

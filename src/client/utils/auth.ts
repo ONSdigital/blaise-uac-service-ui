@@ -84,7 +84,3 @@ function normaliseRuntimeValue(value: string | undefined): string | undefined {
 function toViteEnvName(key: keyof RuntimeAppConfig): string {
   return `VITE_${key.replace(/([A-Z])/g, "_$1").toUpperCase()}`;
 }
-
-export function isProduction(hostname: string): boolean {
-  return hostname.endsWith(".blaise.gcp.onsdigital.uk");
-}

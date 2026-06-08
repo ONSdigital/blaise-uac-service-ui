@@ -5,7 +5,7 @@ import MockAdapter from "axios-mock-adapter";
 import { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 
-import * as fileFunctions from "../../fileFunctions";
+import * as fileFunctions from "../../api/fileFunctions";
 import { renderWithQueryClient } from "../../test-utils/renderWithQueryClient";
 
 import UploadUsedUacs from "./uploadUsedUacsPage";

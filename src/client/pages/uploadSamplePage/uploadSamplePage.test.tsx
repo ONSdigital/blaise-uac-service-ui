@@ -4,8 +4,8 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { MemoryRouter, useNavigate } from "react-router-dom";
 
-import * as fileFunctions from "../../fileFunctions";
-import { getFileName } from "../../fileFunctions";
+import * as fileFunctions from "../../api/fileFunctions";
+import { getFileName } from "../../api/fileFunctions";
 import { renderWithQueryClient } from "../../test-utils/renderWithQueryClient";
 
 import UploadSample from "./uploadSamplePage";

@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Panel } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
 
-import { getListOfQuestionnairesWithExistingSampleFiles } from "../../fileFunctions";
-import { QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../queryKeys";
+import { getListOfQuestionnairesWithExistingSampleFiles } from "../../api/fileFunctions";
+import { QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../query/queryKeys";
 
 import UploadedSamples from "./sections/uploadedSamples";
 
-import type { QuestionnaireFile } from "../../questionnaire.types";
+import type { QuestionnaireFile } from "../../types/questionnaire.types";
 
 function UploadedSamplesPage(): ReactElement {
   const {

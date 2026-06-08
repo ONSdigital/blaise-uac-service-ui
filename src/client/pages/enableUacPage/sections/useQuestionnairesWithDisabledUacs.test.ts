@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
+import { DISABLED_UACS_QUERY_KEY } from "../../../query/queryKeys";
 
 import useQuestionnairesWithDisabledUacs from "./useQuestionnairesWithDisabledUacs";
 

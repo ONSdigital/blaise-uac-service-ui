@@ -1,4 +1,7 @@
-import type { QuestionnaireFile, QuestionnaireWithDisabledUacs } from "../questionnaire.types";
+import type {
+  QuestionnaireFile,
+  QuestionnaireWithDisabledUacs,
+} from "../types/questionnaire.types";
 import type { Uacs } from "blaise-uac-service-node-client";
 
 export const mockQuestionnaireNames: QuestionnaireFile[] = [

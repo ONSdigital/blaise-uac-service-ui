@@ -5,9 +5,9 @@ import { Form, Formik, type FormikHelpers } from "formik";
 import { type ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { generateUacsForSampleFile, sampleFileAlreadyExists } from "../../fileFunctions";
-import { AUDIT_LOGS_QUERY_KEY, QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../queryKeys";
-import handleAuthRedirect from "../shared/handleAuthRedirect";
+import { generateUacsForSampleFile, sampleFileAlreadyExists } from "../../api/fileFunctions";
+import { AUDIT_LOGS_QUERY_KEY, QUESTIONNAIRE_NAMES_QUERY_KEY } from "../../query/queryKeys";
+import handleAuthRedirect from "../../utils/handleAuthRedirect";
 
 import ConfirmName from "./sections/confirmName";
 import DownloadUacFile from "./sections/downloadUacFile";

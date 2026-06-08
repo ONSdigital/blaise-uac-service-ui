@@ -2,8 +2,8 @@ import axios, { isAxiosError } from "axios";
 
 import axiosConfig from "./axiosConfig";
 
-import type { CsvDatas } from "./csv.types";
-import type { QuestionnaireFile } from "./questionnaire.types";
+import type { CsvDatas } from "../types/csv.types";
+import type { QuestionnaireFile } from "../types/questionnaire.types";
 
 export async function importUacsFromFile(file: File | undefined): Promise<number> {
   if (file === undefined) {

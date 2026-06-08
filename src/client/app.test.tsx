@@ -4,11 +4,11 @@ import { render, waitFor } from "@testing-library/react";
 import React, { act } from "react";
 import { MemoryRouter } from "react-router-dom";
 
+import { getListOfQuestionnairesWithExistingSampleFiles } from "./api/fileFunctions";
 import App from "./app";
-import { getListOfQuestionnairesWithExistingSampleFiles } from "./fileFunctions";
 import { mockQuestionnaireNames } from "./test-utils/api.mock";
 
-import type { QuestionnaireFile } from "./questionnaire.types";
+import type { QuestionnaireFile } from "./types/questionnaire.types";
 import type { Mock } from "vitest";
 
 const mockAuthenticate = vi.fn(
@@ -39,12 +39,15 @@ vi.mock("blaise-login-react-client", () => ({
   },
 }));
 
-vi.mock("./fileFunctions");
+vi.mock("./api/fileFunctions");
 
 const mockIsProduction = vi.fn();
 
-vi.mock("./env", () => ({
+vi.mock("./utils/env", () => ({
   isProduction: () => mockIsProduction(),
+}));
+
+vi.mock("./utils/auth", () => ({
   getSharedAuthOptions: () => ({
     sessionKey: "mock-session-key",
     cookieDomain: "mock-domain",

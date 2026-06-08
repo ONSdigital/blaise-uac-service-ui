@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { getSampleFileWithUacs } from "../../fileFunctions";
+import { getSampleFileWithUacs } from "../api/fileFunctions";
 
 export default function useSampleFileDownload(questionnaireName: string | undefined) {
   const [loading, setLoading] = useState(false);

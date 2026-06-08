@@ -1,6 +1,6 @@
 import { AuthManager } from "blaise-login-react-client";
 
-import { getSharedAuthOptions } from "./env";
+import { getSharedAuthOptions } from "../utils/auth";
 
 import type { AxiosRequestConfig } from "axios";
 

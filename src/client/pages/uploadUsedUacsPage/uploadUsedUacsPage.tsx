@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "blaise-design-system-react-components";
 import { type ReactElement, useState } from "react";
 
-import { importUacsFromFile } from "../../fileFunctions";
-import { AUDIT_LOGS_QUERY_KEY } from "../../queryKeys";
-import handleAuthRedirect from "../shared/handleAuthRedirect";
+import { importUacsFromFile } from "../../api/fileFunctions";
+import { AUDIT_LOGS_QUERY_KEY } from "../../query/queryKeys";
+import handleAuthRedirect from "../../utils/handleAuthRedirect";
 
 import SelectFile from "./sections/selectFile";
 import UploadFailed from "./sections/uploadFailed";

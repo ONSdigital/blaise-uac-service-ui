@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import useQuestionnairesWithDisabledUacs from "./useQuestionnairesWithDisabledUacs";
 
-import type { DisabledUacRow } from "./useQuestionnairesWithDisabledUacs";
+import type { DisabledUacRow } from "../../../api/disabledUacs";
 
 function QuestionnairesWithDisabledUacs(): ReactElement {
   const navigate = useNavigate();

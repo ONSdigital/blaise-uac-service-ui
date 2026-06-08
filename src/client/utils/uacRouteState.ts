@@ -1,4 +1,4 @@
-import type { QuestionnaireWithDisabledUacs } from "../../questionnaire.types";
+import type { QuestionnaireWithDisabledUacs } from "../types/questionnaire.types";
 
 export type ParsedRouteState<T> =
   | { status: "absent" }

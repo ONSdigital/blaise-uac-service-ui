@@ -2,8 +2,8 @@ import { Panel } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
 import { useLocation } from "react-router-dom";
 
+import { parseDisableUacPageState } from "../../utils/uacRouteState";
 import UacInvalidRouteState from "../shared/uacInvalidRouteState";
-import { parseDisableUacPageState } from "../shared/uacRouteState";
 
 import Confirmation from "./sections/confirmation";
 import Form from "./sections/form";

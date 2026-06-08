@@ -3,9 +3,9 @@ import { Button, LoadingPanel } from "blaise-design-system-react-components";
 import { type ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { enableUac } from "../../../fileFunctions";
-import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../queryKeys";
-import handleAuthRedirect from "../../shared/handleAuthRedirect";
+import { enableUac } from "../../../api/fileFunctions";
+import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../query/queryKeys";
+import handleAuthRedirect from "../../../utils/handleAuthRedirect";
 
 interface Props {
   questionnaireName: string;

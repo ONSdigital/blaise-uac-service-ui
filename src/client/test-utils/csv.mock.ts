@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { CsvDatas } from "../csv.types";
+import type { CsvDatas } from "../types/csv.types";
 import type { UacsByCaseId } from "blaise-uac-service-node-client";
 
 const mockValidUacImportCsv = `UAC

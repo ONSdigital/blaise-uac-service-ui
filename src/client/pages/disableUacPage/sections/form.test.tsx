@@ -7,7 +7,7 @@ import flushPromises from "../../../test-utils/flushPromises";
 
 import Form from "./form";
 
-import type { DisableUacResultState } from "../../shared/uacRouteState";
+import type { DisableUacResultState } from "../../../utils/uacRouteState";
 import type * as ReactRouterDom from "react-router-dom";
 import type { Mock } from "vitest";
 

@@ -9,8 +9,8 @@ import {
 import { type ReactElement } from "react";
 
 import { getAuditLogs } from "../../api/auditLogs";
-import { AUDIT_LOGS_QUERY_KEY } from "../../queryKeys";
-import { type AuditLog } from "../../utils/auditLog.types";
+import { AUDIT_LOGS_QUERY_KEY } from "../../query/queryKeys";
+import { type AuditLog } from "../../types/auditLog.types";
 
 function twoDigits(value: number): string {
   return String(value).padStart(2, "0");
