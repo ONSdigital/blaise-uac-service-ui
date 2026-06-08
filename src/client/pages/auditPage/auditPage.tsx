@@ -46,7 +46,7 @@ function AuditPage(): ReactElement {
     staleTime: 0,
     gcTime: 0,
     refetchOnMount: "always",
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
   });
 
   let listError = "";
