@@ -31,6 +31,17 @@ describe("AuditLogger", () => {
     expect(logger.error).toHaveBeenCalledWith("AUDIT_LOG: something failed");
   });
 
+  it("sanitises audit messages before logging", () => {
+    const auditLogger = new AuditLogger("project-1");
+    const logger = { info: vi.fn(), error: vi.fn() };
+
+    auditLogger.info(logger as never, "alice uploaded file\nAUDIT_LOG: forged");
+    auditLogger.error(logger as never, "bob failed\r\nAUDIT_LOG: forged");
+
+    expect(logger.info).toHaveBeenCalledWith("AUDIT_LOG: alice uploaded file AUDIT_LOG: forged");
+    expect(logger.error).toHaveBeenCalledWith("AUDIT_LOG: bob failed AUDIT_LOG: forged");
+  });
+
   it("retrieves and maps logs with bus-ui filter", async () => {
     getEntriesMock.mockResolvedValueOnce([
       [

@@ -11,6 +11,10 @@ export interface AuditLog {
 
 const AUDIT_LOG_LOOKBACK_DAYS = 7;
 
+function sanitiseAuditMessage(message: string): string {
+  return message.replace(/[\r\n]+/g, " ").trim();
+}
+
 export default class AuditLogger {
   private readonly logger: Logging;
   private readonly logName: string;
@@ -21,11 +25,11 @@ export default class AuditLogger {
   }
 
   info(logger: Request["log"], message: string): void {
-    logger.info(`AUDIT_LOG: ${message}`);
+    logger.info(`AUDIT_LOG: ${sanitiseAuditMessage(message)}`);
   }
 
   error(logger: Request["log"], message: string): void {
-    logger.error(`AUDIT_LOG: ${message}`);
+    logger.error(`AUDIT_LOG: ${sanitiseAuditMessage(message)}`);
   }
 
   async getLogs(): Promise<AuditLog[]> {
