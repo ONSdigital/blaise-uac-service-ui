@@ -1,82 +1,104 @@
+import type { AuthConfig } from "blaise-login-react-server";
 
-import crypto from "crypto";
-import dotenv from "dotenv";
-import { AuthConfig } from "blaise-login-react/blaise-login-react-server";
+const DEFAULT_SESSION_TIMEOUT = "12h";
+const ALLOWED_ROLES = ["DST", "BDSS", "Researcher"];
+
 export interface Config extends AuthConfig {
-    ProjectID: string,
-    BucketName: string,
-    ServerPark: string,
-    BusApiUrl: string,
-    BusClientId: string,
-    BlaiseApiUrl: string
+  port: number;
+  projectId: string;
+  urlDomain: string;
+  bucketName: string;
+  serverPark: string;
+  busUrl: string;
+  busClientId: string;
+  blaiseApiUrl: string;
 }
 
-export function GetConfigFromEnv(): Config {
-    if (process.env.NODE_ENV !== "production") {
-        dotenv.config({ path: __dirname + "/../.env" });
-    }
+type RequiredConfigEnv = {
+  PROJECT_ID: string | undefined;
+  URL_DOMAIN: string | undefined;
+  BUCKET_NAME: string | undefined;
+  SERVER_PARK: string | undefined;
+  BUS_API_URL: string | undefined;
+  BUS_CLIENT_ID: string | undefined;
+  BLAISE_API_URL: string | undefined;
+  SESSION_SECRET: string | undefined;
+};
 
-    let { PROJECT_ID, BUCKET_NAME, SERVER_PARK, BUS_API_URL, BUS_CLIENT_ID, BLAISE_API_URL, SESSION_TIMEOUT } = process.env;
-    const { ROLES, SESSION_SECRET } = process.env;
+type ResolvedRequiredConfigEnv = {
+  [TKey in keyof RequiredConfigEnv]: string;
+};
 
-    if (PROJECT_ID === undefined) {
-        console.error("PROJECT_ID environment variable has not been set");
-        PROJECT_ID = "ENV_VAR_NOT_SET";
-    }
+export function getConfigFromEnv(): Config {
+  const {
+    PROJECT_ID,
+    URL_DOMAIN,
+    BUCKET_NAME,
+    SERVER_PARK,
+    BUS_API_URL,
+    BUS_CLIENT_ID,
+    BLAISE_API_URL,
+    SESSION_SECRET,
+    PORT,
+  } = process.env;
 
-    if (BUCKET_NAME === undefined) {
-        console.error("BUCKET_NAME environment variable has not been set");
-        BUCKET_NAME = "ENV_VAR_NOT_SET";
-    }
+  const requiredEnv: RequiredConfigEnv = {
+    PROJECT_ID,
+    URL_DOMAIN,
+    BUCKET_NAME,
+    SERVER_PARK,
+    BUS_API_URL,
+    BUS_CLIENT_ID,
+    BLAISE_API_URL,
+    SESSION_SECRET,
+  };
 
-    if (SERVER_PARK === undefined) {
-        console.error("SERVER_PARK environment variable has not been set");
-        SERVER_PARK = "ENV_VAR_NOT_SET";
-    }
+  assertResolvedRequiredEnv(requiredEnv);
 
-    if (BUS_API_URL === undefined) {
-        console.error("BUS_API_URL environment variable has not been set");
-        BUS_API_URL = "ENV_VAR_NOT_SET";
-    }
-
-    if (BUS_CLIENT_ID === undefined) {
-        console.error("BUS_CLIENT_ID environment variable has not been set");
-        BUS_CLIENT_ID = "ENV_VAR_NOT_SET";
-    }
-
-    if (BLAISE_API_URL === undefined) {
-        console.error("BLAISE_API_URL environment variable has not been set");
-        BLAISE_API_URL = "ENV_VAR_NOT_SET";
-    }
-
-    if (SESSION_TIMEOUT === undefined || SESSION_TIMEOUT === "_SESSION_TIMEOUT") {
-        console.error("SESSION_TIMEOUT environment variable has not been set");
-        SESSION_TIMEOUT = "12h";
-    }
-
-    return {
-        ProjectID: PROJECT_ID,
-        BucketName: BUCKET_NAME,
-        ServerPark: SERVER_PARK,
-        BusApiUrl: BUS_API_URL,
-        BusClientId: BUS_CLIENT_ID,
-        BlaiseApiUrl: BLAISE_API_URL,
-        Roles: loadRoles(ROLES),
-        SessionTimeout: SESSION_TIMEOUT,
-        SessionSecret: sessionSecret(SESSION_SECRET)
-    };
+  return {
+    port: parsePort(PORT),
+    projectId: requiredEnv.PROJECT_ID,
+    urlDomain: requiredEnv.URL_DOMAIN,
+    bucketName: requiredEnv.BUCKET_NAME,
+    serverPark: requiredEnv.SERVER_PARK,
+    busUrl: requiredEnv.BUS_API_URL,
+    busClientId: requiredEnv.BUS_CLIENT_ID,
+    blaiseApiUrl: requiredEnv.BLAISE_API_URL,
+    SessionTimeout: DEFAULT_SESSION_TIMEOUT,
+    SessionSecret: requiredEnv.SESSION_SECRET,
+    TokenIssuer: requiredEnv.PROJECT_ID,
+    Roles: ALLOWED_ROLES,
+  };
 }
 
-function loadRoles(roles: string | undefined): string[] {
-    if (!roles || roles === "" || roles === "_ROLES") {
-        return ["DST", "BDSS", "Researcher"];
-    }
-    return roles.split(",");
+function assertResolvedRequiredEnv(
+  env: RequiredConfigEnv,
+): asserts env is ResolvedRequiredConfigEnv {
+  const requiredEnvErrors = Object.entries(env)
+    .map(([name, value]) => {
+      if (value === undefined || value.trim() === "" || value === `_${name}`) {
+        return name;
+      }
+
+      return undefined;
+    })
+    .filter((errorMessage): errorMessage is string => errorMessage !== undefined);
+
+  if (requiredEnvErrors.length > 0) {
+    throw new Error(`Missing required environment variables: ${requiredEnvErrors.join(", ")}`);
+  }
 }
 
-function sessionSecret(secret: string | undefined): string {
-    if (!secret || secret === "" || secret === "_SESSION_SECRET") {
-        return crypto.randomBytes(20).toString("hex");
-    }
-    return secret;
+function parsePort(port: string | undefined): number {
+  if (port === undefined) {
+    return 5000;
+  }
+
+  const parsed = Number(port);
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(`Invalid PORT value: ${port}`);
+  }
+
+  return parsed;
 }

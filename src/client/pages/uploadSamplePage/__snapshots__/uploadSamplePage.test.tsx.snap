@@ -1,0 +1,249 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Upload Sample Page > select file page matches Snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <script
+      id="app-config"
+      type="application/json"
+    >
+      {"projectId":"test-project-id","urlDomain":"test.blaise.gcp.onsdigital.uk"}
+    </script>
+    <div>
+      <main
+        class="ons-page__main ons-u-mt-no"
+        id="main-content"
+      >
+        <form
+          action="#"
+          id="formID"
+        >
+          <div>
+            <div
+              class="ons-u-mt-m"
+            >
+              <div
+                class="ons-grid"
+              >
+                <div
+                  class="ons-grid__col ons-col-8@m"
+                >
+                  <h1>
+                    Which questionnaire needs UACs generated?
+                  </h1>
+                  <div
+                    class="ons-panel ons-panel--info ons-panel--no-title ons-u-mt-m"
+                    id="panel-_r_0_"
+                  >
+                    <span
+                      class="ons-panel__assistive-text ons-u-vh"
+                    >
+                      Important information:
+                       
+                    </span>
+                    <div
+                      class="ons-panel__body "
+                    >
+                      <p>
+                        The questionnaire name must match the name of the questionnaire deployed via the Deploy Questionnaire Service (DQS).
+                      </p>
+                      <p>
+                        The questionnaire name must start with 3 letters for the survey TLA followed by 4 numbers for the questionnaire field period, e.g. OPN2101A.
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="ons-field"
+                  >
+                    <div
+                      class="ons-field"
+                    >
+                      <label
+                        class="ons-label"
+                        for="questionnaire-name-input"
+                      >
+                        Questionnaire name
+                      </label>
+                      <input
+                        class="ons-input ons-input--text ons-input-type__input"
+                        data-testid="questionnaire-name-input-input"
+                        id="questionnaire-name-input"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ons-btn-group ons-u-mt-m"
+            >
+              <button
+                class="ons-btn"
+                data-testid="next-screen-button-button"
+                id="next-screen-button"
+                type="submit"
+              >
+                <span
+                  class="ons-btn__inner"
+                >
+                  <span
+                    class="ons-btn__text"
+                  >
+                    Continue
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>,
+  "container": <div>
+    <main
+      class="ons-page__main ons-u-mt-no"
+      id="main-content"
+    >
+      <form
+        action="#"
+        id="formID"
+      >
+        <div>
+          <div
+            class="ons-u-mt-m"
+          >
+            <div
+              class="ons-grid"
+            >
+              <div
+                class="ons-grid__col ons-col-8@m"
+              >
+                <h1>
+                  Which questionnaire needs UACs generated?
+                </h1>
+                <div
+                  class="ons-panel ons-panel--info ons-panel--no-title ons-u-mt-m"
+                  id="panel-_r_0_"
+                >
+                  <span
+                    class="ons-panel__assistive-text ons-u-vh"
+                  >
+                    Important information:
+                     
+                  </span>
+                  <div
+                    class="ons-panel__body "
+                  >
+                    <p>
+                      The questionnaire name must match the name of the questionnaire deployed via the Deploy Questionnaire Service (DQS).
+                    </p>
+                    <p>
+                      The questionnaire name must start with 3 letters for the survey TLA followed by 4 numbers for the questionnaire field period, e.g. OPN2101A.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="ons-field"
+                >
+                  <div
+                    class="ons-field"
+                  >
+                    <label
+                      class="ons-label"
+                      for="questionnaire-name-input"
+                    >
+                      Questionnaire name
+                    </label>
+                    <input
+                      class="ons-input ons-input--text ons-input-type__input"
+                      data-testid="questionnaire-name-input-input"
+                      id="questionnaire-name-input"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="ons-btn-group ons-u-mt-m"
+          >
+            <button
+              class="ons-btn"
+              data-testid="next-screen-button-button"
+              id="next-screen-button"
+              type="submit"
+            >
+              <span
+                class="ons-btn__inner"
+              >
+                <span
+                  class="ons-btn__text"
+                >
+                  Continue
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "queryClient": QueryClient {},
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
