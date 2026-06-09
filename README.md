@@ -1,113 +1,98 @@
-# Blaise UAC Service (BUS) UI
+# Blaise UAC Service (BUS) UI 🚌
 
-Web-based UI for [BUS](https://github.com/ONSdigital/blaise-uac-service)!
+Web UI for [BUS](https://github.com/ONSdigital/blaise-uac-service) that generates and manages UACs.
 
-The UI allows questionnaire sample CSVs to be uploaded and stored in a storage bucket, it then sends the questionnaire name provided and the serial numbers of the cases from the sample CSV to BUS so UACs can be generated. The UACs are then appended to the sample CSV file in the bucket. The UI then provides a link for the user to download their orignal sample CSV but now with UACs!
+Users upload questionnaire sample CSVs which are stored in a Google Cloud Storage bucket. The app sends the questionnaire name and serial numbers to BUS to generate UACs, appends them to the CSV in the bucket, and provides a download link for the original sample with UACs added.
 
-This UI also allows to disable or enable a UAC.
+The UI also supports enabling and disabling UACs.
 
-This project is a React.js application which when built is rendered by a Node.js express server.
+The application is a React frontend served by an Express backend and is deployed to Google App Engine.
 
-The application is being deployed to Google App Engine.
+## Local Development
 
-### Local Setup 
+### Prerequisites
 
-Prerequisites:
+- [Node.js](https://nodejs.org/) 24+ (see `engines` in [package.json](package.json))
+- [Yarn](https://yarnpkg.com/) 4+
+- [Google Cloud SDK (`gcloud` CLI)](https://cloud.google.com/sdk/)
 
-Prerequisites:
-- [Node.js version 20](https://nodejs.org/)
-- [Yarn](https://yarnpkg.com/)
-- [Cloud SDK](https://cloud.google.com/sdk/)
+### Clone and install packages
 
-Clone the repository:
-
-```shell script
+```shell
 git clone https://github.com/ONSdigital/blaise-uac-service-ui.git
-```
-
-Create an .env file in the root of the project and add the following variables:
-
-| Variable | Description | Example |
-| --- | --- | --- |
-| BUCKET_NAME | GCP bucket name for the sample file to be stored. | ons-blaise-v2-dev-sandbox123-bus |
-| BUS_API_URL | The BUS API URL the application will use to generate UACs. | ons-blaise-v2-dev-sandbox123-bus  |
-| BUS_CLIENT_ID | The client ID the application will use to authenticate with BUS. | blah.apps.googleusercontent.com |
-| BLAISE_API_URL | The Blaise API URL the application will use to check the users role has permission to use this service. | http://localhost:90 |
-| SERVER_PARK | Server park name to fetch all the installed questionnaires and then use those questionnaire names to get all the disabled code for each one of then to display them to the user. | gusty |
-
-Example .env file:
-
-```.env
-PROJECT_ID=ons-blaise-v2-dev-sandbox123
-BUCKET_NAME=ons-blaise-v2-dev-sandbox123-bus
-BUS_API_URL=https://dev-sandbox123-bus.social-surveys.gcp.onsdigital.uk
-BUS_CLIENT_ID=blah.apps.googleusercontent.com
-BLAISE_API_URL=http://localhost:90
-SERVER_PARK=gusty
-```
-
-Install the project dependencies:
-
-```shell script
+cd blaise-deploy-questionnaire-service
 yarn install
 ```
 
-Running yarn or yarn install will install the required modules specified in the yarn.lock file.
+### Authenticate with Google Cloud (keyless)
 
-The versions of theses modules are fixed in the yarn.lock files, so to avoid unwanted upgrades or instability caused by incorrect modifications, DO NOT DELETE THE LOCK FILE.
+Use service account impersonation to auth with BUS.
 
-More information about yarn (https://confluence.ons.gov.uk/x/zdwACQ)
-
-Authenticate with GCP:
 ```shell
 gcloud auth login
+gcloud config set project ons-blaise-v2-dev
+gcloud auth application-default login --impersonate-service-account=ons-blaise-v2-dev@appspot.gserviceaccount.com
 ```
 
-Set your GCP project:
+### Start an IAP tunnel to Blaise REST API
+
+Run this in a separate terminal and keep it running:
+
 ```shell
-gcloud config set project ons-blaise-v2-dev-sandbox123
+gcloud compute start-iap-tunnel restapi-1 80 --local-host-port=localhost:8080 --zone europe-west2-a
 ```
 
-Open a tunnel to the Blaise API in your GCP project:
+Expected output includes `Listening on port [8080]`.
+
+### Configure environment variables
+
+Create a `.env` file in the repository root. You can find IAP client IDs from an existing deployment:
+
+- App Engine -> Versions -> `bus-ui` -> View Config
+
+Example `.env` file:
+
+```ini
+BLAISE_API_URL=localhost:8080
+BUCKET_NAME=ons-blaise-v2-dev-sandbox123-bus
+BUS_API_URL=https://dev-sandbox123-bus.social-surveys.gcp.onsdigital.uk
+BUS_CLIENT_ID=blah.apps.googleusercontent.com
+PROJECT_ID=ons-blaise-v2-dev-sandbox123
+SERVER_PARK=gusty
+URL_DOMAIN=localhost
+SESSION_SECRET=blah
+```
+
+### Run the app
+
+Standard mode:
+
 ```shell
-gcloud compute start-iap-tunnel restapi-1 80 --local-host-port=localhost:90 --zone europe-west2-a
-```
-
-Download a service account JSON key for accessing the bucket in your GCP project:
-
-```
-gcloud iam service-accounts keys create keys.json --iam-account ons-blaise-v2-dev-<sandbox>@appspot.gserviceaccount.com
-```
-
-Temporary set your local GOOGLE_APPLICATION_CREDENTIALS environment variable to this JSON file:
-
-```
-Unix: export GOOGLE_APPLICATION_CREDENTIALS=keys.json
-Windows: set GOOGLE_APPLICATION_CREDENTIALS=keys.json
-```
-
-Run Node.js server and React.js client via the following package.json script:
-
-```shell script
 yarn dev
 ```
 
-The UI should now be accessible via:
+For WSL/mounted paths (polling mode):
 
-http://localhost:3000/
-
-**NB: Port 5000  may already be in use on a Mac, to release it go to System Preferences -> Sharing -> AirPlay Receiver and uncheck it**
-
-Tests can be run via the following package.json script:
-
-```shell script
-yarn test
+```shell
+yarn dev-wsl
 ```
 
-Test snapshots can be updated via:
+UI is available at http://localhost:3000/.
 
-```shell script
-yarn test -u
+If local processes become stale, stop known ports and watchers:
+
+```shell
+yarn kill
 ```
 
-To deploy your locally edited version of the application to App Engine within your sandbox, create an `app.yaml` file based off the template provided in this repository, you'll need to manually set the environment variables, then run `gcloud app deploy`.
+## Common Scripts
+
+- `yarn dev`: Run frontend + backend in watch mode
+- `yarn dev-wsl`: Run with polling watcher support for WSL/mounted paths
+- `yarn build`: Build client and server
+- `yarn typecheck`: Run TypeScript checks for frontend and server projects
+- `yarn lint`: Run typecheck, ESLint, Prettier checks, and knip
+- `yarn lint-fix`: Auto-fix lint/prettier issues and run knip fix
+- `yarn test`: Run Vitest suite with coverage
+- `yarn test-watch`: Run Vitest in watch mode
+- `yarn spellcheck`: Run cspell over code/config/docs files
