@@ -1,0 +1,200 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Questionnaire list page > questionnaire list page matches Snapshot 1`] = `
+<DocumentFragment>
+  <main
+    class="ons-page__main ons-u-mt-no"
+    id="main-content"
+  >
+    <h1
+      class="ons-u-mt-m"
+    >
+      Uploaded questionnaire samples with generated UACs
+    </h1>
+    <div
+      class="ons-u-mt-m"
+    >
+      <div
+        class="ons-u-mt-s"
+      >
+        <div
+          class="ons-table-scrollable ons-table-scrollable--on"
+        >
+          <div
+            aria-label="Table"
+            class="ons-table-scrollable__content"
+            role="region"
+            tabindex="0"
+          >
+            <table
+              class="ons-table"
+              data-testid="questionnaire-table-table"
+              id="questionnaire-table"
+            >
+              <thead
+                class="ons-table__head"
+              >
+                <tr
+                  class="ons-table__row"
+                >
+                  <th
+                    class="ons-table__header ons-table__header--top"
+                    scope="col"
+                  >
+                    <span
+                      class="ons-table__header-text"
+                    >
+                      Questionnaire name
+                    </span>
+                  </th>
+                  <th
+                    class="ons-table__header ons-table__header--top"
+                    scope="col"
+                  >
+                    <span
+                      class="ons-table__header-text"
+                    >
+                      Last modified date
+                    </span>
+                  </th>
+                  <th
+                    class="ons-table__header ons-table__header--top"
+                    scope="col"
+                  >
+                    <span
+                      class="ons-table__header-text"
+                    >
+                      CSV file
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="ons-table__body"
+              >
+                <tr
+                  class="ons-table__row "
+                  data-testid="questionnaire-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    DST1345A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    10/03/2024 09:00
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn ons-btn--small"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          <span
+                            class="ons-btn__text"
+                          >
+                            Download
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  class="ons-table__row "
+                  data-testid="questionnaire-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    DST5643A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    20/02/2024 11:30
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn ons-btn--small"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          <span
+                            class="ons-btn__text"
+                          >
+                            Download
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  class="ons-table__row "
+                  data-testid="questionnaire-table-row"
+                >
+                  <td
+                    class="ons-table__cell"
+                    style="padding: 1rem;"
+                  >
+                    OPN2101A
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    15/01/2024 14:41
+                  </td>
+                  <td
+                    class="ons-table__cell"
+                  >
+                    <div
+                      role="button"
+                      tabindex="0"
+                    >
+                      <button
+                        class="ons-btn ons-btn--small"
+                        type="button"
+                      >
+                        <span
+                          class="ons-btn__inner"
+                        >
+                          <span
+                            class="ons-btn__text"
+                          >
+                            Download
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</DocumentFragment>
+`;

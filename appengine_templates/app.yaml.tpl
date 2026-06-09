@@ -6,6 +6,7 @@ vpc_access_connector:
 
 env_variables:
   PROJECT_ID: _PROJECT_ID
+  URL_DOMAIN: _URL_DOMAIN
   BUCKET_NAME: _BUCKET_NAME
   SERVER_PARK: _SERVER_PARK
   BUS_API_URL: _BUS_API_URL

@@ -1,16 +1,22 @@
-import BusApiClient from "blaise-uac-service-node-client";
-import { GetConfigFromEnv } from "./config";
-import { NewServer } from "./server";
-import { GoogleStorage } from "./storage/google-storage-functions";
-import BlaiseApiClient from "blaise-api-node-client";
+import dotenv from "dotenv";
 
-const config = GetConfigFromEnv();
-const busApiClient = new BusApiClient(config.BusApiUrl, config.BusClientId);
-const googleStorage = new GoogleStorage(config.ProjectID);
-const blaiseApiClient = new BlaiseApiClient(config.BlaiseApiUrl);
-const app = NewServer(busApiClient, googleStorage, config, blaiseApiClient);
-const port: string = process.env.PORT || "5000";
+import { getConfigFromEnv } from "./config.js";
+import createLogger from "./pinoLogger.js";
+import { newServer } from "./server.js";
 
-app.listen(port);
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
-console.log("App is listening on port " + port);
+const config = getConfigFromEnv();
+const httpLogger = createLogger();
+const app = newServer(config, httpLogger);
+
+app
+  .listen(config.port, () => {
+    httpLogger.logger.info(`App is listening on port ${config.port}`);
+  })
+  .on("error", (err: Error) => {
+    httpLogger.logger.error(err, "Failed to start server");
+    process.exit(1);
+  });

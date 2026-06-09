@@ -1,0 +1,283 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Import UAC Page > import uac page matches Snapshot 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <script
+      id="app-config"
+      type="application/json"
+    >
+      {"projectId":"test-project-id","urlDomain":"test.blaise.gcp.onsdigital.uk"}
+    </script>
+    <div>
+      <main
+        class="ons-page__main ons-u-mt-no"
+        id="main-content"
+      >
+        <form
+          id="formID"
+        >
+          <div>
+            <div
+              class="ons-u-mt-m"
+            >
+              <div
+                class="ons-grid"
+              >
+                <div
+                  class="ons-grid__col ons-col-8@m"
+                >
+                  <h1>
+                    Which used UAC file do you want to upload?
+                  </h1>
+                  <div
+                    class="ons-panel ons-panel--info ons-panel--no-title ons-u-mt-m"
+                    id="panel-_r_0_"
+                  >
+                    <span
+                      class="ons-panel__assistive-text ons-u-vh"
+                    >
+                      Important information:
+                       
+                    </span>
+                    <div
+                      class="ons-panel__body "
+                    >
+                      <p>
+                        The UAC file must be a CSV containing the column
+                         
+                        <em
+                          class="ons-highlight"
+                        >
+                          UAC
+                        </em>
+                        .
+                      </p>
+                      <p>
+                        Upload UACs that were generated outside this service or the Deploy Questionnaire Service (DQS). Uploading these UACs marks them as used, so they will not be generated again.
+                      </p>
+                      <p>
+                        Upload may take a few minutes. Do not navigate away from this page.
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="ons-field"
+                  >
+                    <div
+                      class="ons-field"
+                    >
+                      <label
+                        class="ons-label ons-label--with-description"
+                        for="uac-selector"
+                      >
+                        Select a UAC file
+                      </label>
+                      <span
+                        class="ons-label__description ons-input--with-description"
+                        id="uac-selector-hint"
+                      >
+                        Accepted file type: csv
+                      </span>
+                      <input
+                        accept=".csv"
+                        aria-describedby="uac-selector-hint"
+                        class="ons-input ons-input--text ons-input-type__input ons-input--upload"
+                        data-testid="uac-selector-input"
+                        id="uac-selector"
+                        name="file"
+                        type="file"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="ons-btn-group ons-u-mt-m"
+            >
+              <button
+                class="ons-btn"
+                data-testid="next-screen-button-button"
+                id="next-screen-button"
+                type="submit"
+              >
+                <span
+                  class="ons-btn__inner"
+                >
+                  <span
+                    class="ons-btn__text"
+                  >
+                    Continue
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </body>,
+  "container": <div>
+    <main
+      class="ons-page__main ons-u-mt-no"
+      id="main-content"
+    >
+      <form
+        id="formID"
+      >
+        <div>
+          <div
+            class="ons-u-mt-m"
+          >
+            <div
+              class="ons-grid"
+            >
+              <div
+                class="ons-grid__col ons-col-8@m"
+              >
+                <h1>
+                  Which used UAC file do you want to upload?
+                </h1>
+                <div
+                  class="ons-panel ons-panel--info ons-panel--no-title ons-u-mt-m"
+                  id="panel-_r_0_"
+                >
+                  <span
+                    class="ons-panel__assistive-text ons-u-vh"
+                  >
+                    Important information:
+                     
+                  </span>
+                  <div
+                    class="ons-panel__body "
+                  >
+                    <p>
+                      The UAC file must be a CSV containing the column
+                       
+                      <em
+                        class="ons-highlight"
+                      >
+                        UAC
+                      </em>
+                      .
+                    </p>
+                    <p>
+                      Upload UACs that were generated outside this service or the Deploy Questionnaire Service (DQS). Uploading these UACs marks them as used, so they will not be generated again.
+                    </p>
+                    <p>
+                      Upload may take a few minutes. Do not navigate away from this page.
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="ons-field"
+                >
+                  <div
+                    class="ons-field"
+                  >
+                    <label
+                      class="ons-label ons-label--with-description"
+                      for="uac-selector"
+                    >
+                      Select a UAC file
+                    </label>
+                    <span
+                      class="ons-label__description ons-input--with-description"
+                      id="uac-selector-hint"
+                    >
+                      Accepted file type: csv
+                    </span>
+                    <input
+                      accept=".csv"
+                      aria-describedby="uac-selector-hint"
+                      class="ons-input ons-input--text ons-input-type__input ons-input--upload"
+                      data-testid="uac-selector-input"
+                      id="uac-selector"
+                      name="file"
+                      type="file"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="ons-btn-group ons-u-mt-m"
+          >
+            <button
+              class="ons-btn"
+              data-testid="next-screen-button-button"
+              id="next-screen-button"
+              type="submit"
+            >
+              <span
+                class="ons-btn__inner"
+              >
+                <span
+                  class="ons-btn__text"
+                >
+                  Continue
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "queryClient": QueryClient {},
+  "rerender": [Function],
+  "unmount": [Function],
+}
+`;
