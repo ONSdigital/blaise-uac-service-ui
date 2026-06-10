@@ -153,4 +153,57 @@ describe("AuditLogger", () => {
       severity: "INFO",
     });
   });
+
+  it("falls back to nested info.msg when top-level message keys are absent", async () => {
+    getEntriesMock.mockResolvedValueOnce([
+      [
+        {
+          metadata: {
+            insertId: "nested-msg",
+            timestamp: "2026-06-10T11:00:00.000Z",
+            severity: "INFO",
+          },
+          data: {
+            info: {
+              msg: "AUDIT_LOG: re-enabled UAC for sam",
+            },
+          },
+        },
+      ],
+    ]);
+
+    const auditLogger = new AuditLogger("project-2");
+    const [entry] = await auditLogger.getLogs();
+
+    expect(entry).toMatchObject({
+      id: "nested-msg",
+      message: "re-enabled UAC for sam",
+      severity: "INFO",
+    });
+  });
+
+  it("handles non-object payload entries without throwing", async () => {
+    getEntriesMock.mockResolvedValueOnce([
+      [
+        {
+          metadata: {
+            insertId: "non-object",
+            timestamp: "2026-06-10T11:00:00.000Z",
+            severity: "WARNING",
+          },
+          data: "unexpected-payload",
+        },
+      ],
+    ]);
+
+    const auditLogger = new AuditLogger("project-2");
+    const [entry] = await auditLogger.getLogs();
+
+    expect(entry).toStrictEqual({
+      id: "non-object",
+      timestamp: "2026-06-10T11:00:00.000Z",
+      message: "",
+      severity: "WARNING",
+    });
+  });
 });
