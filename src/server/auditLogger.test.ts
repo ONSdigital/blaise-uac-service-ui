@@ -98,4 +98,59 @@ describe("AuditLogger", () => {
       severity: "INFO",
     });
   });
+
+  it("reads auditMessage from nested info payload", async () => {
+    getEntriesMock.mockResolvedValueOnce([
+      [
+        {
+          metadata: {
+            insertId: "nested",
+            timestamp: "2026-06-10T11:00:00.000Z",
+            severity: "INFO",
+          },
+          data: {
+            message: "AUDIT_LOG:",
+            info: {
+              auditMessage: "rich disabled UAC for alex",
+            },
+          },
+        },
+      ],
+    ]);
+
+    const auditLogger = new AuditLogger("project-2");
+    const [entry] = await auditLogger.getLogs();
+
+    expect(entry).toMatchObject({
+      id: "nested",
+      message: "rich disabled UAC for alex",
+      severity: "INFO",
+    });
+  });
+
+  it("falls back to msg key when message key is absent", async () => {
+    getEntriesMock.mockResolvedValueOnce([
+      [
+        {
+          metadata: {
+            insertId: "msg-key",
+            timestamp: "2026-06-10T11:00:00.000Z",
+            severity: "INFO",
+          },
+          data: {
+            msg: "AUDIT_LOG: enabled UAC for alex",
+          },
+        },
+      ],
+    ]);
+
+    const auditLogger = new AuditLogger("project-2");
+    const [entry] = await auditLogger.getLogs();
+
+    expect(entry).toMatchObject({
+      id: "msg-key",
+      message: "enabled UAC for alex",
+      severity: "INFO",
+    });
+  });
 });
