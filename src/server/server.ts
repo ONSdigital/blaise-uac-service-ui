@@ -7,6 +7,7 @@ import { Auth, newLoginHandler } from "blaise-login-react-server";
 import { BusClient } from "blaise-uac-service-node-client";
 import ejs from "ejs";
 import express, { type Express, type NextFunction, type Request, type Response } from "express";
+import rateLimit from "express-rate-limit";
 
 import AuditLogger from "./auditLogger.js";
 import createAuditHandler from "./handlers/auditHandler.js";
@@ -25,6 +26,14 @@ import type { HttpLogger } from "pino-http";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const apiRateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 300,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
 
 function resolveClientBuildFolder(): string {
   const candidates = [
@@ -75,6 +84,7 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
+  server.use("/api/v1", apiRateLimiter);
 
   //define handlers
   server.use(
