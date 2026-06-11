@@ -35,6 +35,14 @@ const apiRateLimiter = rateLimit({
   message: { error: "Too many requests, please try again later" },
 });
 
+const pageRateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  limit: 300,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later" },
+});
+
 function resolveClientBuildFolder(): string {
   const candidates = [
     path.resolve(process.cwd(), "build/client"),
@@ -78,8 +86,8 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   server.use(logger);
 
   server.use("/assets", express.static(path.join(clientBuildFolder, "assets")));
-  server.get("/", renderClientIndex);
-  server.get("/index.html", renderClientIndex);
+  server.get("/", pageRateLimiter, renderClientIndex);
+  server.get("/index.html", pageRateLimiter, renderClientIndex);
   server.use(express.static(clientBuildFolder, { index: false }));
 
   server.use(express.json());
@@ -103,7 +111,7 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   server.use("/", createBlaiseHandler(blaiseApiClient, config.serverPark, auth));
   server.use("/", createAuditHandler(auditLogger, auth));
 
-  server.get("/{*path}", renderClientIndex);
+  server.get("/{*path}", pageRateLimiter, renderClientIndex);
 
   server.use(function (err: Error, req: Request, res: Response, _next: NextFunction) {
     req.log.error(err, err.message);
