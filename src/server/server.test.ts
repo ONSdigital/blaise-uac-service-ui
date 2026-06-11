@@ -38,12 +38,12 @@ describe("All expected routes are registered", () => {
   const expectedEndpoints = [
     {
       methods: ["GET"],
-      middlewares: ["renderClientIndex"],
+      middlewares: ["anonymous", "renderClientIndex"],
       path: "/",
     },
     {
       methods: ["GET"],
-      middlewares: ["renderClientIndex"],
+      middlewares: ["anonymous", "renderClientIndex"],
       path: "/index.html",
     },
     {
@@ -100,7 +100,7 @@ describe("All expected routes are registered", () => {
       middlewares: ["middleware", "getAuditInfo"],
       path: "/api/audit",
     },
-    { methods: ["GET"], middlewares: ["renderClientIndex"], path: "/{*path}" },
+    { methods: ["GET"], middlewares: ["anonymous", "renderClientIndex"], path: "/{*path}" },
   ];
 
   it("should contain all expected routes", async () => {
