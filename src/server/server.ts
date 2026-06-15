@@ -28,6 +28,25 @@ import type { HttpLogger } from "pino-http";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const DEFAULT_API_RATE_LIMIT = 3000;
+const DEFAULT_PAGE_RATE_LIMIT = 1000;
+
+function parseRateLimit(envName: string, fallback: number): number {
+  const value = process.env[envName];
+
+  if (value == null || value.trim() === "") {
+    return fallback;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return fallback;
+  }
+
+  return parsed;
+}
+
 function normaliseForwardedForValue(forwardedForValue: string): string | null {
   const trimmedValue = forwardedForValue.trim().replace(/^"|"$/g, "");
 
@@ -81,18 +100,45 @@ export function keyGeneratorFromForwardedHeader(req: Request): string {
   return ipKeyGenerator(forwardedFor ?? req.ip ?? req.socket.remoteAddress ?? "unknown");
 }
 
-const apiRateLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,
-  limit: 300,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  keyGenerator: keyGeneratorFromForwardedHeader,
-  message: { error: "Too many requests, please try again later" },
-});
+function userRateLimitKey(auth: Auth, req: Request): string | null {
+  try {
+    const token = auth.getToken(req);
+    const userName = auth.getUser(token)?.name;
+
+    if (typeof userName !== "string") {
+      return null;
+    }
+
+    const normalisedUserName = userName.trim().toLowerCase();
+
+    if (normalisedUserName === "") {
+      return null;
+    }
+
+    return `user:${encodeURIComponent(normalisedUserName)}`;
+  } catch {
+    return null;
+  }
+}
+
+export function keyGeneratorFromAuthenticatedUser(auth: Auth, req: Request): string {
+  return userRateLimitKey(auth, req) ?? keyGeneratorFromForwardedHeader(req);
+}
+
+function createApiRateLimiter(auth: Auth) {
+  return rateLimit({
+    windowMs: 5 * 60 * 1000,
+    limit: parseRateLimit("BUS_API_RATE_LIMIT", DEFAULT_API_RATE_LIMIT),
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    keyGenerator: (req: Request) => keyGeneratorFromAuthenticatedUser(auth, req),
+    message: { error: "Too many requests, please try again later" },
+  });
+}
 
 const pageRateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  limit: 300,
+  limit: parseRateLimit("BUS_PAGE_RATE_LIMIT", DEFAULT_PAGE_RATE_LIMIT),
   standardHeaders: "draft-8",
   legacyHeaders: false,
   keyGenerator: keyGeneratorFromForwardedHeader,
@@ -129,6 +175,7 @@ export function newServer(config: Config, logger: HttpLogger = createLogger()): 
   const googleStorage = new GoogleStorage(config.projectId);
   const blaiseApiClient = new BlaiseApiClient(config.blaiseApiUrl);
   const auth = new Auth(config);
+  const apiRateLimiter = createApiRateLimiter(auth);
   const auditLogger = new AuditLogger(config.projectId);
   const loginHandler = newLoginHandler(auth, blaiseApiClient);
 

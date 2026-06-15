@@ -1,11 +1,16 @@
 import fs from "fs";
 
+import { type Auth } from "blaise-login-react-server";
 import ejs from "ejs";
 import listEndpoints from "express-list-endpoints";
 import supertest from "supertest";
 
 import { getConfigFromEnv } from "./config.js";
-import { keyGeneratorFromForwardedHeader, newServer } from "./server.js";
+import {
+  keyGeneratorFromAuthenticatedUser,
+  keyGeneratorFromForwardedHeader,
+  newServer,
+} from "./server.js";
 
 import type * as BlaiseLoginReactServer from "blaise-login-react-server";
 import type * as EjsModule from "ejs";
@@ -276,6 +281,109 @@ describe("Rate limiter key generator", () => {
     };
 
     expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("unknown");
+  });
+});
+
+describe("Rate limiter authenticated key generator", () => {
+  type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromForwardedHeader>[0];
+
+  it("uses the authenticated username when available", () => {
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "Rich User" }),
+    } as unknown as Auth;
+    const request = {
+      headers: { forwarded: "for=198.51.100.50;proto=https" },
+      ip: "10.0.0.2",
+      socket: { remoteAddress: "127.0.0.1" },
+    };
+
+    expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
+      "user:rich%20user",
+    );
+  });
+
+  it("falls back to forwarded/IP identity when username is unavailable", () => {
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({}),
+    } as unknown as Auth;
+    const request = {
+      headers: { forwarded: "for=198.51.100.50;proto=https" },
+      ip: "10.0.0.2",
+      socket: { remoteAddress: "127.0.0.1" },
+    };
+
+    expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
+      "198.51.100.50",
+    );
+  });
+
+  it("falls back to forwarded/IP identity when auth access throws", () => {
+    const auth = {
+      getToken: vi.fn().mockImplementation(() => {
+        throw new Error("token error");
+      }),
+      getUser: vi.fn(),
+    } as unknown as Auth;
+    const request = {
+      headers: { forwarded: "for=198.51.100.50;proto=https" },
+      ip: "10.0.0.2",
+      socket: { remoteAddress: "127.0.0.1" },
+    };
+
+    expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
+      "198.51.100.50",
+    );
+  });
+
+  it("falls back to forwarded/IP identity when username is blank", () => {
+    const auth = {
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "   " }),
+    } as unknown as Auth;
+    const request = {
+      headers: { forwarded: "for=198.51.100.50;proto=https" },
+      ip: "10.0.0.2",
+      socket: { remoteAddress: "127.0.0.1" },
+    };
+
+    expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
+      "198.51.100.50",
+    );
+  });
+});
+
+describe("Rate limiter configuration", () => {
+  const config = getConfigFromEnv();
+  const originalApiRateLimit = process.env.BUS_API_RATE_LIMIT;
+
+  afterEach(() => {
+    process.env.BUS_API_RATE_LIMIT = originalApiRateLimit;
+  });
+
+  it("falls back to default API limit when BUS_API_RATE_LIMIT is invalid", async () => {
+    process.env.BUS_API_RATE_LIMIT = "invalid";
+
+    const response = await supertest(newServer(config)).post("/api/v1/not-found");
+    const rateLimitHeader = String(
+      response.headers.ratelimit ?? response.headers["ratelimit-policy"] ?? "",
+    );
+
+    expect(response.status).toBe(404);
+    expect(rateLimitHeader).toContain("3000");
+  });
+
+  it("uses BUS_API_RATE_LIMIT when it is a valid integer", async () => {
+    process.env.BUS_API_RATE_LIMIT = "7";
+
+    const response = await supertest(newServer(config)).post("/api/v1/not-found");
+    const rateLimitHeader = String(
+      response.headers.ratelimit ?? response.headers["ratelimit-policy"] ?? "",
+    );
+
+    expect(response.status).toBe(404);
+    expect(rateLimitHeader).toContain("7");
   });
 });
 
