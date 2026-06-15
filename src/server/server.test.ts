@@ -365,24 +365,24 @@ describe("Rate limiter configuration", () => {
   it("falls back to default API limit when BUS_API_RATE_LIMIT is invalid", async () => {
     process.env.BUS_API_RATE_LIMIT = "invalid";
 
-    const response = await supertest(newServer(config)).get("/api/v1/not-found");
+    const response = await supertest(newServer(config)).post("/api/v1/not-found");
     const rateLimitHeader = String(
       response.headers.ratelimit ?? response.headers["ratelimit-policy"] ?? "",
     );
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(404);
     expect(rateLimitHeader).toContain("3000");
   });
 
   it("uses BUS_API_RATE_LIMIT when it is a valid integer", async () => {
     process.env.BUS_API_RATE_LIMIT = "7";
 
-    const response = await supertest(newServer(config)).get("/api/v1/not-found");
+    const response = await supertest(newServer(config)).post("/api/v1/not-found");
     const rateLimitHeader = String(
       response.headers.ratelimit ?? response.headers["ratelimit-policy"] ?? "",
     );
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(404);
     expect(rateLimitHeader).toContain("7");
   });
 });
