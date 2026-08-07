@@ -6,3 +6,4 @@ coverage/
 node_modules/
 *.log
 .env
+keys.json
