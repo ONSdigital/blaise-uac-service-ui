@@ -65,8 +65,6 @@ SESSION_SECRET=blah
 
 ### Run the app
 
-Standard mode:
-
 ```shell
 yarn dev
 ```
