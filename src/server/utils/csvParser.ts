@@ -259,7 +259,7 @@ function mapUacChunk(
   uacDetails: UacsByCaseId[string],
 ): Record<string, string> {
   const sanitizedLine = Object.fromEntries(
-    Object.entries(line).map(([key, value]) => [key, sanitizeCsvCell(value)]),
+    Object.entries(line).map(([key, value]) => [sanitizeCsvCell(key), sanitizeCsvCell(value)]),
   );
 
   sanitizedLine[uacHeadings[0]] = uacDetails.uac_chunks.uac1;

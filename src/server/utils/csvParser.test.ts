@@ -15,6 +15,7 @@ import {
   mockValidSampleCsvWithExistingUacColumns,
   mockValidSampleCsvWithExistingUacEntries,
   mockValidSampleCsvWithFormulaInjection,
+  mockValidSampleCsvWithFormulaInjectionInHeader,
   mockValidUacImportCsv,
 } from "../../server/test-utils/csv.mock.js";
 
@@ -337,6 +338,24 @@ describe("addUacsToFile tests", () => {
       UAC2: "7578",
       UAC3: "5367",
       UAC: "978975785367",
+    });
+  });
+
+  it("Sanitizes formula injection characters in column headers", async () => {
+    const fileData = Buffer.from(mockValidSampleCsvWithFormulaInjectionInHeader);
+
+    const result = await addUacsToFile(fileData, mockMatchedQuestionnaireUacDetails);
+
+    expect(result).toHaveLength(3);
+    expect(result).toContainEqual({
+      serial_number: "100000001",
+      "'=Name": "Homer Simpson",
+      "Phone Number": "5551234422",
+      Email: "homer@springfield.com",
+      UAC1: "0009",
+      UAC2: "7565",
+      UAC3: "3827",
+      UAC: "000975653827",
     });
   });
 
