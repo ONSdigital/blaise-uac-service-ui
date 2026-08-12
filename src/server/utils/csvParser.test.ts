@@ -14,10 +14,17 @@ import {
   mockValidSampleCsvWithExistingMixedCaseUacColumns,
   mockValidSampleCsvWithExistingUacColumns,
   mockValidSampleCsvWithExistingUacEntries,
+  mockValidSampleCsvWithFormulaInjection,
+  mockValidSampleCsvWithFormulaInjectionInHeader,
   mockValidUacImportCsv,
 } from "../../server/test-utils/csv.mock.js";
 
-import { addUacsToFile, getCaseIdsFromFile, getUacsFromFile } from "./csvParser.js";
+import {
+  addUacsToFile,
+  getCaseIdsFromFile,
+  getUacsFromFile,
+  sanitizeCsvCell,
+} from "./csvParser.js";
 
 import type * as ValidationModule from "../validation.js";
 
@@ -117,6 +124,27 @@ describe("getCaseIdsFromFile tests", () => {
       "There is a problem with the CSV file, please ensure all IDs in the serial_number column are unique",
     );
   });
+});
+
+describe("sanitizeCsvCell tests", () => {
+  it.each([
+    ["=", "'="],
+    ["=SUM(A1+B1)", "'=SUM(A1+B1)"],
+    ["+value", "'+value"],
+    ["-value", "'-value"],
+    ["@value", "'@value"],
+    ["\tvalue", "'\tvalue"],
+    ["\rvalue", "'\rvalue"],
+  ])("prefixes dangerous leading character: %s", (input, expected) => {
+    expect(sanitizeCsvCell(input)).toBe(expected);
+  });
+
+  it.each([["normal text"], ["100000001"], ["homer@springfield.com"], [""], ["' already quoted"]])(
+    "leaves safe values unchanged: %s",
+    (input) => {
+      expect(sanitizeCsvCell(input)).toBe(input);
+    },
+  );
 });
 
 describe("addUacsToFile tests", () => {
@@ -272,6 +300,62 @@ describe("addUacsToFile tests", () => {
       UAC: "978975785367",
       "Phone Number": "2675465026",
       Email: "bart@spring.field",
+    });
+  });
+
+  it("Sanitizes formula injection characters in cell values", async () => {
+    const fileData = Buffer.from(mockValidSampleCsvWithFormulaInjection);
+
+    const result = await addUacsToFile(fileData, mockMatchedQuestionnaireUacDetails);
+
+    expect(result).toHaveLength(3);
+    expect(result).toContainEqual({
+      serial_number: "100000001",
+      Name: "'=Homer Simpson",
+      "Phone Number": "'+5551234422",
+      Email: "'@homer@springfield.com",
+      UAC1: "0009",
+      UAC2: "7565",
+      UAC3: "3827",
+      UAC: "000975653827",
+    });
+    expect(result).toContainEqual({
+      serial_number: "100000002",
+      Name: "'-Seymour Skinner",
+      "Phone Number": "1235663322",
+      Email: "a@b.c",
+      UAC1: "3453",
+      UAC2: "6545",
+      UAC3: "4564",
+      UAC: "345365454564",
+    });
+    expect(result).toContainEqual({
+      serial_number: "100000003",
+      Name: "'\tBart Simpson",
+      "Phone Number": "2675465026",
+      Email: "bart@spring.field",
+      UAC1: "9789",
+      UAC2: "7578",
+      UAC3: "5367",
+      UAC: "978975785367",
+    });
+  });
+
+  it("Sanitizes formula injection characters in column headers", async () => {
+    const fileData = Buffer.from(mockValidSampleCsvWithFormulaInjectionInHeader);
+
+    const result = await addUacsToFile(fileData, mockMatchedQuestionnaireUacDetails);
+
+    expect(result).toHaveLength(3);
+    expect(result).toContainEqual({
+      serial_number: "100000001",
+      "'=Name": "Homer Simpson",
+      "Phone Number": "5551234422",
+      Email: "homer@springfield.com",
+      UAC1: "0009",
+      UAC2: "7565",
+      UAC3: "3827",
+      UAC: "000975653827",
     });
   });
 

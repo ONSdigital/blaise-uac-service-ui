@@ -242,22 +242,37 @@ export function addUacsToFile(
   });
 }
 
+// Characters that trigger formula execution in spreadsheet applications (OWASP CSV Injection)
+const FORMULA_INJECTION_CHARS = /^[=+\-@\t\r]/;
+
+export function sanitizeCsvCell(value: string): string {
+  if (FORMULA_INJECTION_CHARS.test(value)) {
+    return `'${value}`;
+  }
+
+  return value;
+}
+
 function mapUacChunk(
   uacHeadings: string[],
   line: Record<string, string>,
   uacDetails: UacsByCaseId[string],
 ): Record<string, string> {
-  line[uacHeadings[0]] = uacDetails.uac_chunks.uac1;
-  line[uacHeadings[1]] = uacDetails.uac_chunks.uac2;
-  line[uacHeadings[2]] = uacDetails.uac_chunks.uac3;
+  const sanitizedLine = Object.fromEntries(
+    Object.entries(line).map(([key, value]) => [sanitizeCsvCell(key), sanitizeCsvCell(value)]),
+  );
+
+  sanitizedLine[uacHeadings[0]] = uacDetails.uac_chunks.uac1;
+  sanitizedLine[uacHeadings[1]] = uacDetails.uac_chunks.uac2;
+  sanitizedLine[uacHeadings[2]] = uacDetails.uac_chunks.uac3;
 
   if (uacDetails.uac_chunks.uac4) {
-    line[uacHeadings[3]] = uacDetails.uac_chunks.uac4;
+    sanitizedLine[uacHeadings[3]] = uacDetails.uac_chunks.uac4;
   }
 
   if (uacDetails.full_uac) {
-    line[uacHeadings[4]] = uacDetails.full_uac;
+    sanitizedLine[uacHeadings[4]] = uacDetails.full_uac;
   }
 
-  return line;
+  return sanitizedLine;
 }
