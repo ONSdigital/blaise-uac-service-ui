@@ -28,6 +28,23 @@ const navigationLinks = [
   { id: "audit-link", label: "View UAC history", endpoint: "/audit" },
 ];
 
+function NotFound(): ReactElement {
+  return (
+    <main
+      id="main-content"
+      className="ons-page__main ons-u-mt-l"
+    >
+      <div className="ons-grid">
+        <div className="ons-grid__col ons-col-8@m">
+          <h1>Page not found</h1>
+          <p>The page you're looking for doesn't exist.</p>
+          <Link to="/">Return home</Link>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function AppContent({ loggedIn, user }: { loggedIn: boolean; user: User }): ReactElement {
   if (loggedIn && user) {
     return (
@@ -56,6 +73,10 @@ function AppContent({ loggedIn, user }: { loggedIn: boolean; user: User }): Reac
           <Route
             path="/"
             element={<UploadedSamplesPage />}
+          />
+          <Route
+            path="*"
+            element={<NotFound />}
           />
         </Routes>
       </DefaultErrorBoundary>
