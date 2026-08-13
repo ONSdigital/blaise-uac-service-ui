@@ -1,9 +1,7 @@
 import type { QuestionnaireWithDisabledUacs } from "../types/questionnaire.types";
 
 export type ParsedRouteState<T> =
-  | { status: "absent" }
-  | { status: "invalid" }
-  | { status: "valid"; value: T };
+  { status: "absent" } | { status: "invalid" } | { status: "valid"; value: T };
 
 export interface DisableUacResultState {
   disabledUac: string;
@@ -11,8 +9,7 @@ export interface DisableUacResultState {
 }
 
 export type DisableUacPageState =
-  | { kind: "confirmation"; uac: string }
-  | { kind: "result"; result: DisableUacResultState };
+  { kind: "confirmation"; uac: string } | { kind: "result"; result: DisableUacResultState };
 
 export type EnableUacPageState =
   | { kind: "table"; questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs }
