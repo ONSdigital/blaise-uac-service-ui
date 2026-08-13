@@ -79,7 +79,9 @@ describe("Enable Page", () => {
 
     renderComponent();
 
-    expect(screen.getByText(/Are you sure you want to enable this UAC\?/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to enable this UAC for questionnaire/i),
+    ).toBeInTheDocument();
     expect(screen.queryByText("100461197282")).toBeNull();
   });
 

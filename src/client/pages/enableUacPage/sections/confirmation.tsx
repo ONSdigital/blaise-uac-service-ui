@@ -51,11 +51,11 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
 
   return (
     <>
-      <h1 className="ons-u-mt-m ons-u-mb-l">Are you sure you want to enable this UAC?</h1>
-      <p>
-        Context: questionnaire <em className="ons-highlight">{questionnaireName}</em>, case ID{" "}
-        <em className="ons-highlight">{case_id}</em>
-      </p>
+      <h1 className="ons-u-mt-m ons-u-mb-l">
+        Are you sure you want to enable this UAC for questionnaire{" "}
+        <em className="ons-highlight">{questionnaireName}</em>, case ID{" "}
+        <em className="ons-highlight">{case_id}</em>?
+      </h1>
       <Button
         label="Continue"
         onClick={() => enableUacMutation.mutate()}

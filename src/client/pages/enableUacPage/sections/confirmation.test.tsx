@@ -55,7 +55,8 @@ describe("Enable UAC Confirmation component", () => {
   it("renders Enable Confirmation Component and receives the passed state", async () => {
     const { getByText, queryByText } = renderComponent();
 
-    const expectedWarningMessageText = /Are you sure you want to enable this UAC\?/i;
+    const expectedWarningMessageText =
+      /Are you sure you want to enable this UAC for questionnaire/i;
 
     expect(getByText(expectedWarningMessageText)).toBeInTheDocument();
     expect(getByText(confirmationComponentState.case_id)).toBeInTheDocument();

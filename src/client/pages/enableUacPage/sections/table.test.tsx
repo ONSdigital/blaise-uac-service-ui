@@ -108,7 +108,7 @@ describe("Disable UAC page works as expected", () => {
     await act(async () => {
       await flushPromises();
     });
-    expect(getByText(/Are you sure you want to enable this UAC\?/i)).toBeDefined();
+    expect(getByText(/Are you sure you want to enable this UAC for questionnaire/i)).toBeDefined();
     expect(getByText(mockQuestionnaireWithOneDisabledUac.disabledUacs[0].case_id)).toBeDefined();
     expect(getByText(mockQuestionnaireWithOneDisabledUac.questionnaireName)).toBeDefined();
   });
