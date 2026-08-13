@@ -10,8 +10,6 @@ interface Props {
 
 function Form({ resultState }: Props): ReactElement {
   const [uac, setUac] = useState("");
-  const [questionnaireName, setQuestionnaireName] = useState("");
-  const [caseId, setCaseId] = useState("");
   const [error, setError] = useState<string>("");
   const [submitDisable, setSubmitDisable] = useState(true);
 
@@ -68,49 +66,11 @@ function Form({ resultState }: Props): ReactElement {
           onChange={handleChangeInUac}
         />
       </div>
-      <div className="ons-u-mt-m">
-        <TextInput
-          label="Questionnaire name (optional, for audit log context)"
-          onClick={function noRefCheck() {}}
-          placeholder="Enter questionnaire name"
-          value={questionnaireName}
-          onChange={(event) => setQuestionnaireName(event.target.value)}
-        />
-      </div>
-      <div className="ons-u-mt-m">
-        <TextInput
-          label="Case ID (optional, for audit log context)"
-          onClick={function noRefCheck() {}}
-          placeholder="Enter case ID"
-          value={caseId}
-          onChange={(event) => setCaseId(event.target.value)}
-        />
-      </div>
       <div className="ons-btn-group ons-u-mt-m">
         <Button
           label="Disable UAC"
           disabled={submitDisable}
-          onClick={() => {
-            const state: {
-              step: "confirmation";
-              uac: string;
-              questionnaireName?: string;
-              case_id?: string;
-            } = { step: "confirmation", uac };
-
-            const trimmedQuestionnaireName = questionnaireName.trim();
-            const trimmedCaseId = caseId.trim();
-
-            if (trimmedQuestionnaireName !== "") {
-              state.questionnaireName = trimmedQuestionnaireName;
-            }
-
-            if (trimmedCaseId !== "") {
-              state.case_id = trimmedCaseId;
-            }
-
-            navigate("/disable-uac", { state: state });
-          }}
+          onClick={() => navigate("/disable-uac", { state: { step: "confirmation", uac } })}
           primary
         />
       </div>

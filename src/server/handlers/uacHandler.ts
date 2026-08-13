@@ -19,33 +19,21 @@ interface UacAuditContext {
 const UNKNOWN_QUESTIONNAIRE_NAME = "unknown-questionnaire";
 const UNKNOWN_CASE_ID = "unknown-case-id";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-function readOptionalNonEmptyString(value: unknown): string | undefined {
-  if (typeof value !== "string") {
-    return undefined;
-  }
-
-  const trimmedValue = value.trim();
-
-  return trimmedValue === "" ? undefined : trimmedValue;
-}
-
-function readUacAuditContext(body: unknown): UacAuditContext {
-  if (!isRecord(body)) {
-    return {
-      questionnaireName: UNKNOWN_QUESTIONNAIRE_NAME,
-      caseId: UNKNOWN_CASE_ID,
-    };
-  }
-
+function unknownAuditContext(): UacAuditContext {
   return {
-    questionnaireName:
-      readOptionalNonEmptyString(body.questionnaireName) ?? UNKNOWN_QUESTIONNAIRE_NAME,
-    caseId: readOptionalNonEmptyString(body.caseId) ?? UNKNOWN_CASE_ID,
+    questionnaireName: UNKNOWN_QUESTIONNAIRE_NAME,
+    caseId: UNKNOWN_CASE_ID,
   };
+}
+
+function isUnknownAuditContext(context: UacAuditContext): boolean {
+  return (
+    context.questionnaireName === UNKNOWN_QUESTIONNAIRE_NAME && context.caseId === UNKNOWN_CASE_ID
+  );
+}
+
+function caseIdOrUnknown(caseId: unknown): string {
+  return typeof caseId === "string" && caseId.trim() !== "" ? caseId : UNKNOWN_CASE_ID;
 }
 
 function buildDisableAuditMessage(username: string, context: UacAuditContext): string {
@@ -104,6 +92,57 @@ class UacHandler {
     private readonly auditLogger?: AuditLoggerLike,
   ) {}
 
+  private async findAuditContextForUac(uac: string, req: Request): Promise<UacAuditContext> {
+    if (!this.blaiseApiClient || !this.serverPark) {
+      return unknownAuditContext();
+    }
+
+    try {
+      const questionnaires = await this.blaiseApiClient.getQuestionnaires(this.serverPark);
+      const activeQuestionnaires = questionnaires.filter(
+        (q) => q.status === undefined || (q.status !== "Erroneous" && q.status !== "Failed"),
+      );
+
+      for (const q of activeQuestionnaires) {
+        try {
+          const disabledUacs = await this.busClient.getDisabledUacs(q.name);
+
+          for (const uacObj of Object.values(disabledUacs)) {
+            const disabledUac =
+              uacObj.full_uac ??
+              `${uacObj.uac_chunks.uac1}${uacObj.uac_chunks.uac2}${uacObj.uac_chunks.uac3}${uacObj.uac_chunks.uac4 ?? ""}`;
+
+            if (disabledUac !== uac) {
+              continue;
+            }
+
+            return {
+              questionnaireName: (uacObj.questionnaire_name ?? q.name).toUpperCase(),
+              caseId: caseIdOrUnknown(uacObj.case_id),
+            };
+          }
+        } catch (error: unknown) {
+          req.log.warn(
+            {
+              questionnaireName: q.name,
+              errorName: error instanceof Error ? error.name : typeof error,
+            },
+            "Failed to fetch disabled UACs while resolving audit context",
+          );
+        }
+      }
+    } catch (error: unknown) {
+      req.log.warn(
+        {
+          errorName: error instanceof Error ? error.name : typeof error,
+        },
+        "Failed to fetch questionnaires while resolving audit context",
+      );
+    }
+
+    return unknownAuditContext();
+  }
+
   getAllDisabledUacs = async (req: Request, res: Response): Promise<Response> => {
     if (!this.blaiseApiClient || !this.serverPark) {
       return res.status(500).json("Blaise API client not configured");
@@ -121,17 +160,13 @@ class UacHandler {
           const disabledUacs = await this.busClient.getDisabledUacs(q.name);
 
           for (const uacObj of Object.values(disabledUacs)) {
-            if (!uacObj.case_id) {
-              continue;
-            }
-
             const uac =
               uacObj.full_uac ??
               `${uacObj.uac_chunks.uac1}${uacObj.uac_chunks.uac2}${uacObj.uac_chunks.uac3}${uacObj.uac_chunks.uac4 ?? ""}`;
 
             allResults.push({
               questionnaire: (uacObj.questionnaire_name ?? q.name).toUpperCase(),
-              caseId: uacObj.case_id,
+              caseId: caseIdOrUnknown(uacObj.case_id),
               uac,
             });
           }
@@ -155,16 +190,21 @@ class UacHandler {
 
   disableUac = async (req: Request, res: Response): Promise<Response> => {
     const uac: string = req.body.uac;
-    const auditContext = readUacAuditContext(req.body);
 
     if (!uac || !isValidUac(uac)) {
       return res.status(400).json("Invalid UAC: must be exactly 12 digits");
     }
 
     const username = getUsername(req, this.auth);
+    const beforeDisableContext = await this.findAuditContextForUac(uac, req);
 
     try {
       await this.busClient.disableUac(uac);
+      const afterDisableContext = await this.findAuditContextForUac(uac, req);
+      const auditContext = isUnknownAuditContext(afterDisableContext)
+        ? beforeDisableContext
+        : afterDisableContext;
+
       req.log.info("Successfully disabled UAC");
       this.auditLogger?.info(req.log, buildDisableAuditMessage(username, auditContext));
 
@@ -174,19 +214,27 @@ class UacHandler {
       // A BusClientError with no statusCode means HTTP 200 was received but body
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
+        const afterDisableContext = await this.findAuditContextForUac(uac, req);
+        const auditContext = isUnknownAuditContext(afterDisableContext)
+          ? beforeDisableContext
+          : afterDisableContext;
+
         req.log.info("Successfully disabled UAC");
         this.auditLogger?.info(req.log, buildDisableAuditMessage(username, auditContext));
 
         return res.status(200).json("Success");
       }
 
-      this.auditLogger?.error(req.log, buildDisableAuditFailureMessage(username, auditContext));
+      this.auditLogger?.error(
+        req.log,
+        buildDisableAuditFailureMessage(username, beforeDisableContext),
+      );
 
       req.log.error(
         {
           ...buildSafeErrorDetails(error),
-          questionnaireName: auditContext.questionnaireName,
-          caseId: auditContext.caseId,
+          questionnaireName: beforeDisableContext.questionnaireName,
+          caseId: beforeDisableContext.caseId,
         },
         "Disable UAC failed",
       );
@@ -197,13 +245,13 @@ class UacHandler {
 
   enableUac = async (req: Request, res: Response): Promise<Response> => {
     const uac: string = req.body.uac;
-    const auditContext = readUacAuditContext(req.body);
 
     if (!uac || !isValidUac(uac)) {
       return res.status(400).json("Invalid UAC: must be exactly 12 digits");
     }
 
     const username = getUsername(req, this.auth);
+    const auditContext = await this.findAuditContextForUac(uac, req);
 
     try {
       await this.busClient.enableUac(uac);

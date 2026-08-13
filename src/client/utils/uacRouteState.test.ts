@@ -136,25 +136,6 @@ describe("parseDisableUacPageState", () => {
     });
   });
 
-  it("keeps optional disable audit context when present", () => {
-    expect(
-      parseDisableUacPageState({
-        step: "confirmation",
-        uac: "123456789012",
-        questionnaireName: "LMS2209_EM1",
-        case_id: "907195",
-      }),
-    ).toEqual({
-      status: "valid",
-      value: {
-        kind: "confirmation",
-        uac: "123456789012",
-        questionnaireName: "LMS2209_EM1",
-        case_id: "907195",
-      },
-    });
-  });
-
   it("returns invalid when the confirmation state contains a blank UAC", () => {
     expect(parseDisableUacPageState({ step: "confirmation", uac: "" })).toEqual({
       status: "invalid",

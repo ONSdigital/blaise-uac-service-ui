@@ -17,7 +17,7 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const enableUacMutation = useMutation({
-    mutationFn: () => enableUac(uac, { questionnaireName, caseId: case_id }),
+    mutationFn: () => enableUac(uac),
     onSuccess: (success) => {
       void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
 

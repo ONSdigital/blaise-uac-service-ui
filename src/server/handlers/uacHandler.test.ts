@@ -327,6 +327,7 @@ describe("aggregate disabled UAC endpoint", () => {
       { questionnaire: "ABC1234A", caseId: "0001", uac: "123456789123" },
       { questionnaire: "LMS2209_EM1", caseId: "0002", uac: "1111222233334444" },
       { questionnaire: "LMS2209_EM1", caseId: "0003", uac: "555566667777" },
+      { questionnaire: "LMS2209_EM1", caseId: "unknown-case-id", uac: "000100020003" },
     ]);
     expect(mockGetDisabledUacs).toHaveBeenCalledTimes(2);
     expect(mockGetDisabledUacs).toHaveBeenCalledWith("LMS2209_EM1");
@@ -477,33 +478,27 @@ describe("uac audit logging", () => {
   it("logs disable success and failure", async () => {
     const { app, busClient, auditLogger } = createAuditTestApp();
     const request = supertest(app);
-    const questionnaireName = "LMS2209_EM1";
-    const caseId = "907195";
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
 
-    const success = await request
-      .post("/api/v1/uac/disable")
-      .send({ uac: "123456789123", questionnaireName, caseId });
+    const success = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
 
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      `rich disabled UAC for questionnaire ${questionnaireName} case ${caseId}`,
+      "rich disabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
     );
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
       new Error("fail"),
     );
 
-    const failure = await request
-      .post("/api/v1/uac/disable")
-      .send({ uac: "123456789123", questionnaireName, caseId });
+    const failure = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
 
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      `rich failed to disable UAC for questionnaire ${questionnaireName} case ${caseId}`,
+      "rich failed to disable UAC for questionnaire unknown-questionnaire case unknown-case-id",
     );
 
     expect(auditLogger.info).not.toHaveBeenCalledWith(
@@ -519,33 +514,27 @@ describe("uac audit logging", () => {
   it("logs enable success and failure", async () => {
     const { app, busClient, auditLogger } = createAuditTestApp();
     const request = supertest(app);
-    const questionnaireName = "LMS2209_EM1";
-    const caseId = "907195";
 
     (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
 
-    const success = await request
-      .post("/api/v1/uac/enable")
-      .send({ uac: "123456789123", questionnaireName, caseId });
+    const success = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
 
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      `rich enabled UAC for questionnaire ${questionnaireName} case ${caseId}`,
+      "rich enabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
     );
 
     (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
       new Error("fail"),
     );
 
-    const failure = await request
-      .post("/api/v1/uac/enable")
-      .send({ uac: "123456789123", questionnaireName, caseId });
+    const failure = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
 
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      `rich failed to enable UAC for questionnaire ${questionnaireName} case ${caseId}`,
+      "rich failed to enable UAC for questionnaire unknown-questionnaire case unknown-case-id",
     );
 
     expect(auditLogger.info).not.toHaveBeenCalledWith(
@@ -570,6 +559,47 @@ describe("uac audit logging", () => {
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
       "rich disabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
+    );
+  });
+
+  it("looks up questionnaire and case details on enable", async () => {
+    const app = express();
+    const busClient = {
+      disableUac: vi.fn(),
+      enableUac: vi.fn().mockResolvedValue("Success"),
+      getDisabledUacs: vi.fn().mockResolvedValue({
+        match: {
+          questionnaire_name: "dia2510a",
+          case_id: "803920",
+          uac_chunks: { uac1: "1234", uac2: "5678", uac3: "9123" },
+          full_uac: "123456789123",
+          disabled: true,
+        },
+      }),
+    } as unknown as BusClient;
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      middleware: (_req: unknown, _res: unknown, next: () => void) => next(),
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    } as unknown as Auth;
+    const blaiseApiClient = {
+      getQuestionnaires: vi.fn().mockResolvedValue([{ name: "DIA2510A", status: "Active" }]),
+    } as unknown as BlaiseApiClient;
+
+    app.use(express.json());
+    app.use((req, _res, next) => {
+      Object.assign(req, { log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } });
+      next();
+    });
+    app.use("/", createUacHandler(busClient, auth, blaiseApiClient, "ServerPark", auditLogger));
+
+    const response = await supertest(app).post("/api/v1/uac/enable").send({ uac: "123456789123" });
+
+    expect(response.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich enabled UAC for questionnaire DIA2510A case 803920",
     );
   });
 });

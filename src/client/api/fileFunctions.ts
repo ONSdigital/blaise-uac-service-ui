@@ -5,11 +5,6 @@ import axiosConfig from "./axiosConfig";
 import type { CsvDatas } from "../types/csv.types";
 import type { QuestionnaireFile } from "../types/questionnaire.types";
 
-interface UacAuditContext {
-  questionnaireName?: string;
-  caseId?: string;
-}
-
 export async function importUacsFromFile(file: File | undefined): Promise<number> {
   if (file === undefined) {
     throw new Error("file was not supplied");
@@ -24,30 +19,14 @@ export async function importUacsFromFile(file: File | undefined): Promise<number
   return response.data?.uacs_imported;
 }
 
-export async function disableUac(uac: string, auditContext?: UacAuditContext): Promise<boolean> {
-  const response = await axios.post(
-    "/api/v1/uac/disable",
-    {
-      uac,
-      questionnaireName: auditContext?.questionnaireName,
-      caseId: auditContext?.caseId,
-    },
-    axiosConfig(),
-  );
+export async function disableUac(uac: string): Promise<boolean> {
+  const response = await axios.post("/api/v1/uac/disable", { uac }, axiosConfig());
 
   return response.data === "Success";
 }
 
-export async function enableUac(uac: string, auditContext?: UacAuditContext): Promise<boolean> {
-  const response = await axios.post(
-    "/api/v1/uac/enable",
-    {
-      uac,
-      questionnaireName: auditContext?.questionnaireName,
-      caseId: auditContext?.caseId,
-    },
-    axiosConfig(),
-  );
+export async function enableUac(uac: string): Promise<boolean> {
+  const response = await axios.post("/api/v1/uac/enable", { uac }, axiosConfig());
 
   return response.data === "Success";
 }

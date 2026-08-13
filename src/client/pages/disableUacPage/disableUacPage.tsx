@@ -19,11 +19,7 @@ function DisableUac(): ReactElement {
       >
         <div className="ons-grid">
           <div className="ons-grid__col ons-col-8@m">
-            <Confirmation
-              uac={parsedState.value.uac}
-              questionnaireName={parsedState.value.questionnaireName}
-              case_id={parsedState.value.case_id}
-            />
+            <Confirmation uac={parsedState.value.uac} />
           </div>
         </div>
       </main>
