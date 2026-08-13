@@ -9,13 +9,15 @@ import handleAuthRedirect from "../../../utils/handleAuthRedirect";
 
 interface Props {
   uac: string;
+  questionnaireName?: string;
+  case_id?: string;
 }
 
-function Confirmation({ uac }: Props): ReactElement {
+function Confirmation({ uac, questionnaireName, case_id }: Props): ReactElement {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const disableUacMutation = useMutation({
-    mutationFn: () => disableUac(uac),
+    mutationFn: () => disableUac(uac, { questionnaireName, caseId: case_id }),
     onSuccess: (success) => {
       void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
 

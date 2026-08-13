@@ -26,7 +26,7 @@ describe("AuditPage", () => {
       {
         id: "2",
         timestamp: "2026-06-04T12:32:10.000Z",
-        message: "jane failed to disable UAC 123456789123",
+        message: "jane failed to disable UAC for questionnaire LMS2209_EM1 case 803920",
         severity: "ERROR",
       },
     ]);
@@ -43,10 +43,9 @@ describe("AuditPage", () => {
         "ons-status",
         "ons-status--info",
       );
-      expect(screen.getByText("jane failed to disable UAC 123456789123")).toHaveClass(
-        "ons-status",
-        "ons-status--error",
-      );
+      expect(
+        screen.getByText("jane failed to disable UAC for questionnaire LMS2209_EM1 case 803920"),
+      ).toHaveClass("ons-status", "ons-status--error");
     });
   });
 

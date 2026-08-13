@@ -9,7 +9,13 @@ export interface DisableUacResultState {
 }
 
 export type DisableUacPageState =
-  { kind: "confirmation"; uac: string } | { kind: "result"; result: DisableUacResultState };
+  | {
+      kind: "confirmation";
+      uac: string;
+      questionnaireName?: string;
+      case_id?: string;
+    }
+  | { kind: "result"; result: DisableUacResultState };
 
 export type EnableUacPageState =
   | { kind: "table"; questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs }
@@ -154,7 +160,23 @@ export function parseDisableUacPageState(state: unknown): ParsedRouteState<Disab
 
   if (state.step !== undefined) {
     if (state.step === "confirmation" && isNonEmptyString(state.uac)) {
-      return { status: "valid", value: { kind: "confirmation", uac: state.uac } };
+      const confirmationState: Extract<DisableUacPageState, { kind: "confirmation" }> = {
+        kind: "confirmation",
+        uac: state.uac,
+      };
+
+      if (isNonEmptyString(state.questionnaireName)) {
+        confirmationState.questionnaireName = state.questionnaireName;
+      }
+
+      if (isNonEmptyString(state.case_id)) {
+        confirmationState.case_id = state.case_id;
+      }
+
+      return {
+        status: "valid",
+        value: confirmationState,
+      };
     }
 
     return { status: "invalid" };

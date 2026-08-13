@@ -235,6 +235,15 @@ describe("disableUac", () => {
 
     await expect(disableUac(uac)).resolves.toBe(false);
   });
+
+  it("It should pass questionnaire and case metadata when provided", async () => {
+    const questionnaireName = "LMS2209_EM1";
+    const caseId = "907195";
+
+    mock.onPost("/api/v1/uac/disable", { uac, questionnaireName, caseId }).reply(200, "Success");
+
+    await expect(disableUac(uac, { questionnaireName, caseId })).resolves.toBe(true);
+  });
 });
 
 describe("enableUac", () => {
@@ -255,6 +264,15 @@ describe("enableUac", () => {
     mock.onPost("/api/v1/uac/enable", { uac }).reply(200, "Failed");
 
     await expect(enableUac(uac)).resolves.toBe(false);
+  });
+
+  it("It should pass questionnaire and case metadata when provided", async () => {
+    const questionnaireName = "LMS2209_EM1";
+    const caseId = "907195";
+
+    mock.onPost("/api/v1/uac/enable", { uac, questionnaireName, caseId }).reply(200, "Success");
+
+    await expect(enableUac(uac, { questionnaireName, caseId })).resolves.toBe(true);
   });
 });
 

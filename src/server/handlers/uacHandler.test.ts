@@ -477,6 +477,90 @@ describe("uac audit logging", () => {
   it("logs disable success and failure", async () => {
     const { app, busClient, auditLogger } = createAuditTestApp();
     const request = supertest(app);
+    const questionnaireName = "LMS2209_EM1";
+    const caseId = "907195";
+
+    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
+
+    const success = await request
+      .post("/api/v1/uac/disable")
+      .send({ uac: "123456789123", questionnaireName, caseId });
+
+    expect(success.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      `rich disabled UAC for questionnaire ${questionnaireName} case ${caseId}`,
+    );
+
+    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("fail"),
+    );
+
+    const failure = await request
+      .post("/api/v1/uac/disable")
+      .send({ uac: "123456789123", questionnaireName, caseId });
+
+    expect(failure.status).toBe(500);
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      expect.anything(),
+      `rich failed to disable UAC for questionnaire ${questionnaireName} case ${caseId}`,
+    );
+
+    expect(auditLogger.info).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+    expect(auditLogger.error).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+  });
+
+  it("logs enable success and failure", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp();
+    const request = supertest(app);
+    const questionnaireName = "LMS2209_EM1";
+    const caseId = "907195";
+
+    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
+
+    const success = await request
+      .post("/api/v1/uac/enable")
+      .send({ uac: "123456789123", questionnaireName, caseId });
+
+    expect(success.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      `rich enabled UAC for questionnaire ${questionnaireName} case ${caseId}`,
+    );
+
+    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
+      new Error("fail"),
+    );
+
+    const failure = await request
+      .post("/api/v1/uac/enable")
+      .send({ uac: "123456789123", questionnaireName, caseId });
+
+    expect(failure.status).toBe(500);
+    expect(auditLogger.error).toHaveBeenCalledWith(
+      expect.anything(),
+      `rich failed to enable UAC for questionnaire ${questionnaireName} case ${caseId}`,
+    );
+
+    expect(auditLogger.info).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+    expect(auditLogger.error).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+  });
+
+  it("uses unknown placeholders when questionnaire context is missing", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp();
+    const request = supertest(app);
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
 
@@ -485,46 +569,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich disabled UAC 123456789123",
-    );
-
-    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error("fail"),
-    );
-
-    const failure = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
-
-    expect(failure.status).toBe(500);
-    expect(auditLogger.error).toHaveBeenCalledWith(
-      expect.anything(),
-      "rich failed to disable UAC 123456789123",
-    );
-  });
-
-  it("logs enable success and failure", async () => {
-    const { app, busClient, auditLogger } = createAuditTestApp();
-    const request = supertest(app);
-
-    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
-
-    const success = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
-
-    expect(success.status).toBe(200);
-    expect(auditLogger.info).toHaveBeenCalledWith(
-      expect.anything(),
-      "rich enabled UAC 123456789123",
-    );
-
-    (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
-      new Error("fail"),
-    );
-
-    const failure = await request.post("/api/v1/uac/enable").send({ uac: "123456789123" });
-
-    expect(failure.status).toBe(500);
-    expect(auditLogger.error).toHaveBeenCalledWith(
-      expect.anything(),
-      "rich failed to enable UAC 123456789123",
+      "rich disabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
     );
   });
 });
