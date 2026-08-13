@@ -65,16 +65,8 @@ SESSION_SECRET=blah
 
 ### Run the app
 
-Standard mode:
-
 ```shell
 yarn dev
-```
-
-For WSL/mounted paths (polling mode):
-
-```shell
-yarn dev-wsl
 ```
 
 UI is available at http://localhost:3000/.
@@ -88,7 +80,6 @@ yarn kill
 ## Common Scripts
 
 - `yarn dev`: Run frontend + backend in watch mode
-- `yarn dev-wsl`: Run with polling watcher support for WSL/mounted paths
 - `yarn build`: Build client and server
 - `yarn typecheck`: Run TypeScript checks for frontend and server projects
 - `yarn lint`: Run typecheck, ESLint, Prettier checks, and knip

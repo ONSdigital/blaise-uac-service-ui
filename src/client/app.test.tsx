@@ -84,6 +84,16 @@ describe("React homepage", () => {
     );
   }
 
+  function wrapperWithPath(path: string) {
+    return function PathWrapper({ children }: { children: React.ReactNode }) {
+      return (
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={[path]}>{children}</MemoryRouter>
+        </QueryClientProvider>
+      );
+    };
+  }
+
   it("App page matches snapshot", async () => {
     const { asFragment } = render(<App />, { wrapper });
 
@@ -156,6 +166,18 @@ describe("React homepage", () => {
       expect(
         queryByText(/Uploaded questionnaire samples with generated UACs/i),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  it("should render a not found page for unknown routes", async () => {
+    const { getByRole, getByText } = render(<App />, {
+      wrapper: wrapperWithPath("/path-that-does-not-exist"),
+    });
+
+    await waitFor(() => {
+      expect(getByRole("heading", { name: "Page not found" })).toBeInTheDocument();
+      expect(getByText("The page you're looking for doesn't exist.")).toBeInTheDocument();
+      expect(getByRole("link", { name: "Return home" })).toHaveAttribute("href", "/");
     });
   });
 });
