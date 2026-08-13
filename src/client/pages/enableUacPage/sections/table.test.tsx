@@ -137,6 +137,6 @@ describe("Disable UAC page works as expected", () => {
     });
 
     expect(getByText(/The requested enable-UAC screen state was invalid/i)).toBeInTheDocument();
-    expect(getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 });

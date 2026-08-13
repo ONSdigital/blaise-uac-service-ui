@@ -16,21 +16,7 @@ interface UacAuditContext {
   caseId: string;
 }
 
-const UNKNOWN_QUESTIONNAIRE_NAME = "unknown-questionnaire";
 const UNKNOWN_CASE_ID = "unknown-case-id";
-
-function unknownAuditContext(): UacAuditContext {
-  return {
-    questionnaireName: UNKNOWN_QUESTIONNAIRE_NAME,
-    caseId: UNKNOWN_CASE_ID,
-  };
-}
-
-function isUnknownAuditContext(context: UacAuditContext): boolean {
-  return (
-    context.questionnaireName === UNKNOWN_QUESTIONNAIRE_NAME && context.caseId === UNKNOWN_CASE_ID
-  );
-}
 
 function caseIdOrUnknown(caseId: unknown): string {
   return typeof caseId === "string" && caseId.trim() !== "" ? caseId : UNKNOWN_CASE_ID;
@@ -92,9 +78,9 @@ class UacHandler {
     private readonly auditLogger?: AuditLoggerLike,
   ) {}
 
-  private async findAuditContextForUac(uac: string, req: Request): Promise<UacAuditContext> {
+  private async findAuditContextForUac(uac: string, req: Request): Promise<UacAuditContext | null> {
     if (!this.blaiseApiClient || !this.serverPark) {
-      return unknownAuditContext();
+      return null;
     }
 
     try {
@@ -116,9 +102,15 @@ class UacHandler {
               continue;
             }
 
+            const caseId = typeof uacObj.case_id === "string" ? uacObj.case_id.trim() : "";
+
+            if (caseId === "") {
+              continue;
+            }
+
             return {
               questionnaireName: (uacObj.questionnaire_name ?? q.name).toUpperCase(),
-              caseId: caseIdOrUnknown(uacObj.case_id),
+              caseId,
             };
           }
         } catch (error: unknown) {
@@ -140,7 +132,47 @@ class UacHandler {
       );
     }
 
-    return unknownAuditContext();
+    return null;
+  }
+
+  private auditInfo(
+    req: Request,
+    username: string,
+    context: UacAuditContext | null,
+    action: "disable" | "enable",
+  ) {
+    if (!context) {
+      req.log.warn("Audit context lookup failed; skipping success audit event");
+
+      return;
+    }
+
+    this.auditLogger?.info(
+      req.log,
+      action === "disable"
+        ? buildDisableAuditMessage(username, context)
+        : buildEnableAuditMessage(username, context),
+    );
+  }
+
+  private auditError(
+    req: Request,
+    username: string,
+    context: UacAuditContext | null,
+    action: "disable" | "enable",
+  ) {
+    if (!context) {
+      req.log.warn("Audit context lookup failed; skipping failure audit event");
+
+      return;
+    }
+
+    this.auditLogger?.error(
+      req.log,
+      action === "disable"
+        ? buildDisableAuditFailureMessage(username, context)
+        : buildEnableAuditFailureMessage(username, context),
+    );
   }
 
   getAllDisabledUacs = async (req: Request, res: Response): Promise<Response> => {
@@ -201,12 +233,10 @@ class UacHandler {
     try {
       await this.busClient.disableUac(uac);
       const afterDisableContext = await this.findAuditContextForUac(uac, req);
-      const auditContext = isUnknownAuditContext(afterDisableContext)
-        ? beforeDisableContext
-        : afterDisableContext;
+      const auditContext = afterDisableContext ?? beforeDisableContext;
 
       req.log.info("Successfully disabled UAC");
-      this.auditLogger?.info(req.log, buildDisableAuditMessage(username, auditContext));
+      this.auditInfo(req, username, auditContext, "disable");
 
       return res.status(200).json("Success");
     } catch (error: unknown) {
@@ -215,27 +245,24 @@ class UacHandler {
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
         const afterDisableContext = await this.findAuditContextForUac(uac, req);
-        const auditContext = isUnknownAuditContext(afterDisableContext)
-          ? beforeDisableContext
-          : afterDisableContext;
+        const auditContext = afterDisableContext ?? beforeDisableContext;
 
         req.log.info("Successfully disabled UAC");
-        this.auditLogger?.info(req.log, buildDisableAuditMessage(username, auditContext));
+        this.auditInfo(req, username, auditContext, "disable");
 
         return res.status(200).json("Success");
       }
 
-      this.auditLogger?.error(
-        req.log,
-        buildDisableAuditFailureMessage(username, beforeDisableContext),
-      );
+      this.auditError(req, username, beforeDisableContext, "disable");
 
       req.log.error(
-        {
-          ...buildSafeErrorDetails(error),
-          questionnaireName: beforeDisableContext.questionnaireName,
-          caseId: beforeDisableContext.caseId,
-        },
+        beforeDisableContext
+          ? {
+              ...buildSafeErrorDetails(error),
+              questionnaireName: beforeDisableContext.questionnaireName,
+              caseId: beforeDisableContext.caseId,
+            }
+          : buildSafeErrorDetails(error),
         "Disable UAC failed",
       );
 
@@ -256,7 +283,7 @@ class UacHandler {
     try {
       await this.busClient.enableUac(uac);
       req.log.info("Successfully enabled UAC");
-      this.auditLogger?.info(req.log, buildEnableAuditMessage(username, auditContext));
+      this.auditInfo(req, username, auditContext, "enable");
 
       return res.status(200).json("Success");
     } catch (error: unknown) {
@@ -265,19 +292,21 @@ class UacHandler {
       // parsing failed, treat this as success.
       if (error instanceof BusClientError && error.statusCode === undefined) {
         req.log.info("Successfully enabled UAC");
-        this.auditLogger?.info(req.log, buildEnableAuditMessage(username, auditContext));
+        this.auditInfo(req, username, auditContext, "enable");
 
         return res.status(200).json("Success");
       }
 
-      this.auditLogger?.error(req.log, buildEnableAuditFailureMessage(username, auditContext));
+      this.auditError(req, username, auditContext, "enable");
 
       req.log.error(
-        {
-          ...buildSafeErrorDetails(error),
-          questionnaireName: auditContext.questionnaireName,
-          caseId: auditContext.caseId,
-        },
+        auditContext
+          ? {
+              ...buildSafeErrorDetails(error),
+              questionnaireName: auditContext.questionnaireName,
+              caseId: auditContext.caseId,
+            }
+          : buildSafeErrorDetails(error),
         "Enable UAC failed",
       );
 

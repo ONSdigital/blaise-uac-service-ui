@@ -68,36 +68,23 @@ describe("parseEnableUacPageState", () => {
     });
   });
 
-  it("returns a valid confirmation state when only UAC is supplied", () => {
+  it("returns invalid when only UAC is supplied for confirmation", () => {
     expect(
       parseEnableUacPageState({
         step: "confirmation",
         uac: "123456789012",
       }),
-    ).toEqual({
-      status: "valid",
-      value: {
-        kind: "confirmation",
-        uac: "123456789012",
-      },
-    });
+    ).toEqual({ status: "invalid" });
   });
 
-  it("returns valid when confirmation has UAC and optional questionnaire only", () => {
+  it("returns invalid when confirmation is missing case id", () => {
     expect(
       parseEnableUacPageState({
         step: "confirmation",
         questionnaireName: "DST1234A",
         uac: "123456789012",
       }),
-    ).toEqual({
-      status: "valid",
-      value: {
-        kind: "confirmation",
-        questionnaireName: "DST1234A",
-        uac: "123456789012",
-      },
-    });
+    ).toEqual({ status: "invalid" });
   });
 
   it("returns a valid summary state when the summary payload is complete", () => {
@@ -118,18 +105,12 @@ describe("parseEnableUacPageState", () => {
     });
   });
 
-  it("returns a valid summary state when only response status is supplied", () => {
+  it("returns invalid when summary is missing questionnaire context", () => {
     expect(
       parseEnableUacPageState({
         responseStatus: "success",
       }),
-    ).toEqual({
-      status: "valid",
-      value: {
-        kind: "summary",
-        responseStatus: "success",
-      },
-    });
+    ).toEqual({ status: "invalid" });
   });
 
   it("returns invalid when the summary payload contains an invalid response status", () => {

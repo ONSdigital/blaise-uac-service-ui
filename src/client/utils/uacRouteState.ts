@@ -13,11 +13,11 @@ export type DisableUacPageState =
 
 export type EnableUacPageState =
   | { kind: "table"; questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs }
-  | { kind: "confirmation"; uac: string; questionnaireName?: string; case_id?: string }
+  | { kind: "confirmation"; uac: string; questionnaireName: string; case_id: string }
   | {
       kind: "summary";
-      questionnaireName?: string;
-      case_id?: string;
+      questionnaireName: string;
+      case_id: string;
       responseStatus: "success" | "error";
     };
 
@@ -68,31 +68,19 @@ function parseEnableSummaryState(
     return { status: "absent" };
   }
 
-  if (isResponseStatus(state.responseStatus)) {
-    const summaryState: Extract<EnableUacPageState, { kind: "summary" }> = {
-      kind: "summary",
-      responseStatus: state.responseStatus,
-    };
-
-    if (state.questionnaireName !== undefined) {
-      if (!isNonEmptyString(state.questionnaireName)) {
-        return { status: "invalid" };
-      }
-
-      summaryState.questionnaireName = state.questionnaireName;
-    }
-
-    if (state.case_id !== undefined) {
-      if (!isNonEmptyString(state.case_id)) {
-        return { status: "invalid" };
-      }
-
-      summaryState.case_id = state.case_id;
-    }
-
+  if (
+    isResponseStatus(state.responseStatus) &&
+    isNonEmptyString(state.questionnaireName) &&
+    isNonEmptyString(state.case_id)
+  ) {
     return {
       status: "valid",
-      value: summaryState,
+      value: {
+        kind: "summary",
+        questionnaireName: state.questionnaireName,
+        case_id: state.case_id,
+        responseStatus: state.responseStatus,
+      },
     };
   }
 
@@ -122,31 +110,20 @@ export function parseEnableUacPageState(state: unknown): ParsedRouteState<Enable
       };
     }
 
-    if (state.step === "confirmation" && isNonEmptyString(state.uac)) {
-      const confirmationState: Extract<EnableUacPageState, { kind: "confirmation" }> = {
-        kind: "confirmation",
-        uac: state.uac,
-      };
-
-      if (state.questionnaireName !== undefined) {
-        if (!isNonEmptyString(state.questionnaireName)) {
-          return { status: "invalid" };
-        }
-
-        confirmationState.questionnaireName = state.questionnaireName;
-      }
-
-      if (state.case_id !== undefined) {
-        if (!isNonEmptyString(state.case_id)) {
-          return { status: "invalid" };
-        }
-
-        confirmationState.case_id = state.case_id;
-      }
-
+    if (
+      state.step === "confirmation" &&
+      isNonEmptyString(state.uac) &&
+      isNonEmptyString(state.questionnaireName) &&
+      isNonEmptyString(state.case_id)
+    ) {
       return {
         status: "valid",
-        value: confirmationState,
+        value: {
+          kind: "confirmation",
+          uac: state.uac,
+          questionnaireName: state.questionnaireName,
+          case_id: state.case_id,
+        },
       };
     }
 

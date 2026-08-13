@@ -54,7 +54,7 @@ describe("Enable Page", () => {
   it("renders the default enable heading", () => {
     renderComponent();
 
-    expect(screen.getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(screen.getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 
   it("renders the table step when step==='table'", async () => {
@@ -97,7 +97,7 @@ describe("Enable Page", () => {
     expect(screen.getByText("UAC has been enabled.")).toBeInTheDocument();
   });
 
-  it("accepts confirmation state when only UAC is provided", async () => {
+  it("treats confirmation state without questionnaire/case as invalid", async () => {
     (useLocation as Mock).mockReturnValueOnce({
       state: {
         step: "confirmation",
@@ -107,7 +107,9 @@ describe("Enable Page", () => {
 
     renderComponent();
 
-    expect(screen.getByText(/Are you sure you want to enable this UAC\?/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/The requested enable-UAC screen state was invalid/i),
+    ).toBeInTheDocument();
   });
 
   it("renders an error panel when route state is malformed", async () => {
@@ -120,6 +122,6 @@ describe("Enable Page", () => {
     expect(
       screen.getByText(/The requested enable-UAC screen state was invalid/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(screen.getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 });

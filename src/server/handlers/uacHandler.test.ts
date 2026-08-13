@@ -446,12 +446,20 @@ describe("compareDisabledUacRows", () => {
 });
 
 describe("uac audit logging", () => {
-  function createAuditTestApp() {
+  function createAuditTestApp({ withLookup = true }: { withLookup?: boolean } = {}) {
     const app = express();
     const busClient = {
       disableUac: vi.fn(),
       enableUac: vi.fn(),
-      getDisabledUacs: vi.fn(),
+      getDisabledUacs: vi.fn().mockResolvedValue({
+        match: {
+          questionnaire_name: "dia2510a",
+          case_id: "803920",
+          uac_chunks: { uac1: "1234", uac2: "5678", uac3: "9123" },
+          full_uac: "123456789123",
+          disabled: true,
+        },
+      }),
     } as unknown as BusClient;
     const auditLogger = { info: vi.fn(), error: vi.fn() };
     const auth = {
@@ -459,13 +467,27 @@ describe("uac audit logging", () => {
       getToken: vi.fn().mockReturnValue("token"),
       getUser: vi.fn().mockReturnValue({ name: "rich" }),
     } as unknown as Auth;
+    const blaiseApiClient = withLookup
+      ? ({
+          getQuestionnaires: vi.fn().mockResolvedValue([{ name: "DIA2510A", status: "Active" }]),
+        } as unknown as BlaiseApiClient)
+      : undefined;
 
     app.use(express.json());
     app.use((req, _res, next) => {
       Object.assign(req, { log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } });
       next();
     });
-    app.use("/", createUacHandler(busClient, auth, undefined, undefined, auditLogger));
+    app.use(
+      "/",
+      createUacHandler(
+        busClient,
+        auth,
+        blaiseApiClient,
+        withLookup ? "ServerPark" : undefined,
+        auditLogger,
+      ),
+    );
 
     return { app, busClient, auditLogger };
   }
@@ -486,7 +508,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich disabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
+      "rich disabled UAC for questionnaire DIA2510A case 803920",
     );
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -498,7 +520,7 @@ describe("uac audit logging", () => {
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      "rich failed to disable UAC for questionnaire unknown-questionnaire case unknown-case-id",
+      "rich failed to disable UAC for questionnaire DIA2510A case 803920",
     );
 
     expect(auditLogger.info).not.toHaveBeenCalledWith(
@@ -522,7 +544,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich enabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
+      "rich enabled UAC for questionnaire DIA2510A case 803920",
     );
 
     (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -534,7 +556,7 @@ describe("uac audit logging", () => {
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      "rich failed to enable UAC for questionnaire unknown-questionnaire case unknown-case-id",
+      "rich failed to enable UAC for questionnaire DIA2510A case 803920",
     );
 
     expect(auditLogger.info).not.toHaveBeenCalledWith(
@@ -547,8 +569,8 @@ describe("uac audit logging", () => {
     );
   });
 
-  it("uses unknown placeholders when questionnaire context is missing", async () => {
-    const { app, busClient, auditLogger } = createAuditTestApp();
+  it("skips audit message when questionnaire context is missing", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp({ withLookup: false });
     const request = supertest(app);
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
@@ -556,10 +578,8 @@ describe("uac audit logging", () => {
     const success = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
 
     expect(success.status).toBe(200);
-    expect(auditLogger.info).toHaveBeenCalledWith(
-      expect.anything(),
-      "rich disabled UAC for questionnaire unknown-questionnaire case unknown-case-id",
-    );
+    expect(auditLogger.info).not.toHaveBeenCalled();
+    expect(auditLogger.error).not.toHaveBeenCalled();
   });
 
   it("looks up questionnaire and case details on enable", async () => {

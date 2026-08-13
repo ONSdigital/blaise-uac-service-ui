@@ -8,9 +8,9 @@ import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../query/qu
 import handleAuthRedirect from "../../../utils/handleAuthRedirect";
 
 interface Props {
-  questionnaireName?: string;
+  questionnaireName: string;
   uac: string;
-  case_id?: string;
+  case_id: string;
 }
 
 function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement {
@@ -52,12 +52,10 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
   return (
     <>
       <h1 className="ons-u-mt-m ons-u-mb-l">Are you sure you want to enable this UAC?</h1>
-      {(questionnaireName || case_id) && (
-        <p>
-          Context: questionnaire <em className="ons-highlight">{questionnaireName ?? "Unknown"}</em>
-          , case ID <em className="ons-highlight">{case_id ?? "Unknown"}</em>
-        </p>
-      )}
+      <p>
+        Context: questionnaire <em className="ons-highlight">{questionnaireName}</em>, case ID{" "}
+        <em className="ons-highlight">{case_id}</em>
+      </p>
       <Button
         label="Continue"
         onClick={() => enableUacMutation.mutate()}
