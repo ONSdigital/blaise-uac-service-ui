@@ -79,14 +79,14 @@ describe("Enable Page", () => {
 
     renderComponent();
 
-    expect(screen.getByText(/Are you sure you want to enable UAC/i)).toBeInTheDocument();
+    expect(screen.getByText(/Are you sure you want to enable this UAC\?/i)).toBeInTheDocument();
+    expect(screen.queryByText("100461197282")).toBeNull();
   });
 
   it("renders the EnableUacSummary when responseStatus is set", async () => {
     (useLocation as Mock).mockReturnValueOnce({
       state: {
         questionnaireName: "LMS2209_EM1",
-        uac: "100461197282",
         case_id: "907195",
         responseStatus: "success",
       },
@@ -94,9 +94,20 @@ describe("Enable Page", () => {
 
     renderComponent();
 
-    expect(
-      screen.getByText(/UAC 100461197282 has been enabled for case 907195 in LMS2209_EM1/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText("UAC has been enabled.")).toBeInTheDocument();
+  });
+
+  it("accepts confirmation state when only UAC is provided", async () => {
+    (useLocation as Mock).mockReturnValueOnce({
+      state: {
+        step: "confirmation",
+        uac: "100461197282",
+      },
+    });
+
+    renderComponent();
+
+    expect(screen.getByText(/Are you sure you want to enable this UAC\?/i)).toBeInTheDocument();
   });
 
   it("renders an error panel when route state is malformed", async () => {

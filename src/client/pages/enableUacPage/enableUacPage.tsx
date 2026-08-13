@@ -5,6 +5,7 @@ import { parseEnableUacPageState } from "../../utils/uacRouteState";
 import UacInvalidRouteState from "../shared/uacInvalidRouteState";
 
 import Confirmation from "./sections/confirmation";
+import Form from "./sections/form";
 import QuestionnairesWithDisabledUacs from "./sections/questionnairesWithDisabledUacs";
 import Summary from "./sections/summary";
 import TableSection from "./sections/table";
@@ -60,10 +61,10 @@ function EnableUac(): ReactElement {
             <UacInvalidRouteState message="The requested enable-UAC screen state was invalid. Start again from the list below." />
           )}
           {!summaryState && <h1 className="ons-u-mt-m">Which UAC do you want to enable?</h1>}
+          {!summaryState && <Form />}
           {summaryState && (
             <Summary
               questionnaireName={summaryState.questionnaireName}
-              uac={summaryState.uac}
               case_id={summaryState.case_id}
               responseStatus={summaryState.responseStatus}
             />

@@ -18,7 +18,7 @@ function QuestionnairesWithDisabledUacs(): ReactElement {
     <div className="ons-u-mt-s">
       {disabledUacRows.length > 0 ? (
         <Table
-          columns={["Questionnaire name", "Case ID", "UAC", "Actions"]}
+          columns={["Questionnaire name", "Case ID", "Actions"]}
           id={"disabled-uacs-table"}
         >
           {disabledUacRows.map((row: DisabledUacRow) => (
@@ -29,7 +29,6 @@ function QuestionnairesWithDisabledUacs(): ReactElement {
             >
               <td className="ons-table__cell ons-u-p-s">{row.questionnaire}</td>
               <td className="ons-table__cell">{row.caseId}</td>
-              <td className="ons-table__cell">{row.uac}</td>
               <td className="ons-table__cell">
                 <Button
                   label="Enable UAC"

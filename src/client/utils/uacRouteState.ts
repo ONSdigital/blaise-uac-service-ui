@@ -13,12 +13,11 @@ export type DisableUacPageState =
 
 export type EnableUacPageState =
   | { kind: "table"; questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs }
-  | { kind: "confirmation"; questionnaireName: string; uac: string; case_id: string }
+  | { kind: "confirmation"; uac: string; questionnaireName?: string; case_id?: string }
   | {
       kind: "summary";
-      questionnaireName: string;
-      uac: string;
-      case_id: string;
+      questionnaireName?: string;
+      case_id?: string;
       responseStatus: "success" | "error";
     };
 
@@ -63,30 +62,37 @@ function parseEnableSummaryState(
   state: Record<string, unknown>,
 ): ParsedRouteState<Extract<EnableUacPageState, { kind: "summary" }>> {
   const hasSummaryKey =
-    "questionnaireName" in state ||
-    "uac" in state ||
-    "case_id" in state ||
-    "responseStatus" in state;
+    "responseStatus" in state || "questionnaireName" in state || "case_id" in state;
 
   if (!hasSummaryKey) {
     return { status: "absent" };
   }
 
-  if (
-    isNonEmptyString(state.questionnaireName) &&
-    isNonEmptyString(state.uac) &&
-    isNonEmptyString(state.case_id) &&
-    isResponseStatus(state.responseStatus)
-  ) {
+  if (isResponseStatus(state.responseStatus)) {
+    const summaryState: Extract<EnableUacPageState, { kind: "summary" }> = {
+      kind: "summary",
+      responseStatus: state.responseStatus,
+    };
+
+    if (state.questionnaireName !== undefined) {
+      if (!isNonEmptyString(state.questionnaireName)) {
+        return { status: "invalid" };
+      }
+
+      summaryState.questionnaireName = state.questionnaireName;
+    }
+
+    if (state.case_id !== undefined) {
+      if (!isNonEmptyString(state.case_id)) {
+        return { status: "invalid" };
+      }
+
+      summaryState.case_id = state.case_id;
+    }
+
     return {
       status: "valid",
-      value: {
-        kind: "summary",
-        questionnaireName: state.questionnaireName,
-        uac: state.uac,
-        case_id: state.case_id,
-        responseStatus: state.responseStatus,
-      },
+      value: summaryState,
     };
   }
 
@@ -116,20 +122,31 @@ export function parseEnableUacPageState(state: unknown): ParsedRouteState<Enable
       };
     }
 
-    if (
-      state.step === "confirmation" &&
-      isNonEmptyString(state.questionnaireName) &&
-      isNonEmptyString(state.uac) &&
-      isNonEmptyString(state.case_id)
-    ) {
+    if (state.step === "confirmation" && isNonEmptyString(state.uac)) {
+      const confirmationState: Extract<EnableUacPageState, { kind: "confirmation" }> = {
+        kind: "confirmation",
+        uac: state.uac,
+      };
+
+      if (state.questionnaireName !== undefined) {
+        if (!isNonEmptyString(state.questionnaireName)) {
+          return { status: "invalid" };
+        }
+
+        confirmationState.questionnaireName = state.questionnaireName;
+      }
+
+      if (state.case_id !== undefined) {
+        if (!isNonEmptyString(state.case_id)) {
+          return { status: "invalid" };
+        }
+
+        confirmationState.case_id = state.case_id;
+      }
+
       return {
         status: "valid",
-        value: {
-          kind: "confirmation",
-          questionnaireName: state.questionnaireName,
-          uac: state.uac,
-          case_id: state.case_id,
-        },
+        value: confirmationState,
       };
     }
 

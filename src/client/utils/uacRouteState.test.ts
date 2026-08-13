@@ -68,21 +68,42 @@ describe("parseEnableUacPageState", () => {
     });
   });
 
-  it("returns invalid when the confirmation route state is incomplete", () => {
+  it("returns a valid confirmation state when only UAC is supplied", () => {
+    expect(
+      parseEnableUacPageState({
+        step: "confirmation",
+        uac: "123456789012",
+      }),
+    ).toEqual({
+      status: "valid",
+      value: {
+        kind: "confirmation",
+        uac: "123456789012",
+      },
+    });
+  });
+
+  it("returns valid when confirmation has UAC and optional questionnaire only", () => {
     expect(
       parseEnableUacPageState({
         step: "confirmation",
         questionnaireName: "DST1234A",
         uac: "123456789012",
       }),
-    ).toEqual({ status: "invalid" });
+    ).toEqual({
+      status: "valid",
+      value: {
+        kind: "confirmation",
+        questionnaireName: "DST1234A",
+        uac: "123456789012",
+      },
+    });
   });
 
   it("returns a valid summary state when the summary payload is complete", () => {
     expect(
       parseEnableUacPageState({
         questionnaireName: "DST1234A",
-        uac: "123456789012",
         case_id: "100000001",
         responseStatus: "success",
       }),
@@ -91,8 +112,21 @@ describe("parseEnableUacPageState", () => {
       value: {
         kind: "summary",
         questionnaireName: "DST1234A",
-        uac: "123456789012",
         case_id: "100000001",
+        responseStatus: "success",
+      },
+    });
+  });
+
+  it("returns a valid summary state when only response status is supplied", () => {
+    expect(
+      parseEnableUacPageState({
+        responseStatus: "success",
+      }),
+    ).toEqual({
+      status: "valid",
+      value: {
+        kind: "summary",
         responseStatus: "success",
       },
     });

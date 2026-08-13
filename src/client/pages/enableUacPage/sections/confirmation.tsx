@@ -8,9 +8,9 @@ import { AUDIT_LOGS_QUERY_KEY, DISABLED_UACS_QUERY_KEY } from "../../../query/qu
 import handleAuthRedirect from "../../../utils/handleAuthRedirect";
 
 interface Props {
-  questionnaireName: string;
+  questionnaireName?: string;
   uac: string;
-  case_id: string;
+  case_id?: string;
 }
 
 function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement {
@@ -28,7 +28,6 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
       navigate("/enable-uac", {
         state: {
           questionnaireName,
-          uac,
           case_id,
           responseStatus: success ? "success" : "error",
         },
@@ -41,7 +40,7 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
 
       void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       navigate("/enable-uac", {
-        state: { questionnaireName, uac, case_id, responseStatus: "error" },
+        state: { questionnaireName, case_id, responseStatus: "error" },
       });
     },
   });
@@ -52,11 +51,13 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
 
   return (
     <>
-      <h1 className="ons-u-mt-m ons-u-mb-l">
-        Are you sure you want to enable UAC <em className="ons-highlight">{uac}</em> for case{" "}
-        <em className="ons-highlight">{case_id}</em> in questionnaire{" "}
-        <em className="ons-highlight">{questionnaireName}</em>?
-      </h1>
+      <h1 className="ons-u-mt-m ons-u-mb-l">Are you sure you want to enable this UAC?</h1>
+      {(questionnaireName || case_id) && (
+        <p>
+          Context: questionnaire <em className="ons-highlight">{questionnaireName ?? "Unknown"}</em>
+          , case ID <em className="ons-highlight">{case_id ?? "Unknown"}</em>
+        </p>
+      )}
       <Button
         label="Continue"
         onClick={() => enableUacMutation.mutate()}
