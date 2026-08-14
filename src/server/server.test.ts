@@ -329,7 +329,7 @@ describe("Rate limiter configuration", () => {
     );
 
     expect(response.status).toBe(404);
-    expect(rateLimitHeader).toContain("3000");
+    expect(rateLimitHeader).toContain("10"); // BENTODO set this back to 3000 after manual test
   });
 
   it("uses BUS_API_RATE_LIMIT when it is a valid integer", async () => {

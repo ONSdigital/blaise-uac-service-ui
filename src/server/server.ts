@@ -28,8 +28,9 @@ import type { HttpLogger } from "pino-http";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DEFAULT_API_RATE_LIMIT = 3000;
-const DEFAULT_PAGE_RATE_LIMIT = 1000;
+// BENTODO: set these back to 3000 and 1000
+const DEFAULT_API_RATE_LIMIT = 10;
+const DEFAULT_PAGE_RATE_LIMIT = 5;
 
 function parseRateLimit(envName: string, fallback: number): number {
   const value = process.env[envName];
