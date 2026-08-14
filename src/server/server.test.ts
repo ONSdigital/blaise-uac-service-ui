@@ -8,7 +8,7 @@ import supertest from "supertest";
 import { getConfigFromEnv } from "./config.js";
 import {
   keyGeneratorFromAuthenticatedUser,
-  keyGeneratorFromForwardedHeader,
+  keyGeneratorFromIp,
   newServer,
 } from "./server.js";
 
@@ -177,7 +177,7 @@ describe("Server catch-all and error handler", () => {
 });
 
 describe("Rate limiter key generator", () => {
-  type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromForwardedHeader>[0];
+  type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromIp>[0];
 
   it("uses express ip when available", () => {
     const request = {
@@ -188,7 +188,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("10.0.0.2");
   });
 
   it("uses express ip when Forwarded is unavailable", () => {
@@ -198,7 +198,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("10.0.0.2");
   });
 
   it("falls back to socket remoteAddress when request ip is undefined", () => {
@@ -207,7 +207,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("127.0.0.1");
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("127.0.0.1");
   });
 
   it("supports IPv6 values from request ip", () => {
@@ -217,7 +217,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe(
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe(
       "2001:db8:cafe::/56",
     );
   });
@@ -229,7 +229,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("10.0.0.2");
   });
 
   it("uses unknown when no header, request ip or socket address are available", () => {
@@ -238,12 +238,12 @@ describe("Rate limiter key generator", () => {
       socket: {},
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("unknown");
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("unknown");
   });
 });
 
 describe("Rate limiter authenticated key generator", () => {
-  type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromForwardedHeader>[0];
+  type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromIp>[0];
 
   it("uses the authenticated username when available", () => {
     const auth = {

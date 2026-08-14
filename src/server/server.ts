@@ -47,7 +47,7 @@ function parseRateLimit(envName: string, fallback: number): number {
   return parsed;
 }
 
-export function keyGeneratorFromForwardedHeader(req: Request): string {
+export function keyGeneratorFromIp(req: Request): string {
   return ipKeyGenerator(req.ip ?? req.socket.remoteAddress ?? "unknown");
 }
 
@@ -73,7 +73,7 @@ function userRateLimitKey(auth: Auth, req: Request): string | null {
 }
 
 export function keyGeneratorFromAuthenticatedUser(auth: Auth, req: Request): string {
-  return userRateLimitKey(auth, req) ?? keyGeneratorFromForwardedHeader(req);
+  return userRateLimitKey(auth, req) ?? keyGeneratorFromIp(req);
 }
 
 function createApiRateLimiter(auth: Auth) {
@@ -92,7 +92,7 @@ const pageRateLimiter = rateLimit({
   limit: parseRateLimit("BUS_PAGE_RATE_LIMIT", DEFAULT_PAGE_RATE_LIMIT),
   standardHeaders: "draft-8",
   legacyHeaders: false,
-  keyGenerator: keyGeneratorFromForwardedHeader,
+  keyGenerator: keyGeneratorFromIp,
   message: { error: "Too many requests, please try again later" },
 });
 
