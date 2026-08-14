@@ -179,7 +179,7 @@ describe("Server catch-all and error handler", () => {
 describe("Rate limiter key generator", () => {
   type KeyGeneratorRequest = Parameters<typeof keyGeneratorFromForwardedHeader>[0];
 
-  it("prefers the first Forwarded for value", () => {
+  it("uses express ip when available", () => {
     const request = {
       headers: {
         forwarded: 'for="198.51.100.27:5151";proto=https, for="203.0.113.9";proto=http',
@@ -188,7 +188,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("198.51.100.27");
+    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
   });
 
   it("uses express ip when Forwarded is unavailable", () => {
@@ -210,10 +210,10 @@ describe("Rate limiter key generator", () => {
     expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("127.0.0.1");
   });
 
-  it("supports IPv6 values from the Forwarded header", () => {
+  it("supports IPv6 values from request ip", () => {
     const request = {
-      headers: { forwarded: 'for="[2001:db8:cafe::17]:4711";proto=https' },
-      ip: "10.0.0.2",
+      headers: {},
+      ip: "2001:db8:cafe::17",
       socket: { remoteAddress: "127.0.0.1" },
     };
 
@@ -222,56 +222,14 @@ describe("Rate limiter key generator", () => {
     );
   });
 
-  it("falls back to request ip when Forwarded for value is unknown", () => {
+  it("ignores spoofed forwarded header values", () => {
     const request = {
-      headers: { forwarded: "for=unknown;proto=https" },
+      headers: { forwarded: "for=198.51.100.50;proto=https" },
       ip: "10.0.0.2",
       socket: { remoteAddress: "127.0.0.1" },
     };
 
     expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
-  });
-
-  it("falls back to request ip when Forwarded does not contain a usable for parameter", () => {
-    const request = {
-      headers: { forwarded: "proto=https;by=203.0.113.10" },
-      ip: "10.0.0.2",
-      socket: { remoteAddress: "127.0.0.1" },
-    };
-
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
-  });
-
-  it("returns plain forwarded hosts without splitting", () => {
-    const request = {
-      headers: { forwarded: "for=client-proxy" },
-      ip: "10.0.0.2",
-      socket: { remoteAddress: "127.0.0.1" },
-    };
-
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("client-proxy");
-  });
-
-  it("ignores invalid bracketed forwarded values", () => {
-    const request = {
-      headers: { forwarded: 'for="[broken"' },
-      ip: "10.0.0.2",
-      socket: { remoteAddress: "127.0.0.1" },
-    };
-
-    expect(keyGeneratorFromForwardedHeader(request as KeyGeneratorRequest)).toBe("10.0.0.2");
-  });
-
-  it("handles an array of Forwarded header values", () => {
-    const request = {
-      headers: { forwarded: ["for=198.51.100.50;proto=https", "for=203.0.113.9"] },
-      ip: "10.0.0.2",
-      socket: { remoteAddress: "127.0.0.1" },
-    };
-
-    expect(keyGeneratorFromForwardedHeader(request as unknown as KeyGeneratorRequest)).toBe(
-      "198.51.100.50",
-    );
   });
 
   it("uses unknown when no header, request ip or socket address are available", () => {
@@ -293,7 +251,7 @@ describe("Rate limiter authenticated key generator", () => {
       getUser: vi.fn().mockReturnValue({ name: "Rich User" }),
     } as unknown as Auth;
     const request = {
-      headers: { forwarded: "for=198.51.100.50;proto=https" },
+      headers: {},
       ip: "10.0.0.2",
       socket: { remoteAddress: "127.0.0.1" },
     };
@@ -303,7 +261,7 @@ describe("Rate limiter authenticated key generator", () => {
     );
   });
 
-  it("falls back to forwarded/IP identity when username is unavailable", () => {
+  it("falls back to IP identity when username is unavailable", () => {
     const auth = {
       getToken: vi.fn().mockReturnValue("token"),
       getUser: vi.fn().mockReturnValue({}),
@@ -315,11 +273,11 @@ describe("Rate limiter authenticated key generator", () => {
     };
 
     expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
-      "198.51.100.50",
+      "10.0.0.2",
     );
   });
 
-  it("falls back to forwarded/IP identity when auth access throws", () => {
+  it("falls back to IP identity when auth access throws", () => {
     const auth = {
       getToken: vi.fn().mockImplementation(() => {
         throw new Error("token error");
@@ -333,11 +291,11 @@ describe("Rate limiter authenticated key generator", () => {
     };
 
     expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
-      "198.51.100.50",
+      "10.0.0.2",
     );
   });
 
-  it("falls back to forwarded/IP identity when username is blank", () => {
+  it("falls back to IP identity when username is blank", () => {
     const auth = {
       getToken: vi.fn().mockReturnValue("token"),
       getUser: vi.fn().mockReturnValue({ name: "   " }),
@@ -349,7 +307,7 @@ describe("Rate limiter authenticated key generator", () => {
     };
 
     expect(keyGeneratorFromAuthenticatedUser(auth, request as KeyGeneratorRequest)).toBe(
-      "198.51.100.50",
+      "10.0.0.2",
     );
   });
 });
