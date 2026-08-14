@@ -54,7 +54,7 @@ describe("Enable Page", () => {
   it("renders the default enable heading", () => {
     renderComponent();
 
-    expect(screen.getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(screen.getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 
   it("renders the table step when step==='table'", async () => {
@@ -79,14 +79,16 @@ describe("Enable Page", () => {
 
     renderComponent();
 
-    expect(screen.getByText(/Are you sure you want to enable UAC/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to enable this UAC for questionnaire/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("100461197282")).toBeNull();
   });
 
   it("renders the EnableUacSummary when responseStatus is set", async () => {
     (useLocation as Mock).mockReturnValueOnce({
       state: {
         questionnaireName: "LMS2209_EM1",
-        uac: "100461197282",
         case_id: "907195",
         responseStatus: "success",
       },
@@ -94,8 +96,21 @@ describe("Enable Page", () => {
 
     renderComponent();
 
+    expect(screen.getByText("UAC has been enabled.")).toBeInTheDocument();
+  });
+
+  it("treats confirmation state without questionnaire/case as invalid", async () => {
+    (useLocation as Mock).mockReturnValueOnce({
+      state: {
+        step: "confirmation",
+        uac: "100461197282",
+      },
+    });
+
+    renderComponent();
+
     expect(
-      screen.getByText(/UAC 100461197282 has been enabled for case 907195 in LMS2209_EM1/i),
+      screen.getByText(/The requested enable-UAC screen state was invalid/i),
     ).toBeInTheDocument();
   });
 
@@ -109,6 +124,6 @@ describe("Enable Page", () => {
     expect(
       screen.getByText(/The requested enable-UAC screen state was invalid/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(screen.getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 });

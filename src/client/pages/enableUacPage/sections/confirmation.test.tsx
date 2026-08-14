@@ -53,13 +53,14 @@ function renderComponent() {
 
 describe("Enable UAC Confirmation component", () => {
   it("renders Enable Confirmation Component and receives the passed state", async () => {
-    const { getByText } = renderComponent();
+    const { getByText, queryByText } = renderComponent();
 
-    const expectedWarningMessageText = /Are you sure you want to enable UAC/i;
+    const expectedWarningMessageText =
+      /Are you sure you want to enable this UAC for questionnaire/i;
 
     expect(getByText(expectedWarningMessageText)).toBeInTheDocument();
-    expect(getByText(confirmationComponentState.uac)).toBeInTheDocument();
     expect(getByText(confirmationComponentState.case_id)).toBeInTheDocument();
+    expect(queryByText(confirmationComponentState.uac)).toBeNull();
   });
 });
 
@@ -73,13 +74,11 @@ describe("Enable UAC Confirmation Component correctly displays messages when use
 
   const manageUacPageSuccessState = {
     questionnaireName: "LMS2209_EM1",
-    uac: "100461197282",
     case_id: "907195",
     responseStatus: "success",
   };
   const manageUacPageFailedState = {
     questionnaireName: "LMS2209_EM1",
-    uac: "100461197282",
     case_id: "907195",
     responseStatus: "error",
   };

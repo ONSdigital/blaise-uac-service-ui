@@ -59,11 +59,10 @@ function EnableUac(): ReactElement {
           {parsedState.status === "invalid" && (
             <UacInvalidRouteState message="The requested enable-UAC screen state was invalid. Start again from the list below." />
           )}
-          {!summaryState && <h1 className="ons-u-mt-m">Which UAC do you want to enable?</h1>}
+          {!summaryState && <h1 className="ons-u-mt-m">Select a disabled UAC to enable</h1>}
           {summaryState && (
             <Summary
               questionnaireName={summaryState.questionnaireName}
-              uac={summaryState.uac}
               case_id={summaryState.case_id}
               responseStatus={summaryState.responseStatus}
             />
