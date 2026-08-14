@@ -70,6 +70,8 @@ describe("List of Questionnaires with disabled UACs", () => {
 
     expect(rows).toHaveLength(2);
     expect(await screen.findByText("LMS2209_EM1")).toBeInTheDocument();
+    expect(screen.queryByText("100222938976")).toBeNull();
+    expect(screen.queryByText("100260876564")).toBeNull();
   });
 
   it("navigates to enable confirmation when user clicks Enable UAC", async () => {

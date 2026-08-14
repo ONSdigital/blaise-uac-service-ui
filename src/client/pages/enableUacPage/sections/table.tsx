@@ -19,7 +19,6 @@ function TableSection({ questionnaireWithDisabledUacs }: Props): ReactElement {
       key={obj.uac}
     >
       <td className="ons-table__cell">{obj.case_id}</td>
-      <td className="ons-table__cell">{obj.uac}</td>
       <td className="ons-table__cell">
         <Button
           label="Enable UAC"
@@ -49,7 +48,7 @@ function TableSection({ questionnaireWithDisabledUacs }: Props): ReactElement {
         </span>
       </h1>
       <Table
-        columns={["Case ID", "UAC", "Enable"]}
+        columns={["Case ID", "Enable"]}
         id="uac-table"
       >
         <>{uacs}</>

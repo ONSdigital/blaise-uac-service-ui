@@ -55,7 +55,6 @@ describe("Disable UAC page works as expected", () => {
     expect(getByText(mockQuestionnaireWithDisabledUacs.questionnaireName)).toBeInTheDocument();
     expect(getByText("Disabled UACs for")).toBeInTheDocument();
     expect(getByText("Case ID")).toBeDefined();
-    expect(getByText("UAC")).toBeDefined();
     expect(getByText("Enable")).toBeDefined();
   });
 
@@ -95,14 +94,11 @@ describe("Disable UAC page works as expected", () => {
 
     const cells = bodyRows[0].querySelectorAll("td");
 
-    expect(cells).toHaveLength(3);
+    expect(cells).toHaveLength(2);
     expect(cells[0].textContent).toStrictEqual(
       mockQuestionnaireWithOneDisabledUac.disabledUacs[0].case_id,
     );
-    expect(cells[1].textContent).toStrictEqual(
-      mockQuestionnaireWithOneDisabledUac.disabledUacs[0].uac,
-    );
-    expect(cells[2].textContent).toStrictEqual("Enable UAC");
+    expect(cells[1].textContent).toStrictEqual("Enable UAC");
 
     const link = getByText("Enable UAC");
 
@@ -112,9 +108,9 @@ describe("Disable UAC page works as expected", () => {
     await act(async () => {
       await flushPromises();
     });
-    expect(getByText(/Are you sure you want to enable UAC/i)).toBeDefined();
+    expect(getByText(/Are you sure you want to enable this UAC for questionnaire/i)).toBeDefined();
     expect(getByText(mockQuestionnaireWithOneDisabledUac.disabledUacs[0].case_id)).toBeDefined();
-    expect(getByText(mockQuestionnaireWithOneDisabledUac.disabledUacs[0].uac)).toBeDefined();
+    expect(getByText(mockQuestionnaireWithOneDisabledUac.questionnaireName)).toBeDefined();
   });
 
   it("renders an error panel when table state is malformed", async () => {
@@ -141,6 +137,6 @@ describe("Disable UAC page works as expected", () => {
     });
 
     expect(getByText(/The requested enable-UAC screen state was invalid/i)).toBeInTheDocument();
-    expect(getByText("Which UAC do you want to enable?")).toBeInTheDocument();
+    expect(getByText("Select a disabled UAC to enable")).toBeInTheDocument();
   });
 });

@@ -13,11 +13,10 @@ export type DisableUacPageState =
 
 export type EnableUacPageState =
   | { kind: "table"; questionnaireWithDisabledUacs: QuestionnaireWithDisabledUacs }
-  | { kind: "confirmation"; questionnaireName: string; uac: string; case_id: string }
+  | { kind: "confirmation"; uac: string; questionnaireName: string; case_id: string }
   | {
       kind: "summary";
       questionnaireName: string;
-      uac: string;
       case_id: string;
       responseStatus: "success" | "error";
     };
@@ -63,27 +62,22 @@ function parseEnableSummaryState(
   state: Record<string, unknown>,
 ): ParsedRouteState<Extract<EnableUacPageState, { kind: "summary" }>> {
   const hasSummaryKey =
-    "questionnaireName" in state ||
-    "uac" in state ||
-    "case_id" in state ||
-    "responseStatus" in state;
+    "responseStatus" in state || "questionnaireName" in state || "case_id" in state;
 
   if (!hasSummaryKey) {
     return { status: "absent" };
   }
 
   if (
+    isResponseStatus(state.responseStatus) &&
     isNonEmptyString(state.questionnaireName) &&
-    isNonEmptyString(state.uac) &&
-    isNonEmptyString(state.case_id) &&
-    isResponseStatus(state.responseStatus)
+    isNonEmptyString(state.case_id)
   ) {
     return {
       status: "valid",
       value: {
         kind: "summary",
         questionnaireName: state.questionnaireName,
-        uac: state.uac,
         case_id: state.case_id,
         responseStatus: state.responseStatus,
       },
@@ -118,16 +112,16 @@ export function parseEnableUacPageState(state: unknown): ParsedRouteState<Enable
 
     if (
       state.step === "confirmation" &&
-      isNonEmptyString(state.questionnaireName) &&
       isNonEmptyString(state.uac) &&
+      isNonEmptyString(state.questionnaireName) &&
       isNonEmptyString(state.case_id)
     ) {
       return {
         status: "valid",
         value: {
           kind: "confirmation",
-          questionnaireName: state.questionnaireName,
           uac: state.uac,
+          questionnaireName: state.questionnaireName,
           case_id: state.case_id,
         },
       };
@@ -154,7 +148,13 @@ export function parseDisableUacPageState(state: unknown): ParsedRouteState<Disab
 
   if (state.step !== undefined) {
     if (state.step === "confirmation" && isNonEmptyString(state.uac)) {
-      return { status: "valid", value: { kind: "confirmation", uac: state.uac } };
+      return {
+        status: "valid",
+        value: {
+          kind: "confirmation",
+          uac: state.uac,
+        },
+      };
     }
 
     return { status: "invalid" };

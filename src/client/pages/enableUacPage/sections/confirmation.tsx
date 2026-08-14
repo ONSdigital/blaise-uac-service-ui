@@ -28,7 +28,6 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
       navigate("/enable-uac", {
         state: {
           questionnaireName,
-          uac,
           case_id,
           responseStatus: success ? "success" : "error",
         },
@@ -41,7 +40,7 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
 
       void queryClient.invalidateQueries({ queryKey: AUDIT_LOGS_QUERY_KEY });
       navigate("/enable-uac", {
-        state: { questionnaireName, uac, case_id, responseStatus: "error" },
+        state: { questionnaireName, case_id, responseStatus: "error" },
       });
     },
   });
@@ -53,9 +52,9 @@ function Confirmation({ questionnaireName, uac, case_id }: Props): ReactElement 
   return (
     <>
       <h1 className="ons-u-mt-m ons-u-mb-l">
-        Are you sure you want to enable UAC <em className="ons-highlight">{uac}</em> for case{" "}
-        <em className="ons-highlight">{case_id}</em> in questionnaire{" "}
-        <em className="ons-highlight">{questionnaireName}</em>?
+        Are you sure you want to enable this UAC for questionnaire{" "}
+        <em className="ons-highlight">{questionnaireName}</em>, case ID{" "}
+        <em className="ons-highlight">{case_id}</em>?
       </h1>
       <Button
         label="Continue"

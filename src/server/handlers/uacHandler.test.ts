@@ -327,6 +327,7 @@ describe("aggregate disabled UAC endpoint", () => {
       { questionnaire: "ABC1234A", caseId: "0001", uac: "123456789123" },
       { questionnaire: "LMS2209_EM1", caseId: "0002", uac: "1111222233334444" },
       { questionnaire: "LMS2209_EM1", caseId: "0003", uac: "555566667777" },
+      { questionnaire: "LMS2209_EM1", caseId: "unknown-case-id", uac: "000100020003" },
     ]);
     expect(mockGetDisabledUacs).toHaveBeenCalledTimes(2);
     expect(mockGetDisabledUacs).toHaveBeenCalledWith("LMS2209_EM1");
@@ -445,12 +446,20 @@ describe("compareDisabledUacRows", () => {
 });
 
 describe("uac audit logging", () => {
-  function createAuditTestApp() {
+  function createAuditTestApp({ withLookup = true }: { withLookup?: boolean } = {}) {
     const app = express();
     const busClient = {
       disableUac: vi.fn(),
       enableUac: vi.fn(),
-      getDisabledUacs: vi.fn(),
+      getDisabledUacs: vi.fn().mockResolvedValue({
+        match: {
+          questionnaire_name: "dia2510a",
+          case_id: "803920",
+          uac_chunks: { uac1: "1234", uac2: "5678", uac3: "9123" },
+          full_uac: "123456789123",
+          disabled: true,
+        },
+      }),
     } as unknown as BusClient;
     const auditLogger = { info: vi.fn(), error: vi.fn() };
     const auth = {
@@ -458,13 +467,27 @@ describe("uac audit logging", () => {
       getToken: vi.fn().mockReturnValue("token"),
       getUser: vi.fn().mockReturnValue({ name: "rich" }),
     } as unknown as Auth;
+    const blaiseApiClient = withLookup
+      ? ({
+          getQuestionnaires: vi.fn().mockResolvedValue([{ name: "DIA2510A", status: "Active" }]),
+        } as unknown as BlaiseApiClient)
+      : undefined;
 
     app.use(express.json());
     app.use((req, _res, next) => {
       Object.assign(req, { log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } });
       next();
     });
-    app.use("/", createUacHandler(busClient, auth, undefined, undefined, auditLogger));
+    app.use(
+      "/",
+      createUacHandler(
+        busClient,
+        auth,
+        blaiseApiClient,
+        withLookup ? "ServerPark" : undefined,
+        auditLogger,
+      ),
+    );
 
     return { app, busClient, auditLogger };
   }
@@ -485,7 +508,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich disabled UAC 123456789123",
+      "rich disabled UAC for questionnaire DIA2510A case 803920",
     );
 
     (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -497,7 +520,16 @@ describe("uac audit logging", () => {
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      "rich failed to disable UAC 123456789123",
+      "rich failed to disable UAC for questionnaire DIA2510A case 803920",
+    );
+
+    expect(auditLogger.info).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+    expect(auditLogger.error).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
     );
   });
 
@@ -512,7 +544,7 @@ describe("uac audit logging", () => {
     expect(success.status).toBe(200);
     expect(auditLogger.info).toHaveBeenCalledWith(
       expect.anything(),
-      "rich enabled UAC 123456789123",
+      "rich enabled UAC for questionnaire DIA2510A case 803920",
     );
 
     (busClient.enableUac as unknown as ReturnType<typeof vi.fn>).mockRejectedValueOnce(
@@ -524,7 +556,70 @@ describe("uac audit logging", () => {
     expect(failure.status).toBe(500);
     expect(auditLogger.error).toHaveBeenCalledWith(
       expect.anything(),
-      "rich failed to enable UAC 123456789123",
+      "rich failed to enable UAC for questionnaire DIA2510A case 803920",
+    );
+
+    expect(auditLogger.info).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+    expect(auditLogger.error).not.toHaveBeenCalledWith(
+      expect.anything(),
+      expect.stringContaining("123456789123"),
+    );
+  });
+
+  it("skips audit message when questionnaire context is missing", async () => {
+    const { app, busClient, auditLogger } = createAuditTestApp({ withLookup: false });
+    const request = supertest(app);
+
+    (busClient.disableUac as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce("Success");
+
+    const success = await request.post("/api/v1/uac/disable").send({ uac: "123456789123" });
+
+    expect(success.status).toBe(200);
+    expect(auditLogger.info).not.toHaveBeenCalled();
+    expect(auditLogger.error).not.toHaveBeenCalled();
+  });
+
+  it("looks up questionnaire and case details on enable", async () => {
+    const app = express();
+    const busClient = {
+      disableUac: vi.fn(),
+      enableUac: vi.fn().mockResolvedValue("Success"),
+      getDisabledUacs: vi.fn().mockResolvedValue({
+        match: {
+          questionnaire_name: "dia2510a",
+          case_id: "803920",
+          uac_chunks: { uac1: "1234", uac2: "5678", uac3: "9123" },
+          full_uac: "123456789123",
+          disabled: true,
+        },
+      }),
+    } as unknown as BusClient;
+    const auditLogger = { info: vi.fn(), error: vi.fn() };
+    const auth = {
+      middleware: (_req: unknown, _res: unknown, next: () => void) => next(),
+      getToken: vi.fn().mockReturnValue("token"),
+      getUser: vi.fn().mockReturnValue({ name: "rich" }),
+    } as unknown as Auth;
+    const blaiseApiClient = {
+      getQuestionnaires: vi.fn().mockResolvedValue([{ name: "DIA2510A", status: "Active" }]),
+    } as unknown as BlaiseApiClient;
+
+    app.use(express.json());
+    app.use((req, _res, next) => {
+      Object.assign(req, { log: { error: vi.fn(), info: vi.fn(), warn: vi.fn() } });
+      next();
+    });
+    app.use("/", createUacHandler(busClient, auth, blaiseApiClient, "ServerPark", auditLogger));
+
+    const response = await supertest(app).post("/api/v1/uac/enable").send({ uac: "123456789123" });
+
+    expect(response.status).toBe(200);
+    expect(auditLogger.info).toHaveBeenCalledWith(
+      expect.anything(),
+      "rich enabled UAC for questionnaire DIA2510A case 803920",
     );
   });
 });
