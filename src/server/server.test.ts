@@ -6,11 +6,7 @@ import listEndpoints from "express-list-endpoints";
 import supertest from "supertest";
 
 import { getConfigFromEnv } from "./config.js";
-import {
-  keyGeneratorFromAuthenticatedUser,
-  keyGeneratorFromIp,
-  newServer,
-} from "./server.js";
+import { keyGeneratorFromAuthenticatedUser, keyGeneratorFromIp, newServer } from "./server.js";
 
 import type * as BlaiseLoginReactServer from "blaise-login-react-server";
 import type * as EjsModule from "ejs";
@@ -217,9 +213,7 @@ describe("Rate limiter key generator", () => {
       socket: { remoteAddress: "127.0.0.1" },
     };
 
-    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe(
-      "2001:db8:cafe::/56",
-    );
+    expect(keyGeneratorFromIp(request as KeyGeneratorRequest)).toBe("2001:db8:cafe::/56");
   });
 
   it("ignores spoofed forwarded header values", () => {
