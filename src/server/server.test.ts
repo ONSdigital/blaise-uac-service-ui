@@ -387,6 +387,56 @@ describe("Rate limiter configuration", () => {
   });
 });
 
+describe("Login rate limiter", () => {
+  const config = getConfigFromEnv();
+
+  it("allows requests up to the login threshold", async () => {
+    const request = supertest(newServer(config));
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const response = await request.post("/api/login").send({ username: "rate-limit-user" });
+
+      expect(response.status).toBe(400);
+    }
+  });
+
+  it("throttles the request after the login threshold is exceeded", async () => {
+    const request = supertest(newServer(config));
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      await request.post("/api/login").send({ username: "rate-limit-user" });
+    }
+
+    const throttledResponse = await request
+      .post("/api/login")
+      .send({ username: "rate-limit-user" });
+    const rateLimitHeader = String(
+      throttledResponse.headers.ratelimit ?? throttledResponse.headers["ratelimit-policy"] ?? "",
+    );
+
+    expect(throttledResponse.status).toBe(429);
+    expect(throttledResponse.body).toEqual({
+      error: "Too many login attempts, please try again later",
+    });
+    expect(rateLimitHeader).toBeTruthy();
+    expect(rateLimitHeader).toContain("10");
+  });
+
+  it("applies login limits independently per username key", async () => {
+    const request = supertest(newServer(config));
+
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      await request.post("/api/login").send({ username: "user-a" });
+    }
+
+    const throttledResponse = await request.post("/api/login").send({ username: "user-a" });
+    const separateUserResponse = await request.post("/api/login").send({ username: "user-b" });
+
+    expect(throttledResponse.status).toBe(429);
+    expect(separateUserResponse.status).toBe(400);
+  });
+});
+
 describe("Server hardening headers", () => {
   it("applies baseline HTTP hardening headers", async () => {
     const config = getConfigFromEnv();
